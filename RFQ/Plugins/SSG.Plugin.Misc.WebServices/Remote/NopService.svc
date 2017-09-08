@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="SSG.Plugin.Misc.WebServices.SSGService" %>

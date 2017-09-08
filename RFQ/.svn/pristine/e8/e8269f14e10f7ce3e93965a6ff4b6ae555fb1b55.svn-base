@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using PagedList;
+
+namespace SSG.Web.Models.RFQ
+{
+    public partial class RFQLineModelIndexes
+    {
+        public virtual IEnumerable<SSG.Web.Models.RFQ.RFQLineIndexModel> RfqLineIndexModels { get; set; }
+        public RFQLineIndexModel RfqLineIndex { get; set; }
+        public RFQLineModel RfqLineModel { get; set; }
+        public RFQModel RfqModel { get; set; }
+
+        [DisplayName("Search")]
+        public string SearchOthers { get; set; }
+
+        //[DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
+        [DisplayName("Start Date")]
+        public DateTime? StartDate { get; set; }
+
+        [DisplayName("End Date")]
+        public DateTime? EndDate { get; set; }
+
+    }
+}

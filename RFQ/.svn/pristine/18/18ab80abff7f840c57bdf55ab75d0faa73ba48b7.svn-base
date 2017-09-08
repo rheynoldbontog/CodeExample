@@ -1,0 +1,147 @@
+﻿@using Org.BouncyCastle.Asn1
+@using PagedList
+@using PagedList.Mvc
+@using SSG.Web.Extensions
+@model PagedList.IPagedList<SSG.Web.Models.RFQ.RFQLineIndexModel>
+           
+<style type="text/css">
+    .verticalTableHeader {
+        text-align:center;
+        white-space:nowrap;
+        transform-origin:50% 50%;
+        -webkit-transform: rotate(-60deg);
+        -moz-transform: rotate(-60deg);
+        -ms-transform: rotate(-60deg);
+        -o-transform: rotate(-60deg);
+        transform: rotate(-60deg);
+    
+    }
+    .verticalTableHeader:before {
+        content:'';
+        padding-top:110%;/* takes width as reference, + 10% for faking some extra padding */
+        display:inline-block;
+        vertical-align:middle;
+    }
+</style>
+<table @*id="rfoLinesTable"*@ class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>RFQ</th>
+        <th><div>RFQ Line No.</div></th>
+        <th><div>RFQ Creation Date</div></th>
+        <th>Item Description</th>
+        <th>Quantity</th>
+        <th>UOM</th>
+        <th>Maker PN</th>
+        <th>Requester</th>
+        <th>Department</th>
+        <th>Buyer</th>
+        <th>Status</th>
+        <th>Type</th>
+        <th>Commodity</th>
+        <th>ROHS Compliant?</th>
+        <th>Purchase of Test Equipment</th>
+        <th>Callibration Type</th>
+        <th>Note to Buyer</th>
+        <th>Buyer Remarks</th>
+        <th>Closed Date</th>
+        <th>Action</th>
+    </tr>
+                
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><div align="center">@Html.ActionLink(item.RFQNo,"Edit","RFQ",new { id = item.RFQID },null)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.RFQLineNo)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.RFQCreationDate)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.ItemDescription)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Quantity)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.UOM)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.MakerPN)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Requester)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Department)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Buyer)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Status)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Type)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.Commodity)</div></td>
+            <td><div align="center">@Html.CheckBoxFor(model => item.ROHSCompliant)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.TestEquipmentPurchaseType)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.CallibrationType)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.NoteToBuyer)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.BuyerRemarks)</div></td>
+            <td><div align="center">@Html.DisplayFor(model => item.ClosedDate)</div></td>
+            <td>
+                <div align="center">
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-sm btnViewMatrix" title="View Matrix" data-id="@Html.DisplayFor(model => item.RFQLineNo)"><i class="icon-search icon-white"></i></button>
+                     
+                        @if(item.IsUserCanEditable)
+                        {
+                            @Html.NoEncodeActionLink("<i class='icon-pencil icon-white'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.RFQLineID }, htmlAttributes: new { data_modal = "", @class = "btn btn-success btn-sm" }) 
+                        }
+                        @if (item.IsUserCanEditable)
+                        {
+                            <button class="btn btn-danger" onclick="deleteLine('@Url.Action("Delete", "RFQLine", new { lineId = @item.RFQLineID })');"><i class="icon-trash icon-white"></i></button>
+                        }
+                         
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div id="displayModal" class="modal fade">
+    
+</div>
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in hide' style="max-height: 900px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div> 
+<div class="text-center">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing((
+            new PagedListRenderOptions
+            {
+                DisplayLinkToFirstPage = true,
+                DisplayLinkToLastPage = true
+            }
+            ), "#grid-list")
+        )
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.edit').on('click', function () {
+
+            $.ajax({
+                url: '@Url.Action(MVC.RFQLine.Edit())',
+                type: 'POST',
+                data: { rfqLineId: $(this).attr('data-id') },
+                success: function (result) {
+                    $('#displayModal').html(result);
+                    $('#displayModal').modal('show');
+                }
+            });
+        });
+        $('.btnViewMatrix').on('click', function () {
+            $.ajax({
+                url: '@Url.Action(MVC.Quotation.QuotationMatrix())',
+                type: 'POST',
+                data: { rfqLineId: $(this).attr('data-id') },
+                success: function (result) {
+                    $('#displayModal').html(result);
+                    $('#displayModal').modal('show');
+                }
+
+            });
+        });
+    });
+</script>

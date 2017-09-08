@@ -1,0 +1,36 @@
+﻿@model SSG.Web.Models.RFQ.RFQLineModel
+@Html.Hidden("last_quotation_index", Model.Quotations.Count, new { id = "last_quotation_index" })
+
+@if (Model.UserCanAddDeleteQuotation)
+{
+    <div class="row-fluid">
+        <div class="span12 master-wrapper-center-1">
+            <div class="pull-right">
+                <button id="delete-quotation" name="delete-quotation" type="button" class="btn btn-default"
+                    onclick="rfqModal.deleteQuotation();">
+                    <i class="fa fa-trash color10"></i>&nbsp;&nbsp;Delete Quotation
+                </button>
+                <button name="new-rfq-button" type="button" class="btn btn-default" onclick="rfqModal.createQuotation('@Url.Action("Create", "Quotation", new { rfqLineId = Model.Id })');">
+                    <i class="fa fa-plus color6"></i>&nbsp;&nbsp;Create Quotation
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row-fluid">
+    <div class="span12 master-wrapper-center-1">
+        <ul id="quotation_tabs" class="nav nav-pills" data-tabs="tabs">
+            @foreach (var quotation in Model.Quotations.OrderBy(m => m.Index))
+            {
+                Html.RenderPartial("_QuotationTabHeaderItem", quotation);
+            }
+        </ul>
+        <div id="quotation_tabs_content" class="tab-content panel">
+            @foreach (var quotation in Model.Quotations.OrderBy(m => m.Index))
+            {
+                Html.RenderPartial("_QuotationTabContentItem", quotation);
+            }
+        </div>
+    </div>
+</div>

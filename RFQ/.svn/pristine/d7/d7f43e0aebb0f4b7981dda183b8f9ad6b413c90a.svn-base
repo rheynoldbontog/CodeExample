@@ -1,0 +1,28 @@
+﻿@model SiteThemeSelectorModel
+@using SSG.Web.Models.Common;
+@if (Model.AvailableSiteThemes.Count > 1)
+{
+    using (Ajax.BeginForm("SiteThemeSelected", "Common", null, new AjaxOptions { OnComplete = "onSiteThemeChangedRequestCompleted();" }, new { id = "form-site-theme-selector" }))
+    {
+        var themes = Model.AvailableSiteThemes.Select(x => new SelectListItem
+        {
+            Text = x.Title,
+            Value = x.Name,
+            Selected = x.Name.Equals(Model.CurrentSiteTheme.Name, StringComparison.InvariantCultureIgnoreCase)
+        });
+    
+        @Html.DropDownList("themeName", themes, new { @class = "input-medium" })
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#themeName").change(onSiteThemeChanged);
+        });
+
+        function onSiteThemeChanged() {
+            $("#form-site-theme-selector").submit();
+        }
+        function onSiteThemeChangedRequestCompleted() {
+            location.reload();
+        }
+    </script>
+}

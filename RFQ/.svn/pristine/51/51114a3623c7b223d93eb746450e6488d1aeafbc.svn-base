@@ -1,0 +1,48 @@
+﻿@model SSG.Web.Models.PSP.SupportCodeModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    var mode = Model.Id == 0 ? "Create" : "Edit";
+    ViewBag.Title = mode + " Support Code";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.CreatedByUserId)
+    @Html.HiddenFor(model => model.UpdatedByUserId)
+    @Html.HiddenFor(model => model.DateCreatedOnUtc)
+    @Html.HiddenFor(model => model.DateUpdatedOnUtc)
+    
+    <fieldset>
+        <legend>Support Code</legend>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SupportCodes)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SupportCodes)
+            @Html.ValidationMessageFor(model => model.SupportCodes)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SupportCodeDescription)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SupportCodeDescription)
+            @Html.ValidationMessageFor(model => model.SupportCodeDescription)</div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Active)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Active)
+            @Html.ValidationMessageFor(model => model.Active)
+        </div>
+        <br />
+        <p>
+            <input type="submit" value="@(mode == "Create" ? "Create" : "Save")" class="btn btn-default" />
+        </p>
+    </fieldset>
+}

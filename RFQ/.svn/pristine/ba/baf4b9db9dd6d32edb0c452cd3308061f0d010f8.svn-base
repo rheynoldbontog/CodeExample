@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SSG.Core.Domain.RFQ
+{
+    public class RFQStatusHistory : BaseAuditEntity
+    {
+        public virtual bool Active  { get; set; }
+
+        public virtual int rfqLineId { get; set; }
+        public virtual RFQLine RfqLine { get; set; }
+
+        public virtual int rfqStatusId { get; set; }
+        public virtual RFQStatus RfqStatus { get; set; }
+    }
+}

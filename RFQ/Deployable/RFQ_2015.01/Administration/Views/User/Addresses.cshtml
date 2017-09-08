@@ -1,0 +1,66 @@
+﻿<!-- done -->
+@model UserAddressListModel
+@using SSG.Web.Models.User;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+<div class="page account-page address-list-page">
+    <div class="page-header">
+        <h2>@T("Account.MyAccount") - @T("Account.UserAddresses")</h2>
+    </div>
+    <div class="page-body">
+        <div class="address-list">
+            @if (Model.Addresses.Count > 0)
+            {
+                for (int i = 0; i < Model.Addresses.Count; i++)
+                {
+                    var address = Model.Addresses[i];
+                    
+                <fieldset class="address-item">
+                    <legend class="title">@address.FirstName @address.LastName</legend>
+                    <address>
+                        @if (!String.IsNullOrEmpty(address.Company))
+                        {
+                            <strong class="company">@address.Company</strong>
+                        }
+                        @address.Address1
+                        @if (!String.IsNullOrEmpty(address.Address2))
+                        {
+                            @address.Address2
+                        }
+                        @address.City,
+                        @address.StateProvinceName
+                        @address.ZipPostalCode
+                        @if (!String.IsNullOrEmpty(address.CountryName))
+                        {
+                            @address.CountryName
+                        }
+                        <abbr title="Phone">P:</abbr> @address.PhoneNumber
+                        <abbr title="Fax">F:</abbr> @address.FaxNumber
+                        <a href="mailto:#">@address.Email</a>
+                    </address>
+                    <p>
+                        <input type="button" class="btn btn-primary edit-address-button" onclick="location.href='@Url.RouteUrl("UserAddressEdit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
+                        <input type="button" class="btn delete-address-button" onclick="location.href='@Url.RouteUrl("UserAddressDelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
+                    </p>
+                </fieldset>
+                <div class="clearfix"></div>
+                }
+            }
+            else
+            {
+                <p class="text-warning">@T("Account.UserAddresses.NoAddresses")</p>
+            }
+        </div>
+        <div class="form-actions">
+            <input type="button" class="btn add-address-button" onclick="location.href='@Url.RouteUrl("UserAddressAdd")'" value="@T("Common.AddNew")" />
+        </div>
+    </div>
+</div>

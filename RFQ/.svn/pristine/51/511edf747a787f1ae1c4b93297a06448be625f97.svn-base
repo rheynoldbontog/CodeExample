@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Domain.Directory;
+
+namespace SSG.Core.Domain.RFQ
+{
+    public partial class Quotation : BaseAuditEntity
+    {
+        public int QuotationNo { get; set; }
+
+        public DateTime QuoteUploadDate { get; set; }
+
+        public string Commodity { get; set; }
+
+        public string QuoteItemDescription { get; set; }
+
+        public string MakerPN { get; set; }
+
+        public decimal UnitPrice { get; set; }
+
+        public decimal DiscountedPrice { get; set; }
+
+        public int MinimumOrderQuantity { get; set; }
+
+        public string PaymentTerms { get; set; }
+
+        public string Supplier { get; set; }
+
+        public string DeliveryLeadTime { get; set; }
+
+        public string WarrantyPeriod { get; set; }
+
+        public string BuyerRemarks { get; set; }
+
+        public string RequesterRemarks { get; set; }
+
+        public bool Active { get; set; }
+
+        //REFERENCES
+        #region RFQLine
+
+        public virtual int RFQLineId { get; set; }
+
+        public virtual RFQLine RFQLine { get; set; } 
+
+        #endregion
+
+        #region "Currency"
+
+        public virtual int CurrencyId { get; set; }
+        public virtual Currency Currency { get; set; }
+
+        #endregion
+
+        #region "Quote Attachment"
+
+        public virtual int? QuoteAttachmentId { get; set; }
+        public virtual FileAttachment QuoteAttachment { get; set; }
+
+        #endregion
+
+        #region "ROHS Document"
+
+        public virtual int? ROHSDocumentAttachmentId { get; set; }
+        public virtual FileAttachment ROHSDocumentAttachment { get; set; }
+
+        #endregion
+
+        #region "MSDS Document"
+
+        public virtual int? MSDSDocumentAttachmentId { get; set; }
+        public virtual FileAttachment MSDSDocumentAttachment { get; set; }
+
+        #endregion
+
+        #region "Other Attachments"
+
+        public virtual ICollection<FileAttachment> OtherAttachments { get; set; }
+
+        #endregion
+    }
+}

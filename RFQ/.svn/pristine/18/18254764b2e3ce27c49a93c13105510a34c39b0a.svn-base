@@ -1,0 +1,827 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using SSG.Core.Domain.RFQ;
+using SSG.Services.Users;
+using SSG.Core;
+using SSG.Core.Domain;
+using Rectangle = iTextSharp.text.Rectangle;
+
+namespace SSG.Services.RFQ
+{
+    public class ReportService : IReportService
+    {
+        #region Fields
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region ctor
+
+        public ReportService(IWorkContext workContext)
+        {
+            this._workContext = workContext;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public bool GeneratePdfReport(SSG.Core.Domain.RFQ.RFQ rfq)
+        {
+            var isGenerated = false;
+
+            using (var fs = new FileStream(rfq.EmailAttachmentFilename, FileMode.Create))
+            {
+                var pageSize = PageSize.A4.Rotate();
+
+                using (var document = new Document(pageSize, 40, 40, 40, 40))
+                {
+                    try
+                    {
+                        var writer = PdfWriter.GetInstance(document, fs);
+
+                        document.Open();
+                        AddRFQPage(document, rfq);
+                        isGenerated = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        isGenerated = false;
+                    }
+                }
+            }
+
+            return isGenerated;
+        }
+
+        private void AddRFQPage(Document document, SSG.Core.Domain.RFQ.RFQ rfq)
+        {
+            // TITLE
+            var titlePhrase = new Phrase("Request For Quotation", ReportCommon._veryLargeFontBold);
+
+            var titleParagraph = new Paragraph
+            {
+                Alignment = Element.ALIGN_CENTER
+            };
+
+            titleParagraph.Add(titlePhrase);
+            titleParagraph.Add(Chunk.NEWLINE);
+            titleParagraph.Add(Chunk.NEWLINE);
+
+            // RFQ
+            var rfqTable = new PdfPTable(2)
+            {
+                WidthPercentage = 100,
+                SpacingBefore = 5,
+                SpacingAfter = 5
+            };
+
+            var rfqTableLeft = new PdfPTable(2)
+            {
+                WidthPercentage = 100
+            };
+
+            rfqTableLeft.SetWidths(new float[] { 45f, 200f });
+
+            // Requester
+            var requesterLabelPhrase = new Phrase("Requester :", ReportCommon._standardTableFontBoldGray);
+            var requesterLabelCell = new PdfPCell(requesterLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var requesterPhrase = new Phrase(rfq.Requestor.GetFullName(), ReportCommon._standardTableFontBold);
+            var requesterCell = new PdfPCell(requesterPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            //Department
+            var departmentLabelPhrase = new Phrase("Department :", ReportCommon._standardTableFontBoldGray);
+            var departmentLabelCell = new PdfPCell(departmentLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var departmentPhrase = new Phrase(rfq.Requestor.Department.Name, ReportCommon._standardTableFontBold);
+            var departmentCell = new PdfPCell(departmentPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            //Buyer
+            var buyerLabelPhrase = new Phrase("Buyer :", ReportCommon._standardTableFontBoldGray);
+            var buyerLabelCell = new PdfPCell(buyerLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var buyerPhrase = new Phrase(rfq.Buyer.GetFullName(), ReportCommon._standardTableFontBold);
+            var buyerCell = new PdfPCell(buyerPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            //Subject
+            var subjectLabelPhrase = new Phrase("Subject :", ReportCommon._standardTableFontBoldGray);
+            var subjectLabelCell = new PdfPCell(subjectLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var subjectPhrase = new Phrase(rfq.Subject, ReportCommon._standardTableFontBold);
+            var subjectCell = new PdfPCell(subjectPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            rfqTableLeft.AddCell(requesterLabelCell);
+            rfqTableLeft.AddCell(requesterCell);
+            rfqTableLeft.AddCell(departmentLabelCell);
+            rfqTableLeft.AddCell(departmentCell);
+            rfqTableLeft.AddCell(buyerLabelCell);
+            rfqTableLeft.AddCell(buyerCell);
+            rfqTableLeft.AddCell(subjectLabelCell);
+            rfqTableLeft.AddCell(subjectCell);
+
+            var rfqTableRight = new PdfPTable(2)
+            {
+                WidthPercentage = 100
+            };
+
+            rfqTableRight.SetWidths(new float[] { 100f, 50f });
+
+
+            //RFQ No
+            var rfqNoLabelPhrase = new Phrase("RFQ No. :", ReportCommon._standardTableFontBoldGray);
+            var rfqNoLabelCell = new PdfPCell(rfqNoLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var rfqNoPhrase = new Phrase(rfq.RFQNo, ReportCommon._standardTableFontBold);
+            var rfqNoCell = new PdfPCell(rfqNoPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            //Creation Date
+            var creationDateLabelPhrase = new Phrase("Creation Date :", ReportCommon._standardTableFontBoldGray);
+            var creationDateLabelCell = new PdfPCell(creationDateLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var creationDatePhrase = new Phrase(rfq.DateCreatedOnUtc.ToString(@"MMMM dd, yyyy"), ReportCommon._standardTableFontBold);
+            var creationDateCell = new PdfPCell(creationDatePhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            //STATUS
+            var rfqStatusLabelPhrase = new Phrase("RFQ Status :", ReportCommon._standardTableFontBoldGray);
+            var rfqStatusLabelCell = new PdfPCell(rfqStatusLabelPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var rfqStatusPhrase = new Phrase(rfq.RFQStatus.Name, ReportCommon._standardTableFontBold);
+            var rfqStatusCell = new PdfPCell(rfqStatusPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                MinimumHeight = 15f,
+                Border = Rectangle.NO_BORDER
+            };
+
+            rfqTableRight.AddCell(rfqNoLabelCell);
+            rfqTableRight.AddCell(rfqNoCell);
+            rfqTableRight.AddCell(creationDateLabelCell);
+            rfqTableRight.AddCell(creationDateCell);
+            rfqTableRight.AddCell(rfqStatusLabelCell);
+            rfqTableRight.AddCell(rfqStatusCell);
+
+            var rfqTableLeftCell = new PdfPCell(rfqTableLeft)
+            {
+                Colspan = 1,
+                Border = Rectangle.NO_BORDER
+            };
+
+            var rfqTableRightCell = new PdfPCell(rfqTableRight)
+            {
+                Colspan = 1,
+                Border = Rectangle.NO_BORDER
+            };
+
+            rfqTable.AddCell(rfqTableLeftCell);
+            rfqTable.AddCell(rfqTableRightCell);
+
+            //LINES TITTLE
+            var rfqLinesTitlePhrase = new Phrase("RFQ Lines", ReportCommon._largeTableFontGrayBold);
+
+            var rfqLinesTitleParagraph = new Paragraph
+            {
+                Alignment = Element.ALIGN_LEFT
+            };
+
+            rfqLinesTitleParagraph.Add(Chunk.NEWLINE);
+            rfqLinesTitleParagraph.Add(Chunk.NEWLINE);
+            rfqLinesTitleParagraph.Add(rfqLinesTitlePhrase);
+            rfqLinesTitleParagraph.Add(Chunk.NEWLINE);
+
+            //RFQ LINES
+            var rfqLinesTable = new PdfPTable(12)
+            {
+                WidthPercentage = 100,
+                SpacingBefore = 5,
+                SpacingAfter = 5
+            };
+
+            rfqLinesTable.SetWidths(new float[] { 30f, 55f, 250f, 80f, 55f, 80f, 80f, 200f, 55f, 200f, 200f, 200f });
+
+            //LINES HEADER
+            //RFQ LINE NO HEADER
+            var rfqLineNoHeaderPhrase = new Phrase("No", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineNoHeaderCell = new PdfPCell(rfqLineNoHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //TYPE
+            var rfqLineTypeHeaderPhrase = new Phrase("Type", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineTypeHeaderCell = new PdfPCell(rfqLineTypeHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //ITEM DESCRIPTION
+            var rfqLineDescriptionHeaderPhrase = new Phrase("Item Description", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineDescription2HeaderPhrase = new Phrase("(Model no/Serial No/Brand)", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineDescriptionParagraph = new Paragraph() { Alignment = Element.ALIGN_CENTER };
+            rfqLineDescriptionParagraph.Add(rfqLineDescriptionHeaderPhrase);
+            rfqLineDescriptionParagraph.Add(Chunk.NEWLINE);
+            rfqLineDescriptionParagraph.Add(rfqLineDescription2HeaderPhrase);
+
+            var rfqLineDescriptionHeaderCell = new PdfPCell(rfqLineDescriptionParagraph)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Quantity
+            var rfqLineQuantityHeaderPhrase = new Phrase("Quantity", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineQuantityHeaderCell = new PdfPCell(rfqLineQuantityHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //UOM
+            var rfqLineUnitHeaderPhrase = new Phrase("UOM", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineUnitHeaderCell = new PdfPCell(rfqLineUnitHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Maker
+            var rfqLineMakerHeaderPhrase = new Phrase("Maker", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineMakerHeaderCell = new PdfPCell(rfqLineMakerHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Maker PN
+            var rfqLineMakerPNHeaderPhrase = new Phrase("MakerPN", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineMakerPNHeaderCell = new PdfPCell(rfqLineMakerPNHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Links and References
+            var rfqLineLinksAndReferencesHeaderPhrase = new Phrase("References Link", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineLinksAndReferencesHeaderCell = new PdfPCell(rfqLineLinksAndReferencesHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //ROHS Compliant
+            var rfqLineROHSCompliantHeaderPhrase = new Phrase("ROHS Compliant", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineROHSCompliantHeaderCell = new PdfPCell(rfqLineROHSCompliantHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Attachments
+            var rfqLineAttachmentsHeaderPhrase = new Phrase("Attachments", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineAttachmentsHeaderCell = new PdfPCell(rfqLineAttachmentsHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Note to Buyer
+            var rfqLineNoteToBuyerHeaderPhrase = new Phrase("Note to Buyer", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineNoteToBuyerHeaderCell = new PdfPCell(rfqLineNoteToBuyerHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+
+            //Others Technical Details
+            var rfqLineOtherTechnicalDetailsHeaderPhrase = new Phrase("Other Technical Details (e.g. weight)", ReportCommon._standardTableFontBoldWhite);
+            var rfqLineOtherTechnicalDetailsHeaderCell = new PdfPCell(rfqLineOtherTechnicalDetailsHeaderPhrase)
+            {
+                Colspan = 1,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = ReportCommon.DARK_BLUE_2
+            };
+            
+            rfqLinesTable.AddCell(rfqLineNoHeaderCell);
+            rfqLinesTable.AddCell(rfqLineTypeHeaderCell);
+            rfqLinesTable.AddCell(rfqLineDescriptionHeaderCell);
+            rfqLinesTable.AddCell(rfqLineQuantityHeaderCell);
+            rfqLinesTable.AddCell(rfqLineUnitHeaderCell);
+            rfqLinesTable.AddCell(rfqLineMakerHeaderCell);
+            rfqLinesTable.AddCell(rfqLineMakerPNHeaderCell);
+            rfqLinesTable.AddCell(rfqLineLinksAndReferencesHeaderCell);
+            rfqLinesTable.AddCell(rfqLineROHSCompliantHeaderCell);
+            rfqLinesTable.AddCell(rfqLineAttachmentsHeaderCell);
+            rfqLinesTable.AddCell(rfqLineNoteToBuyerHeaderCell);
+            rfqLinesTable.AddCell(rfqLineOtherTechnicalDetailsHeaderCell);
+
+            //RFQ LINES DETAILS
+            foreach (var line in rfq.Lines.Where(l => l.RFQLineStatusId != (int)RFQLineStates.Deleted).OrderBy(l => l.RFQLineNo))
+            {
+                //RFQ LINE NO
+                var rfqLineNoValuePhrase = new Phrase(line.RFQLineNo.ToString(), ReportCommon._standardTableFont);
+                var rfqLineNoValueCell = new PdfPCell(rfqLineNoValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //TYPE
+                var rfqLineTypeValuePhrase = new Phrase(line.LineType.Name, ReportCommon._standardTableFont);
+                var rfqLineTypeValueCell = new PdfPCell(rfqLineTypeValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //ITEM DESCRIPTION
+                var rfqItemDescriptionValuePhrase = new Phrase(line.ItemDescription, ReportCommon._standardTableFont);
+                var rfqItemDescriptionValueCell = new PdfPCell(rfqItemDescriptionValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //QUANTITY
+                var rfqLineQuantityValuePhrase = new Phrase(line.Quantity.ToString(), ReportCommon._standardTableFont);
+                var rfqLineQuantityValueCell = new PdfPCell(rfqLineQuantityValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //Unit
+                var rfqLineUnitValuePhrase = new Phrase(line.QuantityUnit.Name, ReportCommon._standardTableFont);
+                var rfqLineUnitValueCell = new PdfPCell(rfqLineUnitValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //Maker
+                var rfqMakerValuePhrase = new Phrase(line.Maker, ReportCommon._standardTableFont);
+                var rfqMakerValueCell = new PdfPCell(rfqMakerValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //MakerPN
+                var rfqMakerPNValuePhrase = new Phrase(line.MakerPN, ReportCommon._standardTableFont);
+                var rfqMakerPNValueCell = new PdfPCell(rfqMakerPNValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //References Link
+                var rfqLinksAndReferencesValuePhrase = new Phrase(line.ReferenceLinks, ReportCommon._standardTableFont);
+                var rfqLinksAndReferencesValueCell = new PdfPCell(rfqLinksAndReferencesValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //ROHS Compliant
+                var rfqROHSCompliantValuePhrase = new Phrase(line.ROHSCompliant.ToString(), ReportCommon._standardTableFont);
+                var rfqROHSCompliantValueCell = new PdfPCell(rfqROHSCompliantValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //Attachments
+                var rfqAttachmentsParagraph = new Paragraph() { Alignment = Element.ALIGN_CENTER };
+                
+                foreach (var attachment in line.Attachments)
+                {
+                    var c = new Chunk(attachment.Filename, ReportCommon._standardTableFontBlue);
+                    c.SetAnchor(attachment.FileUrl);
+
+                    rfqAttachmentsParagraph.Add(c);
+                }
+
+                var rfqAttachmentsValueCell = new PdfPCell(rfqAttachmentsParagraph)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //Note to Buyer
+                var rfqNoteToBuyerValuePhrase = new Phrase(line.NoteToBuyer, ReportCommon._standardTableFont);
+                var rfqNoteToBuyerValueCell = new PdfPCell(rfqNoteToBuyerValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                //Other Technical Details
+                var rfqOtherTechnicalDetailsValuePhrase = new Phrase(line.OtherTechnicalDetails, ReportCommon._standardTableFont);
+                var rfqOtherTechnicalDetailsValueCell = new PdfPCell(rfqOtherTechnicalDetailsValuePhrase)
+                {
+                    Colspan = 1,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK
+                };
+
+                rfqLinesTable.AddCell(rfqLineNoValueCell);
+                rfqLinesTable.AddCell(rfqLineTypeValueCell);
+                rfqLinesTable.AddCell(rfqItemDescriptionValueCell);
+                rfqLinesTable.AddCell(rfqLineQuantityValueCell);
+                rfqLinesTable.AddCell(rfqLineUnitValueCell);
+                rfqLinesTable.AddCell(rfqMakerValueCell);
+                rfqLinesTable.AddCell(rfqMakerPNValueCell);
+                rfqLinesTable.AddCell(rfqLinksAndReferencesValueCell);
+                rfqLinesTable.AddCell(rfqROHSCompliantValueCell);
+                rfqLinesTable.AddCell(rfqAttachmentsValueCell);
+                rfqLinesTable.AddCell(rfqNoteToBuyerValueCell);
+                rfqLinesTable.AddCell(rfqOtherTechnicalDetailsValueCell);
+            }
+
+            //Blank Row
+            var BlankRowValueCell = new PdfPCell()
+            {
+                Colspan = 12,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                MinimumHeight = 15f,
+                BorderColor = BaseColor.BLACK,
+                BackgroundColor = BaseColor.LIGHT_GRAY
+            };
+
+            rfqLinesTable.AddCell(BlankRowValueCell);
+
+            //Notes (Only for Buyer)
+            if (rfq.UserIsBuyer(_workContext.CurrentUser))
+            {
+                var notes1Phrase = new Phrase("Vendor should indicate the ff in their quotes:", ReportCommon._standardTableFont);
+                var notes2Phrase = new Phrase("BOM (Bill Of Materials)", ReportCommon._standardTableFontBold);
+                var notes3Phrase = new Phrase("LeadTime", ReportCommon._standardTableFont);
+                var notes4Phrase = new Phrase("Warranty", ReportCommon._standardTableFont);
+                var notes5Phrase = new Phrase("Quotation number", ReportCommon._standardTableFont);
+                var notes6Phrase = new Phrase("Validity of Quote", ReportCommon._standardTableFont);
+                var notes7Phrase = new Phrase("Incoterm", ReportCommon._standardTableFont);
+                var notes8Phrase = new Phrase("Packaging dimension & weight", ReportCommon._standardTableFont);
+
+                var notesParagraph = new Paragraph() { Alignment = Element.ALIGN_LEFT };
+
+                var notesValueCell = new PdfPCell(notesParagraph)
+                {
+                    Colspan = 12,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    MinimumHeight = 15f,
+                    BorderColor = BaseColor.BLACK,
+                    BackgroundColor = BaseColor.LIGHT_GRAY
+                };
+
+
+                rfqLinesTable.AddCell(notesValueCell);
+            }
+
+            document.Add(titleParagraph);
+            document.Add(rfqTable);
+            document.Add(rfqLinesTitleParagraph);
+            document.Add(rfqLinesTable);
+        }
+
+        public void createExcel(string filePath,List<RFQLine> rfqLines)
+        {
+            var newFile = new FileInfo(filePath);
+            using (var xlPackage = new ExcelPackage(newFile))
+            {
+                var worksheet = xlPackage.Workbook.Worksheets.Add("RFQLine");
+                var properties = new string[]
+                {
+                    "RFQ No.",
+                    "RFQ Line No",
+                    "Commodity",
+                    "Item Description",
+                    "Maker",
+                    "Maker PN",
+                    "Quantity",
+                    "Requester",
+                    "Department",
+                    "Buyer",
+                    "RFQ Creation Date",
+                    "WW",
+                    "Status",
+                    "Age",
+                    "Remarks"
+
+                };
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i];
+                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                    worksheet.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+                int row = 2;
+                foreach (var rfqLine in rfqLines)
+                {
+                    int col = 1;
+
+                    worksheet.Cells[row, col].Value = rfqLine.RFQId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.RFQLineNo;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = "";
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.ItemDescription;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.Maker;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.MakerPN;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.Quantity;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.RFQ.Requestor.GetFullName();
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.RFQ.Department;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.RFQ.Buyer.GetFullName();
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.RFQ.DateCreatedOnUtc.ToString("d");
+                    col++;
+
+                    worksheet.Cells[row, col].Value = getWorkWeek(rfqLine.DateCreatedOnUtc);
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.Status.Name;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = (DateTime.Now.Day - rfqLine.DateCreatedOnUtc.Day);
+                    col++;
+
+                    worksheet.Cells[row, col].Value = rfqLine.NoteToBuyer;
+                    col++;
+
+                    row++;
+                }
+                xlPackage.Save();
+            }
+        }
+
+        private static int getWorkWeek(DateTime dateTime)
+        {
+            var day = (int) CultureInfo.CurrentCulture.Calendar.GetDayOfWeek(dateTime);
+            return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime.AddDays(4 - (day == 0 ? 7 : day)),CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        }
+
+        public void ExportQuotation(string filePath,RFQLine rfqLines)
+        {
+            var newFile = new FileInfo(filePath);
+            using (var xlPackage = new ExcelPackage(newFile))
+            {
+                var worksheet = xlPackage.Workbook.Worksheets.Add("Quotation");
+                var properties = new string[]
+                {
+                    "RFQ No.",
+                    "RFQ Lino No.",
+                    "Quotation No.",
+                    "Quote Upload Date",
+                    "Commodity",
+                    "Quote Item Description",
+                    "Maker PN",
+                    "Currency",
+                    "Unit Price",
+                    "Discounted Price",
+                    "Minimumum Order Quantity (MOQ)",
+                    "Payment Terms",
+                    "Supplier",
+                    "Delivery Lead Time",
+                    "Warranty Period",
+                    "Buyer Remarks",
+                    "Requester Remarks",
+                };
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i];
+                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                    worksheet.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+                int row = 2;
+                foreach (var quotation in rfqLines.Quotations)
+                {
+                    int col = 1;
+
+                    worksheet.Cells[row, col].Value = quotation.RFQLine.RFQ.RFQNo;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.RFQLine.RFQLineNo;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.QuotationNo;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.QuoteUploadDate.ToString("d");
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.Commodity;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.QuoteItemDescription;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.MakerPN;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.Currency.Name;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.UnitPrice;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.DiscountedPrice;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.MinimumOrderQuantity;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.PaymentTerms;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.Supplier;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.DeliveryLeadTime;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.WarrantyPeriod;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.BuyerRemarks;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = quotation.RequesterRemarks;
+                    col++;
+                    
+                    row++;
+                }
+
+                xlPackage.Save();
+            }
+        }
+
+        #endregion
+    }
+}

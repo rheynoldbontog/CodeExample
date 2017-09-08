@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace SSG.Web.Models.RFQ
+{
+    public partial class RFQLineIndexModel
+    {
+
+        [DisplayName("RFQ Line Id")]
+        public int RFQLineID { get; set; }
+
+        [DisplayName("RFQ No.")]
+        public string RFQNo { get; set; }
+
+        [DisplayName("RFQ LineNo.")]
+        public int RFQLineNo { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
+        [DisplayName("RFQ Creation Date")]
+        public DateTime RFQCreationDate { get; set; }
+
+        [DisplayName("Item Description")]
+        public string ItemDescription { get; set; }
+
+        [DisplayName("Quantity")]
+        public int Quantity { get; set; }
+
+        [DisplayName("UOM")]
+        public string  UOM { get; set; }
+
+        [DisplayName("Maker PN")]
+        public string MakerPN { get; set; }
+
+        [DisplayName("Requester")]
+        public string Requester { get; set; }
+        public int RequesterId { get; set; }
+
+        [DisplayName("Department")]
+        public string Department { get; set; }
+
+        [DisplayName("Buyer")]
+        public string Buyer { get; set; }
+
+        public int BuyerId { get; set; }
+
+        [DisplayName("Status")]
+        public string Status { get; set; }
+
+        [DisplayName("Type")]
+        public string Type { get; set; }
+
+        [DisplayName("Commodity")]
+        public string Commodity { get; set; }
+
+        [DisplayName("ROHS Compliant")]
+        public bool ROHSCompliant { get; set; }
+
+        [DisplayName("Test EquipmentPurchase Type")]
+        public string TestEquipmentPurchaseType { get; set; }
+
+        [DisplayName("Callibration Type")]
+        public string  CallibrationType { get; set; }
+
+        [DisplayName("Note To Buyer")]
+        public string NoteToBuyer { get; set; }
+
+        [DisplayName("Buyer Remarks")]
+        public string BuyerRemarks { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
+        [DisplayName("Closed Date")]
+        public DateTime? ClosedDate { get; set; }
+
+        public bool IsUserCanEditable { get; set; }
+
+        public bool IsUserCanDeletable { get; set; }
+    }
+}

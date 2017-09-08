@@ -1,0 +1,36 @@
+﻿<!-- done -->
+@model HomePageNewsItemsModel
+@using SSG.Core.Infrastructure;
+@using SSG.Web.Models.News;
+@if (Model.NewsItems.Count > 0)
+{
+    <div class="news-list-homepage">
+        <div class="page-header">
+            <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss">
+                <img title="@T("News.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("News.RSS")" /></a>
+            <h2>@T("News")</h2>
+        </div>
+        <div class="news-items">
+            @foreach (var item in Model.NewsItems)
+            {
+                <div class="item">
+                    <a class="news-title" href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })">
+                        @item.Title</a> <span class="news-date">-
+                            @item.CreatedOn.ToString("D")
+                        </span>
+                    <div class="news-details">
+                        @Html.Raw(item.Short)&nbsp;
+                        <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="read-more">
+                        @T("News.MoreInfo")</a>
+                    </div>
+                    
+                </div>
+            }
+            <div class="view-all">
+                <a href="@Url.RouteUrl("NewsArchive")">
+                    @T("News.ViewAll")</a>
+            </div>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,8 @@
+﻿<!-- done TODO: link to favicon-->
+@model FaviconModel
+@using SSG.Web.Models.Common;
+@if (Model.Uploaded)
+{
+    @*<link rel="icon" href="@Model.FaviconUrl" />*@
+    <link rel="shortcut icon" href="@Model.FaviconUrl" />
+}

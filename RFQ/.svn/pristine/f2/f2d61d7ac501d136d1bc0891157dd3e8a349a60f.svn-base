@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "";
+}
+<table class="adminContent">
+    <tr>
+        <td>
+            @T("Plugins.Misc.WebServices.Description1")
+            <ul>
+                <li>@T("Plugins.Misc.WebServices.Description2")</li>
+                <li>@T("Plugins.Misc.WebServices.Description3", "http://www.yourSite.com/Plugins/Misc.WebServices/Remote/SSGService.svc")</li>
+                <li>@T("Plugins.Misc.WebServices.Description4", "http://www.yourSite.com/Plugins/Misc.WebServices/Remote/SSGService.svc/mex")</li>
+            </ul>
+        </td>
+    </tr>
+</table>

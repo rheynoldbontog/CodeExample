@@ -1,0 +1,217 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System.Management.Instrumentation;
+using System.Text;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+using System.Transactions;
+using SSG.Services.Messages;
+using SSG.Core;
+
+namespace SSG.Services.RFQ
+{
+    public class RFQLineService : IRFQLineService
+    {
+        #region Fields
+
+        private readonly IRepository<RFQLine> _rfqLineRepository;
+        private readonly IRepository<Core.Domain.RFQ.RFQ> _rfqRepository;
+        private readonly IReportService _reportService;
+        private readonly IRFQLineStatusHistoryService _rfqLineStatusHistoryService;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IRepository<Quotation> _quotationRepository;
+        private readonly IWorkContext _workContext;
+        
+        #endregion
+
+        #region ctor
+
+        public RFQLineService(IRepository<RFQLine> rfqLineRepository,
+                              IRepository<Core.Domain.RFQ.RFQ> rfqRepository,
+                              IReportService reportService,
+                              IRFQLineStatusHistoryService rfqLineStatusHistoryService,
+                              IRepository<Quotation> quotationRepository,
+                              IWorkflowMessageService workflowMessageService,
+                              IWorkContext workContext)
+        {
+            this._rfqLineRepository = rfqLineRepository;
+            this._rfqRepository = rfqRepository;
+            this._reportService = reportService;
+            this._rfqLineStatusHistoryService = rfqLineStatusHistoryService;
+            this._quotationRepository = quotationRepository;
+            this._workflowMessageService = workflowMessageService;
+            this._workContext = workContext;
+
+        }
+
+        #endregion
+
+        #region Methods
+
+        public IEnumerable<RFQLine> GetAllRFQLines(bool activeOnly = false)
+        {
+            return this._rfqLineRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsEnumerable();
+        }
+
+        public IQueryable<RFQLine> GetAllRFQLinesQueryable(bool activeOnly = false)
+        {
+            return this._rfqLineRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsQueryable();
+        }
+
+        public void SaveRFQLine(RFQLine line)
+        {
+            try
+            {
+                if (line.Id == 0)
+                {
+                    using (var scope = new TransactionScope())
+                    {
+                        this._rfqLineRepository.Insert(line);
+                        scope.Complete();
+                    }
+
+                    //Save to status history table...
+                    _rfqLineStatusHistoryService.SaveStatusHistory(line.Id, line.RFQLineStatusId, line.RFQLineStatusId, _workContext.CurrentUser.Id);
+
+                }
+                else
+                {
+                    var originalValues = _rfqLineRepository.GetEntityOriginalValues(line);
+                    var oldNoteToBuyer = (string)originalValues["NoteToBuyer"];
+                    var oldLineStatusId = (int)originalValues["RFQLineStatusId"];
+                    var isFirstUpload = line.HasFirstUpload;
+
+                    using (var scope = new TransactionScope())
+                    {
+                        if (isFirstUpload)
+                        {
+                            line.RFQLineStatusId = (int)RFQLineStates.Closed;
+                            line.FirstUploadDate = DateTime.UtcNow;
+                        }
+
+                        this._rfqLineRepository.Update(line);
+                        scope.Complete();
+                    }
+
+                    //Notify status change if applicable...
+                    NotifyNoteToBuyerChanged(oldNoteToBuyer, line);
+                    NotifyLineDeleted(oldLineStatusId, line);
+
+                    //Notify quote upload if applicable...
+                    if (line.NewQuotationsForUpload != null)
+                    {
+                        foreach (var quotationNo in line.NewQuotationsForUpload)
+                        {
+                            NotifyNewQuotationUpload(quotationNo, line.Id);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private void NotifyNewQuotationUpload(int quotationNo, int rfqLineId)
+        {
+            var rfqLine = GetRFQLineById(rfqLineId);
+
+            if (rfqLine != null)
+            {
+                //Generate PDF...
+                if (!_reportService.GeneratePdfReport(rfqLine.RFQ))
+                    rfqLine.RFQ.EmailAttachmentFilename = string.Empty;
+
+                _workflowMessageService.SendQuotationUploadedNotificationMessage(rfqLine, quotationNo, 1);
+            }
+        }
+
+        private void NotifyLineDeleted(int oldLineStatusId, RFQLine updatedLine)
+        {
+            if (updatedLine.RFQ.RFQStatusId == (int)RFQStates.Submitted)
+            {
+                if ((oldLineStatusId == (int)RFQLineStates.Open || oldLineStatusId == (int)RFQLineStates.Closed) &&
+                updatedLine.RFQLineStatusId == (int)RFQLineStates.Deleted)
+                {
+                    var rfq = _rfqRepository.GetById(updatedLine.RFQId);
+
+                    if (rfq != null)
+                    {
+                        //Generate PDF...
+                        if (!_reportService.GeneratePdfReport(rfq))
+                            rfq.EmailAttachmentFilename = string.Empty;
+
+                        if (updatedLine.RFQ.UserIsRequestor(_workContext.CurrentUser))
+                            _workflowMessageService.SendRFQLineDeletedNotificationMessage(updatedLine, 1, true);
+                        else
+                            _workflowMessageService.SendRFQLineDeletedNotificationMessage(updatedLine, 1, false);
+
+                    }
+                }
+            }
+        }
+
+        private void NotifyNoteToBuyerChanged(string oldNoteToBuyer, RFQLine updatedLine)
+        {
+            if (updatedLine.RFQ.RFQStatusId == (int)RFQStates.Submitted && !oldNoteToBuyer.Equals(updatedLine.NoteToBuyer))
+            {
+                var rfq = _rfqRepository.GetById(updatedLine.RFQId);
+
+                if (rfq != null)
+                {
+                    //Generate PDF...
+                    if (!_reportService.GeneratePdfReport(rfq))
+                        rfq.EmailAttachmentFilename = string.Empty;
+
+                    _workflowMessageService.SendNoteToBuyerChangedNotificationMessage(updatedLine, 1);
+                }
+            }
+        }
+
+        public IQueryable<RFQLine> GetPagedRFQLines(int currentPage, int pageSize, out int totalCount)
+        {
+            var query = this._rfqLineRepository.Table.OrderBy(s => s.RFQId);
+
+            totalCount = query.Count();
+
+            var pagedList = query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            return pagedList;
+        }
+
+        public RFQLine GetRFQLineById(int id)
+        {
+            return this._rfqLineRepository.GetById(id);
+        }
+
+        public class TableJoin
+        {
+            public Core.Domain.RFQ.RFQ Rfq { get; set; }
+            public RFQLine RfqLine { get; set; }
+        }
+        public IQueryable<TableJoin> GetAllQueryableTableJoins()
+        {
+            var query = from rfq in _rfqRepository.Table
+                        join innerrfql in _rfqLineRepository.Table.Where(x => x.RFQLineStatusId != (int)RFQLineStates.Deleted) on rfq.Id equals innerrfql.RFQId into Inners
+                        from rfql in Inners.DefaultIfEmpty()
+                        select new TableJoin()
+                        {
+                            Rfq = rfq,
+                            RfqLine = rfql,
+                        };
+            
+            return query;
+        }
+
+        #endregion
+    }
+}

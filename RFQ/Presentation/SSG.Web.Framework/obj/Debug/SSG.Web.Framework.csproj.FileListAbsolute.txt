@@ -1,0 +1,282 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll.config
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Web.Framework.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Configuration.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Autofac.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Web.Helpers.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Web.Mvc.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Web.Razor.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Web.WebPages.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Web.WebPages.Razor.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Telerik.Web.Mvc.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\WebActivator.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\MySql.Data.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\System.Data.SqlServerCe.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Core.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Data.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\SSG.Services.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Autofac.xml
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\EntityFramework.xml
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\FluentValidation.xml
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\Recaptcha.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\EPPlus.xml
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\de\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\es\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\fr\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\it\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\nl\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\pl\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\pt\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\ru\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\sv\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\tr\FluentValidation.resources.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.csprojResolveAssemblyReference.cache
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.dll
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\obj\Debug\SSG.Web.Framework.pdb
+C:\Repository\RFQ\Presentation\SSG.Web.Framework\bin\Debug\itextsharp.xml

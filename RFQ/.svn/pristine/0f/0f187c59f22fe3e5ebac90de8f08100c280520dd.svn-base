@@ -1,0 +1,18 @@
+﻿@model IList<RegisteredUserReportLineModel>
+@using Telerik.Web.Mvc;
+@using Telerik.Web.Mvc.UI
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model)
+                .Name("registered-users-grid")
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Period);
+                    columns.Bound(x => x.Users).Width(100);
+                })
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("ReportRegisteredUsersList", "User"))
+                .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

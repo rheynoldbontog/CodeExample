@@ -1,0 +1,293 @@
+﻿@using SSG.Web.Extensions
+@model SSG.Web.Models.RFQ.RFQModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    var mode = Model.Id == 0 ? "Create" : "Edit";
+    ViewBag.Title = "Request For Quotation";
+
+}
+<script type="text/javascript">
+
+    function SaveRFQ() {
+
+        if ($('#rfq_form').valid()) {
+            swal({
+                title: 'Are you sure?',
+                text: "Request will be saved to the database!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#303F9F',
+                cancelButtonColor: '#f39c12',
+                confirmButtonText: 'Yes, save request!'
+            }).then(function () {
+                $('#rfq_form').submit();
+            }, function (dismiss) {
+
+            });
+        }
+    };
+
+    function CreateCopy(copyUrl) {
+        if ($('#rfq_form').valid()) {
+            swal({
+                title: 'Are you sure?',
+                text: "A copy of this RFQ will be created and saved to the database!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#303F9F',
+                cancelButtonColor: '#f39c12',
+                confirmButtonText: 'Yes, create copy!'
+            }).then(function () {
+                swal({
+                    title: 'Good job!',
+                    text: 'RFQ has been copied and saved as a draft document!',
+                    timer: 3000,
+                    type: 'success'
+                }).then(
+                function () {
+                    window.location.href = copyUrl;
+                },
+                // handling the promise rejection
+                function (dismiss) {
+                    window.location.href = copyUrl;
+                });
+
+                
+            }, function (dismiss) { 
+                           
+            });
+        }
+    }
+
+    function GetRequesterDepartment(requesterId, getUrl) {
+
+        if (requesterId) {
+            $.ajax({
+                url: getUrl,
+                type: "GET",
+                dataType: "json",
+                data: { userId: requesterId },
+                success: function (response) {
+                    if (response.success) {
+                        $('#Department').val(response.name);
+                        $("#BuyerId").val(response.buyerId);
+                    }
+                    else
+                        alert("Error in getting department name of selected requester!");
+                },
+                error: function (request, textStatus, errorThrown) {
+                    alert(textStatus);
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        //$('#rfqLinesTable').dataTable({ searching: false });
+        $('[data-toggle="tooltip"]').tooltip(); 
+    });
+
+</script>
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in hide'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content-header">
+    <div class="pull-right">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("Index", "RFQIndex")"><i class="fa fa-home"></i>&nbsp;Home</a> </li>
+        </ol>
+    </div>
+    <i class="fa fa-google-wallet fa-2x fa-pull-left fa-border color9" aria-hidden="true"></i><h3 class="color6">@ViewBag.Title <small>Create or edit requests and update it's lines</small></h3>
+    <hr />
+</section>
+</br>
+
+@using (Html.BeginHorizontalForm("rfq_form"))
+{
+    @Html.AntiForgeryToken()
+    <div class="page">
+        <div class="page-body">
+            @Html.ValidationSummary(false, "Please fix the following errors:", new { @class = "alert alert-danger" })
+            <div class="clearfix">
+            </div>
+            <div class="row-fluid">
+                <div class="span4 master-wrapper-center-1">
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.Active)
+                    @Html.HiddenFor(model => model.CreatedByUserId)
+                    @Html.HiddenFor(model => model.UpdatedByUserId)
+                    @Html.HiddenFor(model => model.DateCreatedOnUtc)
+                    @Html.HiddenFor(model => model.DateUpdatedOnUtc)
+                    @Html.HiddenFor(model => model.RequesterId)
+                    @Html.HiddenFor(model => model.IsCopy)
+                    <div class="control-group">
+                        <label class="span3 control-label" style="font-weight: bold">
+                            Requestor:</label>
+                        <div class="span8 controls">
+                            @Html.TextBoxFor(model => model.Requester, new { @placeholder = "Requester", @readonly = "readonly" })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Department, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="span3 control-label" style="font-weight: bold">
+                            Department:</label>
+                        <div class="span8 controls">
+                            @Html.TextBoxFor(model => model.Department, new { @placeholder = "Department", @readonly = "readonly" })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Department, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="span3 control-label" style="font-weight: bold">
+                            Buyer:</label>
+                        <div class="span8 controls">
+                            @if (Model.IsSubmitted)
+                            {
+                                if (Model.UserIsBuyer)
+                                {
+                                    @Html.DropDownListFor(model => model.BuyerId, Model.BuyersList, "Select Buyer", new { @class = "form-control" })
+                                }
+                                else
+                                {
+                                    @Html.HiddenFor(model => model.BuyerId);   
+                                    @Html.TextBoxFor(model => model.Buyer, new { @placeholder = "Buyer", @readonly = "readonly" })
+                                }
+                                
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(m => m.BuyerId, string.Empty, new { @class = "help-inline" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.BuyerId, Model.BuyersList, "Select Buyer", new { @class = "form-control", data_container="body", data_toggle="tooltip", title="Select a buyer for this request!", data_placement="right" })
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(m => m.BuyerId, string.Empty, new { @class = "help-inline" })
+                            }
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="span3 control-label" style="font-weight: bold">
+                            Subject:</label>
+                        <div class="span8 controls">
+                            @if (Model.IsSubmitted)
+                            {
+                                @Html.TextAreaFor(model => model.Subject, new { @class = "form-control rfo-medium-textbox", placeholder = "Subject", required = "required", @readonly = "readonly" })
+                            
+                            }
+                            else
+                            {
+                                @Html.TextAreaFor(model => model.Subject, new { @class = "form-control rfo-medium-textbox", placeholder = "Subject", required = "required", data_container = "body", data_toggle = "tooltip", title = "Subject of this request. Must be between 1 to 200 characters!", data_placement = "right" })
+                            
+                            }
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Subject, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                </div>
+                <div class="span4 master-wrapper-center-1">
+                </div>
+                <div class="span4 master-wrapper-center-1">
+                    <div class="control-group">
+                        @*@Html.LabelFor(model => model.RFQNo, true)*@
+                        <label class="span6 control-label" style="font-weight: bold">
+                            RFQ No:</label>
+                        <div class="span5 controls">
+                            @if (Model.Id == 0)
+                            {
+                                @Html.TextBoxFor(model => model.RFQNo, new { @placeholder = "RFQ No", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                <span class="color7" style="font-size: larger; font-weight: bold;">@Html.DisplayFor(model => model.RFQNo)</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @*@Html.LabelFor(model => model.DateCreatedOnUtc, true)*@
+                        <label class="span6 control-label" style="font-weight: bold">
+                            Creation Date:</label>
+                        <div class="span5 controls">
+                            @if (Model.Id == 0)
+                            {
+                                <input type="text" placeholder="RFQ Creation Date" readonly />
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => @model.DateCreatedOnUtc)
+                            }
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @*@Html.LabelFor(model => model.StatusId, true)*@
+                        <label class="span6 control-label" style="font-weight: bold">
+                            Status:</label>
+                        <div class="span5 controls">
+                            @if (Model.Id == 0)
+                            {
+                                <input type="text" placeholder="RFQ Status" readonly />
+                                @Html.HiddenFor(model => model.StatusId)
+                            }
+                            else
+                            {
+                                <span class="color7 f-bold" style="font-size: larger; font-weight: bold;">@Html.DisplayFor(model => @model.Status)</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                </div>
+                <div class="row-fluid">
+                    <div class="span12 master-wrapper-center-1">
+                        @if (Model.UserCanAddLine)
+                        {
+                            @Html.NoEncodeActionLink("<i class='fa fa-plus'></i> Add Line", "Add RFQ Line", "Create", "RFQLine", routeValues: new { rfqId = Model.Id, lineCount = Model.LastLineNo }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default pull-right" })
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+            <div class="row-fluid">
+                <div id="replacetarget" class="span12 master-wrapper-center-1">
+                    @{ Html.RenderAction("Lines", "RFQLine", new { id = Model.Id }); }
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+            <div class="row-fluid">
+                <div class="span12 master-wrapper-center-1">
+                    <div class="pull-right">
+                        @if (Model.UserIsRequestor)
+                        {
+                            <button name="new-rfq-button" type="button" class="btn btn-default" onclick="location.href='@Url.Action("Create", "RFQ")'">
+                                <i class="fa fa-plus"></i>&nbsp;&nbsp;Create RFQ</button>
+                            
+                            if (Model.Id > 0)
+                            {
+                            <button name="new-rfq-copy-button" type="button" class="btn btn-default" onclick="CreateCopy('@Url.Action("CreateCopy", "RFQ", new { rfqId = @Model.Id })');">
+                                <i class="fa fa-clone"></i>&nbsp;&nbsp;Create RFQ (Copy This)</button>
+                            }
+                        }
+                        @if (Model.UserCanSubmit)
+                        {
+                            <button name="submit-rfq-button" type="button" class="btn btn-primary" onclick="rfqModal.submitForm('@Url.Action("Submit", "RFQ", new { rfqId = @Model.Id })');">
+                                <i class="fa fa-upload color4"></i>&nbsp;&nbsp;Submit RFQ</button>
+                        }
+                        @if (Model.UserIsRequestor || Model.UserIsBuyer)
+                        {
+                            <button name="save-rfq-button" type="button" class="btn btn-success" onclick="SaveRFQ();">
+                                <i class="fa fa-save color4"></i>&nbsp;&nbsp;Save RFQ</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

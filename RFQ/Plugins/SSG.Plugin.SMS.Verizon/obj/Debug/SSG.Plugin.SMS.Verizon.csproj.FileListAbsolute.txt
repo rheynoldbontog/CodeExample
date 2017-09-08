@@ -1,0 +1,4 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\SMS.Verizon\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\SMS.Verizon\SSG.Plugin.SMS.Verizon.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\SMS.Verizon\SSG.Plugin.SMS.Verizon.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.SMS.Verizon\obj\Debug\ResolveAssemblyReference.cache

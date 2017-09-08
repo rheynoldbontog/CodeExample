@@ -1,0 +1,53 @@
+﻿@model HeaderLinksModel
+@using SSG.Web.Models.Common;
+<div class="row-fluid">
+    <div class="span2 btn-group text-left">
+        <a class="btn btn-info" href="#"><i class="icon-cog icon-white"></i>
+        @if (Model.IsAuthenticated)
+        { <span>Hi @Model.UserEmailUsername!</span> }
+        else
+        { <span>User</span> }
+        </a>
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            @Html.Widget("header_links_before")
+            @if (Model.IsUserImpersonated)
+            {
+                <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.UserEmailUsername)))
+                    - <a href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")"><i class="icon-eye-open"></i>&nbsp;@T("Account.ImpersonatedAs.Finish")</a>
+                    ) </span></li>
+            }
+            @if (Model.IsAuthenticated)
+            {
+                <li><a href="@Url.RouteUrl("UserInfo")"><i class="icon-user"></i>&nbsp;@Model.UserEmailUsername!</a></li>
+                <li><a href="@Url.RouteUrl("Logout")"><i class="icon-lock"></i>&nbsp;@T("Account.Logout")</a></li>
+            
+                if (Model.AllowPrivateMessages)
+                {
+                <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })"><i class="icon-envelope"></i>&nbsp;@T("PrivateMessages.Inbox")</a>
+                    @Model.UnreadPrivateMessages</li>
+                    if (!string.IsNullOrEmpty(Model.AlertMessage))
+                    {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        displayPopupNotification('@(Model.AlertMessage)', 'success', false);
+                    });
+                </script>
+                    }
+                }
+            }
+            else
+            {
+                <li><a href="@Url.RouteUrl("Register")"><i class="icon-edit"></i>&nbsp;@T("Account.Register")</a></li>
+                <li><a href="@Url.RouteUrl("Login")"><i class="icon-lock"></i>&nbsp;@T("Account.Login")</a></li>
+            }
+            @if (Model.DisplayAdminLink)
+            {
+                <li class="divider"></li>
+                <li><a href="@Url.Content("~/admin")"><i class="icon-star"></i>&nbsp;@T("Account.Administration")</a>
+                </li>
+            }
+            @Html.Widget("header_links_after")
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model SubsystemModel
+@using SSG.Web.Models.Fracas;
+@using SSG.Core.Infrastructure;
+@using System.Globalization;
+
+@{
+    
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="alert alert-block alert-error">
+                <h4>Error!</h4>
+                <p>@Html.ValidationSummary(true, T("FRACAS.Message.EntryUnseccessful").Text)</p>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">&nbsp;</div>
+}
+
+@Html.HiddenFor(model => model.Id)
+<div class="row-fluid">
+    <div class="span12">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Name, new { @class = "required-mark input-medium", required = "required", autofocus="autofocus", style = "text-transform: uppercase" })
+                                @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class="validation-newline"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Description, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Description, new { @class = "input-medium", style = "text-transform: uppercase" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

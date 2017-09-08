@@ -1,0 +1,5 @@
+﻿@model SSG.Web.Models.RFQ.QuotationModel
+           
+
+<li id="tabHeader_@(Model.Index)" tabindex="@Model.Index" class="@( Model.Index == "0" ? "active" : "")"><a style="font-size: small; font-weight: bold; line-height: 25px;" href="@("#quotation" + Model.Index)" data-toggle="tab">&nbsp;&nbsp;&nbsp;&nbsp;@Model.QuotationNo&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+

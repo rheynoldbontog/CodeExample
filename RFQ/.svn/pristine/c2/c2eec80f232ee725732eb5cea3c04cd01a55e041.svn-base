@@ -1,0 +1,161 @@
+﻿// modalform.js
+
+$(function () {
+    $.ajaxSetup({ cache: false });
+
+    $("a[data-modal]").on("click", function (e) {
+        // hide dropdown if any (this is used wehen invoking modal from link in bootstrap dropdown )
+        //$(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
+
+        $('#myModalContent').load(this.href, function () {
+            $('#myModal').modal({
+                /*backdrop: 'static',*/
+                keyboard: true
+            }, 'show');
+
+            var form = $('#modal_form')
+                       .removeData("validator")
+                       .removeData("unobtrusiveValidation");
+
+            $.validator.unobtrusive.parse(form);
+
+            //Show first tab...
+            $('#line_tabs a:first').tab('show');
+
+            //Show General Form Optional Fields by default...
+            var initialFormType = $("[name='initial_form_type']").val();
+
+            if (initialFormType == 1) {
+                $('#form_tab_name').text("General Form");
+                $('#general_form_optional_fields').show();
+                $('#technical_form_optional_fields').hide();
+            }
+            else {
+                $('#form_tab_name').text("'Test Equipment Rental And Calibration Form'");
+                $('#general_form_optional_fields').hide();
+                $('#technical_form_optional_fields').show();
+            }
+
+            //Initialize File Uploader...
+            $("input[id$='__Filename']").each(function (i, el) {
+                initFineUploader(i);
+            });
+
+            bindForm(this);
+
+        });
+        return false;
+    });
+});
+
+function initFineUploader(index) {
+
+    var prefix = '#Attachments_' + index + '__';
+    var idFileUrl = prefix + 'FileUrl';
+    var idFilename = prefix + 'Filename';
+    var idUploader = prefix + 'Uploader';
+
+    var uploader = new qq.FineUploaderBasic({
+        button: $(idUploader)[0],
+        request: {
+            endpoint: $('#upload_url').val()
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'gif', 'png'],
+            sizeLimit: 204800 // 200 kB = 200 * 1024 bytes
+        },
+        callbacks: {
+            onComplete: function (id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    $(idFilename).val(fileName);
+                    $(idFileUrl).val(responseJSON.fileurl);
+                } else {
+                    alert("Error in uploading file!");
+                }
+            }
+        },
+        debug: true
+    });
+}
+
+function addLineAttachment(url) {
+
+    // Get last index...
+    var last_attachment_index = $('#last_attachment_index').val();
+
+    // Add index to url...
+    url += '&lastIndex=' + last_attachment_index;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: null,
+        cache: false,
+        success: function (result) {
+            $('#attachment_container').append(result);
+
+            initFineUploader(last_attachment_index);
+
+            //Increment index...
+            $('#last_attachment_index').val(parseInt(last_attachment_index) + 1);
+        }
+    });
+}
+
+function removeAttachment(index) {
+    
+    // Set IsDeleted to true...
+    $("#Attachments_" + index + "__IsDeleted").val(true);
+
+    // Hide parent container...
+    $("#Attachments_Container_" + index).fadeOut();
+}
+
+//Bind Form Type Change...
+function ChangeFormType(formType) {
+    $('#form_tab_name').text(formType.options[formType.selectedIndex].innerHTML);
+    var value = parseInt(formType.options[formType.selectedIndex].value);
+    
+    if (value === 1) {
+        $('#general_form_optional_fields').show();
+        $('#technical_form_optional_fields').hide();
+    }
+    else if (value === 2) {
+        $('#general_form_optional_fields').hide();
+        $('#technical_form_optional_fields').show();
+    }
+}
+
+function bindForm(dialog) {
+
+    $('form', dialog).submit(function () {
+
+        if ($(this).valid()) {
+
+            //Removes validation summary
+            $('.validation-summary-errors').addClass('validation-summary-valid');
+            $('.validation-summary-errors').removeClass('validation-summary-errors');
+
+            //alert("Before ajax call to:" + this.action);
+
+            //AJAX CALL HERE...
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#myModal').modal('hide');
+                        //$('#replacetarget').load(result.url); //  Load data from the server and place the returned HTML into the matched element
+                        // Refresh or reload page because replace causes problems with modal...
+                        window.location.href = window.location.href;
+                    } else {
+                        $('#myModalContent').html(result);
+                        bindForm(dialog);
+                    }
+                }
+            });
+        }
+        return false;
+    });
+}

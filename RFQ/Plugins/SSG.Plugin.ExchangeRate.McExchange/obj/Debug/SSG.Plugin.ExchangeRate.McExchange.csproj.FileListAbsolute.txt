@@ -1,0 +1,21 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\ExchangeRate.McExchange\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.pdb
+C:\Kevin Bate\New folder\Template2\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\Description.txt
+C:\Kevin Bate\New folder\Template2\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Kevin Bate\New folder\Template2\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.pdb
+C:\Kevin Bate\New folder\Template2\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\ResolveAssemblyReference.cache
+C:\Kevin Bate\New folder\Template2\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Kevin Bate\New folder\Template2\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.csprojResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.csprojResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Debug\SSG.Plugin.ExchangeRate.McExchange.pdb

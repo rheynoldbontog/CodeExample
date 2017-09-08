@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Transactions;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+
+namespace SSG.Services.RFQ
+{
+    public class RFQStatusHistoryService : IRFQStatusHistoryService
+    {
+        private readonly IRepository<RFQStatusHistory> _statusHistoryRepository;
+
+        public RFQStatusHistoryService(IRepository<RFQStatusHistory> statusHistoryRepository)
+        {
+            this._statusHistoryRepository = statusHistoryRepository;
+        }
+        public IEnumerable<RFQStatusHistory> GetAllStatusHistories(bool activeOnly = false)
+        {
+            return this._statusHistoryRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsEnumerable();
+        }
+
+        public IQueryable<RFQStatusHistory> GetAllStatusHistoriesQueryable(bool activeOnly = false)
+        {
+            return this._statusHistoryRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsQueryable();
+        }
+
+        public void SaveStatusHistory(RFQStatusHistory rfqStatusHistory)
+        {
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    if (rfqStatusHistory.Id == 0)
+                    {
+                        this._statusHistoryRepository.Insert(rfqStatusHistory);
+                    }
+                    else
+                    {
+                        this._statusHistoryRepository.Update(rfqStatusHistory);
+                    }
+                    scope.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public IQueryable<RFQStatusHistory> GetPagedRfqStatusHistories(int currentPage, int pageSize, out int totalCount)
+        {
+            var query = this._statusHistoryRepository.Table.OrderBy(s => s.rfqLineId);
+
+            totalCount = query.Count();
+
+            var pagedList = query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            return pagedList;
+        }
+        public RFQStatusHistory GetRfqStatusHistoryById(int id)
+        {
+            return this._statusHistoryRepository.GetById(id);
+        }
+    }
+}

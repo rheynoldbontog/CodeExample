@@ -1,0 +1,6 @@
+﻿<!-- done -->
+<div class="clearfix"></div>
+<div class="change-device pull-right">
+    <a href="@(Url.RouteUrl("ChangeDevice", new { dontusemobileversion = false, @class = "btn" }))">
+        @T("Mobile.ViewMobileVersion")</a>
+</div>

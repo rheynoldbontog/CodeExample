@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using FluentValidation;
+
+namespace SSG.Web.Validators.User
+{
+    public static class CustomValidatorExtensions
+    {
+        public static IRuleBuilderOptions<T, string> EmailAddressFromDomain<T>(
+        this IRuleBuilder<T, string> ruleBuilder, string domain)
+        {
+            return ruleBuilder.SetValidator(new EmailFromDomainValidator(domain));
+        }
+    }
+}

@@ -1,0 +1,14 @@
+﻿using System.Web.Mvc;
+using SSG.Web.Framework.Security;
+
+namespace SSG.Web.Controllers
+{
+    public partial class HomeController : BaseSSGController
+    {
+        [SSGHttpsRequirement(SslRequirement.No)]
+        public virtual ActionResult Index()
+        {
+            return View();
+        }
+    }
+}

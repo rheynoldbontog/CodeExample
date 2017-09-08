@@ -1,0 +1,24 @@
+﻿@model SSG.Web.Models.RFQ.FileAttachmentModel
+<div class="row-fluid fu_upload_item" style="margin-top: 5px;" id = "Quotations_@(Model.QuotationIndex)__ROHSDocumentAttachment_@(Model.Index)__Container">
+    @Html.HiddenFor(model => model.Id, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__Id", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].Id", @class = "fu_upload_id" })
+    @Html.HiddenFor(model => model.RFQLineId, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__RFQLineId", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].RFQLineId", @class = "fu_upload_rfq_line_id" })
+    @Html.HiddenFor(model => model.FileAttachmentType, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__FileAttachmentType", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].FileAttachmentType", @class = "fu_upload_file_attachment_type" })
+    @Html.HiddenFor(model => model.FileUrl, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__FileUrl", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].FileUrl", @class = "fu_upload_file_url" })
+    @Html.HiddenFor(model => model.IsDeleted, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__IsDeleted", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].IsDeleted", @class = "fu_upload_file_is_deleted" })
+    @Html.HiddenFor(model => model.Active, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__Active", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].Active,", @class = "fu_upload_active" })
+    @Html.HiddenFor(model => model.Index, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__Index,", Name = "Quotations[" + Model.QuotationIndex + "].QuotationAttachment[" + Model.Index + "].Index,", @class = "fu_upload_index" })
+    @Html.HiddenFor(model => model.QuotationIndex, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__QuotationIndex,", Name = "Quotations[" + Model.QuotationIndex + "].QuotationAttachment[" + Model.Index + "].QuotationIndex,", @class = "fu_upload_quotation_index" })
+    @Html.HiddenFor(model => model.CreatedByUserId, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__CreatedByUserId,", Name = "Quotations[" + Model.QuotationIndex + "].QuotationAttachment[" + Model.Index + "].CreatedByUserId,", @class = "fu_upload_created_by_user_id" })
+    @Html.HiddenFor(model => model.UpdatedByUserId, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__UpdatedByUserId,", Name = "Quotations[" + Model.QuotationIndex + "].QuotationAttachment[" + Model.Index + "].UpdatedByUserId,", @class = "fu_upload_updated_by_user_id" })
+    @Html.HiddenFor(model => model.DateCreatedOnUtc, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__DateCreatedOnUtc,", Name = "Quotations[" + Model.QuotationIndex + "].QuotationAttachment[" + Model.Index + "].DateCreatedOnUtc,", @class = "fu_upload_date_created" })
+    @Html.HiddenFor(model => model.DateUpdatedOnUtc, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__DateUpdatedOnUtc,", Name = "Quotations[" + Model.QuotationIndex + "].QuotationAttachment[" + Model.Index + "].DateUpdatedOnUtc,", @class = "fu_upload_date_updated" })
+    <div class="input-append">
+        @Html.TextBoxFor(model => model.Filename, new { id = "Quotations_" + Model.QuotationIndex + "__ROHSDocumentAttachment_" + Model.Index + "__Filename", Name = "Quotations[" + Model.QuotationIndex + "].ROHSDocumentAttachment[" + Model.Index + "].Filename", @class = "span12 fu_upload_file_name", @readonly = "readonly" })
+        <div id="Quotations_@(Model.QuotationIndex)__ROHSDocumentAttachment_@(Model.Index)__Uploader" class="btn btn-sm btn-default fu_upload_file_uploader">
+            <i class="fa fa-upload color6"></i>
+        </div>
+        <div id="Quotations_@(Model.QuotationIndex)__ROHSDocumentAttachment_@(Model.Index)__Deleter" class="btn btn-sm btn-default fu_upload_file_deleter">
+            <i class="fa fa-trash color9"></i>
+        </div>
+    </div>
+</div>

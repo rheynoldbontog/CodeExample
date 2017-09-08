@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using FluentValidation;
+using SSG.Web.Models.RFQ;
+using SSG.Core.Domain.RFQ;
+
+namespace SSG.Web.Validators.RFQ
+{
+    public class RFQLineValidator : AbstractValidator<RFQLineModel>
+    {
+        public RFQLineValidator()
+        {
+            RuleFor(x => x.RFQLineNo).NotEmpty().WithMessage("RFQ Line No. is required!");
+            RuleFor(x => x.LineTypeId).NotEmpty().WithMessage("RFQ Line Type is required!");
+            RuleFor(x => x.FormTypeId).NotEmpty().WithMessage("RFQ Line Form Type is required!");
+            RuleFor(x => x.ItemDescription).NotEmpty().WithMessage("Item Description is required!");
+            RuleFor(x => x.Quantity).NotEmpty().WithMessage("Quantity is required!");
+            RuleFor(x => x.QuantityUnitId).NotEmpty().WithMessage("Unit is required!");
+            RuleFor(x => x.CurrencyId).NotEmpty().WithMessage("Currency is required!");
+            RuleFor(x => x.Maker).NotEmpty().WithMessage("Maker is required!");
+            RuleFor(x => x.MakerPN).NotEmpty().WithMessage("MakerPN is required!");
+
+            RuleFor(x => x.ROHSCompliant).NotNull().When(x => x.FormTypeId == (int)RFQLineFormTypes.GeneralForm).WithMessage("ROHS Compliance is required!");
+
+            RuleFor(x => x.TestEquipmentPurchaseTypeId).NotEmpty().When(x => x.FormTypeId == (int)RFQLineFormTypes.TestEquipmentRentalAndCalibrationForm).WithMessage("Equipment Purchase Type is required!");
+            RuleFor(x => x.TestEquipmentCalibrationTypeId).NotEmpty().When(x => x.FormTypeId == (int)RFQLineFormTypes.TestEquipmentRentalAndCalibrationForm).WithMessage("Equipment Calibration Type is required!");
+
+        }
+    }
+}

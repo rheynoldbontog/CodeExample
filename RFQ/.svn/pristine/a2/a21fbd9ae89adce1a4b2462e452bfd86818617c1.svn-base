@@ -1,0 +1,89 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+using System.Transactions;
+
+namespace SSG.Services.RFQ
+{
+    public class RFQLineService : IRFQLineService
+    {
+        #region Fields
+
+        private readonly IRepository<RFQLine> _rfqLineRepository;
+        private readonly IRepository<Core.Domain.RFQ.RFQ> _rfqRepository;
+        
+        #endregion
+
+        #region ctor
+
+        public RFQLineService(IRepository<RFQLine> rfqLineRepository,IRepository<Core.Domain.RFQ.RFQ> rfqRepository)
+        {
+            this._rfqLineRepository = rfqLineRepository;
+            this._rfqRepository = rfqRepository;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public IEnumerable<RFQLine> GetAllRFQLines(bool activeOnly = false)
+        {
+            return this._rfqLineRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsEnumerable();
+        }
+
+        public IQueryable<RFQLine> GetAllRFQLinesQueryable(bool activeOnly = false)
+        {
+            return this._rfqLineRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsQueryable();
+        }
+
+        public void SaveRFQLine(RFQLine line)
+        {
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    if (line.Id == 0)
+                    {
+                        this._rfqLineRepository.Insert(line);
+                    }
+                    else
+                    {
+                        this._rfqLineRepository.Update(line);
+                    }
+                    scope.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public IQueryable<RFQLine> GetPagedRFQLines(int currentPage, int pageSize, out int totalCount)
+        {
+            var query = this._rfqLineRepository.Table.OrderBy(s => s.RFQId);
+
+            totalCount = query.Count();
+
+            var pagedList = query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            return pagedList;
+        }
+
+        public RFQLine GetRFQLineById(int id)
+        {
+            return this._rfqLineRepository.GetById(id);
+        }
+
+        #endregion
+    }
+}

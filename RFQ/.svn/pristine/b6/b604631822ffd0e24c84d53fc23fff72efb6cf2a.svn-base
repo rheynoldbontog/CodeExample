@@ -1,0 +1,25 @@
+﻿@model InfoBlockModel
+@using SSG.Web.Models.Common;
+<div class="row-fluid">
+    <div class="clearfix">
+    </div>
+    <div class="span2">
+        <ul class="nav nav-list">
+            @Html.Widget("infoblock_before")
+            <li class="nav-header">@T("Information")</li>
+            <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a> </li>
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">@T("AboutUs")</a></li>
+            @if (Model.ForumEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+            }
+            @if (Model.SitemapEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+            }
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })">@T("PrivacyNotice")</a></li>
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })">@T("ConditionsOfUse")</a></li>
+            @Html.Widget("infoblock_after")
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model MenuModel
+@using SSG.Web.Models.Common;
+@using SSG.Core.Infrastructure;
+@using SSG.Services.Security
+@using SSG.Services.Users
+
+<div id='cssmenu'>
+    <ul>
+        @Html.Widget("header_menu_before")
+        <li>@Html.ActionLink("Home", MVC.RFQIndex.Index())</li>
+        @*@if (Model.ForumEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+        }*@
+
+        @if (WorkContext.IsAdmin)
+        {
+            <li>@Html.ActionLink("Maintenance", MVC.Maintenance.Index())</li>
+        }
+
+        <li><a href="@Url.RouteUrl("UserInfo")">@T("Account.MyAccount")</a></li>
+                
+        @*<li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>*@
+
+        @Html.Widget("header_menu_after")
+    </ul>
+</div>

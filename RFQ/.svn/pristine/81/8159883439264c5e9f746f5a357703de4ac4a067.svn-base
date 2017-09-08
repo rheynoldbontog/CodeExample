@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Domain.Users;
+using SSG.Core.Domain.RFQ;
+using SSG.Services.Users;
+using System.IO;
+
+namespace SSG.Services.RFQ
+{
+    public static class RFQExtensions
+    {
+        public static void SetEmailAttachmentFilePath(this SSG.Core.Domain.RFQ.RFQ rfq, string dirPath)
+        {
+            rfq.EmailAttachmentFilename = Path.Combine(dirPath, String.Format("{0}.pdf", rfq.RFQNo));
+            //rfq.EmailAttachmentFilename = Path.Combine(dirPath, String.Format("add3Dgraph1.pdf", rfq.RFQNo));
+        }
+
+        public static int GetLastLineNo(this SSG.Core.Domain.RFQ.RFQ rfq)
+        {
+            var nextLineNo = 0;
+
+            try
+            {
+                if (rfq.Lines != null && rfq.Lines.Count > 0)
+                {
+                    nextLineNo = rfq.Lines.Max(x => x.RFQLineNo);
+                }
+            }
+            catch (Exception ex)
+            {
+                nextLineNo = 0;
+            }
+
+            return nextLineNo;
+        }
+
+        public static bool UserCanSubmit(this SSG.Core.Domain.RFQ.RFQ rfq, User currentUser)
+        {
+            var result = false;
+
+            try
+            {
+                if (rfq.RFQStatus.Name.Equals(Enum.GetName(typeof(RFQStates), RFQStates.Draft)) && rfq.RequestorId == currentUser.Id)
+                    result = true;
+                else
+                    result = false;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public static bool UserCanDeleteLine(this SSG.Core.Domain.RFQ.RFQLine rfqLine, User currentUser)
+        {
+            return UserCanEditLine(rfqLine, currentUser);
+        }
+
+        public static bool UserCanEditLine(this SSG.Core.Domain.RFQ.RFQLine rfqLine, User currentUser)
+        {
+            var result = false;
+
+            try
+            {
+                if (currentUser.IsBuyer(true) && UserIsBuyer(rfqLine.RFQ, currentUser))
+                    result = true;
+                else if (currentUser.IsRequestor() && UserIsRequestor(rfqLine.RFQ, currentUser))
+                    result = true;
+                else
+                    result = false;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public static bool UserCanAddLine(this SSG.Core.Domain.RFQ.RFQ rfq, User currentUser)
+        {
+            var result = false;
+
+            try
+            {
+                if (rfq.RFQStatus.Name.Equals(Enum.GetName(typeof(RFQStates), RFQStates.Draft)) && UserIsRequestor(rfq, currentUser))
+                    result = true;
+                else
+                    result = false;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public static bool UserIsRequestor(this SSG.Core.Domain.RFQ.RFQ rfq, User currentUser)
+        {
+            var result = false;
+
+            try
+            {
+                if (rfq.RequestorId == currentUser.Id)
+                    result = true;
+                else
+                    result = false;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public static bool UserIsBuyer(this SSG.Core.Domain.RFQ.RFQ rfq, User currentUser)
+        {
+            var result = false;
+
+            try
+            {
+                if (rfq.BuyerId == currentUser.Id)
+                    result = true;
+                else
+                    result = false;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public static bool UserCanEdit(this SSG.Core.Domain.RFQ.RFQ rfq, User currentUser)
+        {
+            var result = false;
+
+            try
+            {
+                if (UserIsRequestor(rfq, currentUser) || UserIsBuyer(rfq, currentUser))
+                {
+                    if (UserIsRequestor(rfq, currentUser))
+                        result = true;
+                    else if (UserIsBuyer(rfq, currentUser) && rfq.RFQStatus.Name.Equals(Enum.GetName(typeof(RFQStates), RFQStates.Submitted)))
+                        result = true;
+                    else
+                        result = false;
+                }
+                else
+                    result = false;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+    }
+}

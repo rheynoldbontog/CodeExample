@@ -1,0 +1,30 @@
+﻿@using SSG.Core;
+@using SSG.Core.Infrastructure;
+@using SSG.Core.Infrastructure.DependencyManagement;
+@{
+    //resources
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+}
+<!DOCTYPE html>
+<html @Html.Partial("LanguageAttributes")>
+<head>
+    <title>@Html.SSGTitle(true)</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.SSGMetaDescription())" />
+    <meta name="keywords" content="@(Html.SSGMetaKeywords())" />
+    @Html.SSGCssFiles(ResourceLocation.Head)
+    @Html.SSGScripts(ResourceLocation.Head)
+    @Html.SSGCanonicalUrls()
+    @*Favicon - upload favicon.ico file to the root directory*@
+    @Html.Action("Favicon", "Common")
+    @Html.Widget("head_html_tag")
+</head>
+<body>
+    @Html.Widget("body_start_html_tag_after")
+    @RenderBody()
+    @Html.Widget("body_end_html_tag_before")
+    @Html.SSGCssFiles(ResourceLocation.Foot)
+    @Html.SSGScripts(ResourceLocation.Foot)
+</body>
+</html>

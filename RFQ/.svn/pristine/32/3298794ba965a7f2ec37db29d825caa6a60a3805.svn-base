@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using FluentValidation.Validators;
+
+namespace SSG.Web.Validators.User
+{
+    public class EmailFromDomainValidator : PropertyValidator  
+    {
+        private readonly string _domain;
+        public EmailFromDomainValidator(string domain)
+            : base("Email address {PropertyValue} is not from domain {domain}")
+        {
+            _domain = domain;
+        }
+        protected override bool IsValid(PropertyValidatorContext context)
+        {
+            if (context.PropertyValue == null) return false;
+            var split = (context.PropertyValue as string).Split('@');
+            if (split.Length == 2 && split[1].ToLower().Equals(_domain)) return true;
+            return false;
+        }
+    }
+}

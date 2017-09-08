@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data.Entity.ModelConfiguration;
+
+namespace SSG.Data.Mapping.RFQ
+{
+    public class QuotationMap : EntityTypeConfiguration<SSG.Core.Domain.RFQ.Quotation>
+    {
+        public QuotationMap()
+        {
+            // Primary Key
+            this.HasKey(t => t.Id);
+
+            // Properties
+            this.Property(t => t.QuotationNo).IsRequired().HasMaxLength(50).HasColumnName("QuotationNo");
+            this.Property(t => t.QuoteUploadDate).IsOptional().HasColumnName("QuoteUploadDate");
+            this.Property(t => t.QuoteItemDescription).IsOptional().HasMaxLength(100).HasColumnName("QuoteItemDescription");
+            this.Property(t => t.MakerPN).IsOptional().HasMaxLength(50).HasColumnName("MakerPN");
+            this.Property(t => t.UnitPrice).HasPrecision(8, 2).IsRequired().HasColumnName("UnitPrice");
+            this.Property(t => t.DiscountedPrice).HasPrecision(8, 2).IsOptional().HasColumnName("DiscountedPrice");
+            this.Property(t => t.MinimumOrderQuantity).IsOptional().HasColumnName("MinimumOrderQuantity");
+            this.Property(t => t.PaymentTerms).IsOptional().HasMaxLength(100).HasColumnName("PaymentTerms");
+            this.Property(t => t.Supplier).IsRequired().HasMaxLength(250).HasColumnName("Supplier");
+            this.Property(t => t.DeliveryLeadTime).IsOptional().HasMaxLength(45).HasColumnName("DeliveryLeadTime");
+            this.Property(t => t.WarrantyPeriod).IsOptional().HasMaxLength(45).HasColumnName("WarrantyPeriod");
+            this.Property(t => t.BuyerRemarks).IsOptional().HasMaxLength(1000).HasColumnName("BuyerRemarks");
+            this.Property(t => t.RequesterRemarks).IsOptional().HasMaxLength(1000).HasColumnName("RequesterRemarks");
+            this.Property(t => t.QuotationAttachment).IsOptional().HasMaxLength(100).HasColumnName("QuotationAttachment");
+            this.Property(t => t.ROHSDocument).IsOptional().HasMaxLength(100).HasColumnName("ROHSDocument");
+            this.Property(t => t.MSDSAttachment).IsOptional().HasMaxLength(100).HasColumnName("MSDSAttachment");
+            this.Property(t => t.OtherAttachment1).IsOptional().HasMaxLength(100).HasColumnName("OtherAttachment1");
+            this.Property(t => t.OtherAttachment2).IsOptional().HasMaxLength(100).HasColumnName("OtherAttachment2");
+            this.Property(t => t.OtherAttachment3).IsOptional().HasMaxLength(100).HasColumnName("OtherAttachment3");
+            this.Property(t => t.OtherAttachment4).IsOptional().HasMaxLength(100).HasColumnName("OtherAttachment4");
+            this.Property(t => t.OtherAttachment5).IsOptional().HasMaxLength(100).HasColumnName("OtherAttachment5");
+            
+            // References
+            this.HasRequired(t => t.RFQLine).WithMany(t => t.Quotations).HasForeignKey(t => t.RFQLineId).WillCascadeOnDelete(false);
+            this.HasRequired(t => t.Currency).WithMany().HasForeignKey(t => t.CurrencyId).WillCascadeOnDelete(false);
+
+            // Table & Column Mappings
+            this.ToTable("quotation", "rfq");
+            this.Property(t => t.Id).HasColumnName("Id");
+            this.Property(t => t.Active).HasColumnName("Active");
+            this.Property(t => t.DateCreatedOnUtc).HasColumnName("DateCreatedOnUtc");
+            this.Property(t => t.DateUpdatedOnUtc).HasColumnName("DateUpdatedOnUtc");
+            this.Property(t => t.CreatedByUserId).HasColumnName("CreatedByUserId");
+            this.Property(t => t.UpdatedByUserId).HasColumnName("UpdatedByUserId");
+        }
+    }
+}

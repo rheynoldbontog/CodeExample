@@ -1,0 +1,21 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\Widgets.GoogleAnalytics\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.pdb
+C:\Kevin Bate\New folder\Template2\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\Description.txt
+C:\Kevin Bate\New folder\Template2\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Kevin Bate\New folder\Template2\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.pdb
+C:\Kevin Bate\New folder\Template2\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\ResolveAssemblyReference.cache
+C:\Kevin Bate\New folder\Template2\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Kevin Bate\New folder\Template2\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.csprojResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Presentation\SSG.Web\Plugins\Widgets.GoogleAnalytics\SSG.Plugin.Widgets.GoogleAnalytics.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.csprojResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Projects\Web\FRACAS.2014\branches\2014.1\Plugins\SSG.Plugin.Widgets.GoogleAnalytics\obj\Debug\SSG.Plugin.Widgets.GoogleAnalytics.pdb

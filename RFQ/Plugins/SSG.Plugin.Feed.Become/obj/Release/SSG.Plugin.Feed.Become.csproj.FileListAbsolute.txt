@@ -1,0 +1,5 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\Feed.Become\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\Feed.Become\SSG.Plugin.Feed.Become.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.Feed.Become\obj\Release\ResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.Feed.Become\obj\Release\SSG.Plugin.Feed.Become.dll
+C:\Repository\RFQ\Plugins\SSG.Plugin.Feed.Become\obj\Release\SSG.Plugin.Feed.Become.dll

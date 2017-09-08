@@ -1,0 +1,47 @@
+﻿<!-- done -->
+@model UserAvatarModel
+@using SSG.Web.Models.User;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+@using (Html.BeginRouteForm("UserAvatar", FormMethod.Post, new { enctype = "multipart/form-data", @class="form-horizontal" }))
+{ 
+    <div class="page-header">
+        <h2>@T("Account.MyAccount") - @T("Account.Avatar")</h2>
+    </div>
+    <div class="page-body">
+        @if (!ViewData.ModelState.IsValid)
+        { 
+            <div class="alert alert-block alert-error">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4>@T("Common.Warning")</h4>
+                <p>@Html.ValidationSummary(true)</p>
+                <br />
+                <p>@T("Account.Avatar.UploadRules")</p>
+            </div>
+        }
+        <div class="section-body">
+            @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <div class="image">
+                        <img src="@(Model.AvatarUrl)" alt="avatar" class="img-rounded" />
+                    </div>
+                }
+                <input name="uploadedFile" type="file" />
+        </div>
+        <div class="form-actions">
+            <input type="submit" name="upload-avatar" class="btn btn-primary upload-avatar-button" value="@T("Common.Upload")" />
+            @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <input type="submit" name="remove-avatar" class="btn remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,30 @@
+﻿@model SitemapModel
+@using SSG.Web.Models.Common;
+@using SSG.Web.Models.Topics;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Sitemap").Text);
+}
+<div class="page sitemap-page">
+    <div class="page-header">
+        <h2>@T("Sitemap")</h2>
+    </div>
+    <div class="page-body">
+        @if (Model.Topics.Count > 0)
+        {
+            <div class="entity">
+                @(Html.DataList<TopicModel>(Model.Topics, 4,
+                @<div class="topic-box">
+                    <div class="item">
+                        <a href="@Url.RouteUrl("Topic", new { SystemName = @item.SystemName.ToLowerInvariant() })">@item.Title</a>
+                    </div>
+                </div>
+            ))
+            </div>
+            <div class="clear">
+            </div>
+        }
+    </div>
+</div>

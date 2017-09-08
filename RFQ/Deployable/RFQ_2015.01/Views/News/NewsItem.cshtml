@@ -1,0 +1,114 @@
+﻿<!-- done -->
+@model NewsItemModel
+@using SSG.Web.Models.News;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.Title);
+}
+<div class="page news-item-page">
+    <div class="page-header">
+        <h2>@Model.Title</h2>
+    </div>
+    <div class="page-body">
+        <div class="news-date">
+            @Model.CreatedOn.ToString("D")
+        </div>
+        @Html.Widget("newsitem_page_before_body")
+        <div class="news-body">
+            @Html.Raw(Model.Full)
+        </div>
+        @Html.Widget("newsitem_page_before_comments")
+        @if (Model.AllowComments)
+        {
+            <div class="new-comment">
+                <p class="lead">@T("News.Comments.LeaveYourComment")</p>
+                @using (Html.BeginHorizontalForm())
+                {
+                    <div class="alert alert-block alert-info">
+                        <h4>@T("Common.Warning")</h4>
+                        <p>@Html.ValidationSummary(true)</p>
+                    </div>
+                    string result = TempData["SSG.news.addcomment.result"] as string;
+                    if (!String.IsNullOrEmpty(result))
+                    {
+                        <div class="result">result</div>
+                    }
+                    <div class="forms-box">
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.AddNewComment.CommentTitle)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "comment-title" })
+                                <span class="text-error">@Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.AddNewComment.CommentText)
+                            <div class="controls">
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
+                                <span class="text-error">@Html.ValidationMessageFor(model => model.AddNewComment.CommentText)</span>
+                            </div>
+                        </div>
+                        @if (Model.AddNewComment.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                            <div class="clearfix"></div>
+                        }
+                    </div>
+                    <div class="form-actions">
+                        <input type="submit" name="add-comment" class="btn btn-primary news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
+                    </div>
+                }
+            </div>
+            if (Model.Comments.Count > 0)
+            {
+                <div class="clearfix"></div>
+                <div class="comment-list">
+                    <div class="page-header">
+                        <h2>@T("News.Comments")</h2>
+                    </div>
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <div class="news-comment">
+                            <div class="comment-info">
+                                <div class="user-info">
+                                    @if (comment.AllowViewingProfiles)
+                                    {
+                                        <a href="@Url.RouteUrl("UserProfile", new { id = comment.UserId })" class="username">@(comment.UserName)</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="username">@(comment.UserName)</span>
+                                    }
+                                    <div class="avatar">
+                                        @if (!String.IsNullOrEmpty(comment.UserAvatarUrl))
+                                        {
+                                            <img src="@(comment.UserAvatarUrl)" class="avatar-img" title="avatar" alt="avatar" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                <div class="comment-time">
+                                    @T("News.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                </div>
+                                <div class="comment-title">
+                                    <span class="comment-text">@comment.CommentTitle</span>
+                                </div>
+                                <div class="comment-body">
+                                    <span class="comment-text">@Html.Raw(SSG.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
+                                </div>
+                            </div>
+                            @Html.Widget("newsitem_page_inside_comment")
+                        </div>
+                        <div class="clearfix"></div>
+                    }
+                </div>
+            }
+        }
+        @Html.Widget("newsitem_page_after_comments")
+    </div>
+</div>

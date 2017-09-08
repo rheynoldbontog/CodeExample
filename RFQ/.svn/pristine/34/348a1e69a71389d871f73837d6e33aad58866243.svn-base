@@ -1,0 +1,402 @@
+﻿using System.Web.Mvc;
+using System.Web.Routing;
+using SSG.Web.Framework.Localization;
+using SSG.Web.Framework.Mvc.Routes;
+
+namespace SSG.Web.Infrastructure
+{
+    public partial class RouteProvider : IRouteProvider
+    {
+        public void RegisterRoutes(RouteCollection routes)
+        {
+            //home page
+            routes.MapLocalizedRoute("HomePage",
+                            "",
+                            new { controller = "Home", action = "Index"},
+                            new[] { "SSG.Web.Controllers" });
+
+            //downloads
+            routes.MapRoute("GetDownload",
+                            "download/getdownload/{opvid}/{agree}",
+                            new { controller = "Download", action = "GetDownload", agree = UrlParameter.Optional },
+                            new { opvid = new GuidConstraint(false) },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapRoute("GetLicense",
+                            "download/getlicense/{opvid}/",
+                            new { controller = "Download", action = "GetLicense" },
+                            new { opvid = new GuidConstraint(false) },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("DownloadUserAgreement",
+                            "user/useragreement/{opvid}",
+                            new { controller = "User", action = "UserAgreement" },
+                            new { opvid = new GuidConstraint(false) },
+                            new[] { "SSG.Web.Controllers" });
+
+            //login, register
+            routes.MapLocalizedRoute("Login",
+                            "login/",
+                            new { controller = "User", action = "Login" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("LoginCheckoutAsGuest",
+                            "login/checkoutasguest",
+                            new { controller = "User", action = "Login", checkoutAsGuest = true },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("Register",
+                            "register/",
+                            new { controller = "User", action = "Register" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("Logout",
+                            "logout/",
+                            new { controller = "User", action = "Logout" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("RegisterResult",
+                            "registerresult/{resultId}",
+                            new { controller = "User", action = "RegisterResult" },
+                            new { resultId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("CheckUsernameAvailability",
+                            "user/checkusernameavailability",
+                            new { controller = "User", action = "CheckUsernameAvailability" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //contact us
+            routes.MapLocalizedRoute("ContactUs",
+                            "contactus",
+                            new { controller = "Common", action = "ContactUs" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //passwordrecovery
+            routes.MapLocalizedRoute("PasswordRecovery",
+                            "passwordrecovery",
+                            new { controller = "User", action = "PasswordRecovery" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("PasswordRecoveryConfirm",
+                            "passwordrecovery/confirm",
+                            new { controller = "User", action = "PasswordRecoveryConfirm" },                            
+                            new[] { "SSG.Web.Controllers" });
+            //routes.MapLocalizedRoute("UserInfo",
+            //                "user/info",
+            //                new { controller = "User", action = "Info" },
+            //                new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserInfo",
+                "info/",
+                new { controller = "User", action = "Info" },
+                new[] { "SSG.Web.Controllers" });
+
+            //newsletters
+            routes.MapLocalizedRoute("NewsletterActivation",
+                            "newsletter/subscriptionactivation/{token}/{active}",
+                            new { controller = "Newsletter", action = "SubscriptionActivation" },
+                            new { token = new GuidConstraint(false) },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("SubscribeNewsletter",
+                            "subscribenewsletter",
+                            new { controller = "Newsletter", action = "SubscribeNewsletter" },
+                            new[] { "SSG.Web.Controllers" });
+
+            
+
+            //user
+            routes.MapLocalizedRoute("UserMyAccount",
+                            "user/myaccount",
+                            new { controller = "User", action = "MyAccount" },
+                            new[] { "SSG.Web.Controllers" });
+            //routes.MapLocalizedRoute("UserInfo",
+            //                "user/info",
+            //                new { controller = "User", action = "Info" },
+            //                new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserAddresses",
+                            "user/addresses",
+                            new { controller = "User", action = "Addresses" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("UserChangePassword",
+                            "user/changepassword",
+                            new { controller = "User", action = "ChangePassword" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserAvatar",
+                            "user/avatar",
+                            new { controller = "User", action = "Avatar" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("AccountActivation",
+                            "user/activation",
+                            new { controller = "User", action = "AccountActivation" },                            
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserProfile",
+                            "profile/{id}",
+                            new { controller = "Profile", action = "Index" },
+                            new { id = @"\d+"},
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserProfilePaged",
+                            "profile/{id}/page/{page}",
+                            new { controller = "Profile", action = "Index"},
+                            new {  id = @"\d+", page = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserForumSubscriptions",
+                            "user/forumsubscriptions",
+                            new { controller = "User", action = "ForumSubscriptions"},
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserForumSubscriptionsPaged",
+                            "user/forumsubscriptions/{page}",
+                            new { controller = "User", action = "ForumSubscriptions", page = UrlParameter.Optional },
+                            new { page = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("DeleteForumSubscription",
+                            "user/forumsubscriptions/delete/{subscriptionId}",
+                            new { controller = "User", action = "DeleteForumSubscription" },
+                            new { subscriptionId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            //addresses
+            routes.MapLocalizedRoute("UserAddressDelete",
+                            "user/addressdelete/{addressId}",
+                            new { controller = "User", action = "AddressDelete" },
+                            new { addressId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserAddressEdit",
+                            "user/addressedit/{addressId}",
+                            new { controller = "User", action = "AddressEdit" },
+                            new { addressId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("UserAddressAdd",
+                            "user/addressadd",
+                            new { controller = "User", action = "AddressAdd" },
+                            new[] { "SSG.Web.Controllers" });
+
+
+
+            //forum
+            routes.MapLocalizedRoute("Boards",
+                            "boards",
+                            new { controller = "Boards", action = "Index" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ActiveDiscussions",
+                            "boards/activediscussions",
+                            new { controller = "Boards", action = "ActiveDiscussions" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ActiveDiscussionsRSS",
+                            "boards/activediscussionsrss",
+                            new { controller = "Boards", action = "ActiveDiscussionsRSS" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("PostEdit",
+                            "boards/postedit/{id}",
+                            new { controller = "Boards", action = "PostEdit" },
+                            new { id = @"\d+"},
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("PostDelete",
+                            "boards/postdelete/{id}",
+                            new { controller = "Boards", action = "PostDelete" },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("PostCreate",
+                            "boards/postcreate/{id}",
+                            new { controller = "Boards", action = "PostCreate"},
+                            new { id = @"\d+"},
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("PostCreateQuote",
+                            "boards/postcreate/{id}/{quote}",
+                            new { controller = "Boards", action = "PostCreate"},
+                            new { id = @"\d+", quote = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicEdit",
+                            "boards/topicedit/{id}",
+                            new { controller = "Boards", action = "TopicEdit"},
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicDelete",
+                            "boards/topicdelete/{id}",
+                            new { controller = "Boards", action = "TopicDelete"},
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicCreate",
+                            "boards/topiccreate/{id}",
+                            new { controller = "Boards", action = "TopicCreate" },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicMove",
+                            "boards/topicmove/{id}",
+                            new { controller = "Boards", action = "TopicMove" },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicWatch",
+                            "boards/topicwatch/{id}",
+                            new { controller = "Boards", action = "TopicWatch" },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicSlug",
+                            "boards/topic/{id}/{slug}",
+                            new { controller = "Boards", action = "Topic", slug = UrlParameter.Optional },
+                            new { id = @"\d+"},
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicSlugPaged",
+                            "boards/topic/{id}/{slug}/page/{page}",
+                            new { controller = "Boards", action = "Topic", slug = UrlParameter.Optional, page = UrlParameter.Optional },
+                            new { id = @"\d+", page = @"\d+"},
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ForumWatch",
+                            "boards/forumwatch/{id}",
+                            new { controller = "Boards", action = "ForumWatch" },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ForumRSS",
+                            "boards/forumrss/{id}",
+                            new { controller = "Boards", action = "ForumRSS" },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ForumSlug",
+                            "boards/forum/{id}/{slug}",
+                            new { controller = "Boards", action = "Forum", slug = UrlParameter.Optional },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ForumSlugPaged",
+                            "boards/forum/{id}/{slug}/page/{page}",
+                            new { controller = "Boards", action = "Forum", slug = UrlParameter.Optional, page = UrlParameter.Optional },
+                            new { id = @"\d+", page = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ForumGroupSlug",
+                            "boards/forumgroup/{id}/{slug}",
+                            new { controller = "Boards", action = "ForumGroup", slug = UrlParameter.Optional },
+                            new { id = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("Search",
+                            "boards/search",
+                            new { controller = "Boards", action = "Search" },
+                            new[] { "SSG.Web.Controllers" });
+
+
+            //private messages
+            routes.MapLocalizedRoute("PrivateMessages",
+                            "privatemessages/{tab}",
+                            new { controller = "PrivateMessages", action = "Index", tab = UrlParameter.Optional },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("PrivateMessagesPaged",
+                            "privatemessages/{tab}/page/{page}",
+                            new { controller = "PrivateMessages", action = "Index", tab = UrlParameter.Optional },
+                            new { page = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("PrivateMessagesInbox",
+                            "inboxupdate",
+                            new { controller = "PrivateMessages", action = "InboxUpdate" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("PrivateMessagesSent",
+                            "sentupdate",
+                            new { controller = "PrivateMessages", action = "SentUpdate" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("SendPM",
+                            "sendpm/{toUserId}",
+                            new { controller = "PrivateMessages", action = "SendPM" },
+                            new { toUserId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("SendPMReply",
+                            "sendpm/{toUserId}/{replyToMessageId}",
+                            new { controller = "PrivateMessages", action = "SendPM" },
+                            new { toUserId = @"\d+", replyToMessageId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("ViewPM",
+                            "viewpm/{privateMessageId}",
+                            new { controller = "PrivateMessages", action = "ViewPM" },
+                            new { privateMessageId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+
+            routes.MapLocalizedRoute("DeletePM",
+                            "deletepm/{privateMessageId}",
+                            new { controller = "PrivateMessages", action = "DeletePM" },
+                            new { privateMessageId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //news
+            routes.MapLocalizedRoute("NewsArchive",
+                            "news",
+                            new { controller = "News", action = "List" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("NewsRSS",
+                            "news/rss/{languageId}",
+                            new { controller = "News", action = "ListRss" },
+                            new { languageId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("NewsItem",
+                            "news/{newsItemId}/{SeName}",
+                            new { controller = "News", action = "NewsItem", SeName = UrlParameter.Optional },
+                            new { newsItemId = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //topics
+            routes.MapLocalizedRoute("Topic",
+                            "t/{SystemName}",
+                            new { controller = "Topic", action = "TopicDetails" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicPopup",
+                            "t-popup/{SystemName}",
+                            new { controller = "Topic", action = "TopicDetailsPopup" },
+                            new[] { "SSG.Web.Controllers" });
+            //sitemaps
+            routes.MapLocalizedRoute("Sitemap",
+                            "sitemap",
+                            new { controller = "Common", action = "Sitemap" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("SitemapSEO",
+                            "sitemapseo",
+                            new { controller = "Common", action = "SitemapSeo" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //orders
+            routes.MapLocalizedRoute("Order",
+                            "order",
+                            new { controller = "Order", action = "Index" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //config
+            routes.MapLocalizedRoute("Config",
+                            "config",
+                            new { controller = "Common", action = "Config" },
+                            new[] { "SSG.Web.Controllers" });
+
+            //some AJAX links
+            routes.MapRoute("GetStatesByCountryId",
+                            "country/getstatesbycountryid/",
+                            new { controller = "Country", action = "GetStatesByCountryId" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeDevice",
+                            "changedevice/{dontusemobileversion}",
+                            new { controller = "Common", action = "ChangeDevice" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeCurrency",
+                            "changecurrency/{usercurrency}",
+                            new { controller = "Common", action = "CurrencySelected" },
+                            new { usercurrency = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeLanguage",
+                            "changelanguage/{langid}",
+                            new { controller = "Common", action = "SetLanguage" },
+                            new { langid = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeTaxType",
+                            "changetaxtype/{usertaxtype}",
+                            new { controller = "Common", action = "TaxTypeSelected" },
+                            new { usertaxtype = @"\d+" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("PollVote",
+                            "poll/vote",
+                            new { controller = "Poll", action = "Vote" },
+                            new[] { "SSG.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicAuthenticate",
+                            "topic/authenticate",
+                            new { controller = "Topic", action = "Authenticate" },
+                            new[] { "SSG.Web.Controllers" });
+
+        }
+
+        public int Priority
+        {
+            get
+            {
+                return 0;
+            }
+        }
+    }
+}

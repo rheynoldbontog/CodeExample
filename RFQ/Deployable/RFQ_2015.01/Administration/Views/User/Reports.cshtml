@@ -1,0 +1,25 @@
+﻿@model UserReportsModel
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Users.Reports").Text;
+}
+@using Telerik.Web.Mvc.UI
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-users.png")" alt="" />
+        @T("Admin.Users.Reports")
+    </div>
+    <div class="options">
+    </div>
+</div>
+@Html.Telerik().TabStrip().Name("user-reports").Items(x =>
+{
+    x.Add().Text(T("Admin.Users.Reports.RegisteredUsers").Text).Content(TabRegisteredUsers().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "user-reports"));
+})
+@helper TabRegisteredUsers()
+    {
+    @Html.Action("ReportRegisteredUsers")
+}

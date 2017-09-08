@@ -1,0 +1,42 @@
+﻿<!-- done -->
+@model ProfileIndexModel
+@using SSG.Web.Models.Profile;
+@{    
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.Profile").Text);
+}
+<div class="page profile-page">
+    <div class="page-header">
+        <h2>@Model.ProfileTitle</h2>
+    </div>
+    <div class="page-body">
+        @{
+            var selectPostsTab = String.Empty;
+            if (@Model.ForumsEnabled && @Model.PagingPosts)
+            {
+                selectPostsTab = ".tabs('select', 1)";
+            }
+        }
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab1" data-toggle="tab">@T("Profile.PersonalInfo")</a></li>
+                @if (Model.ForumsEnabled)
+                { 
+                    <li><a href="#tab2" data-toggle="tab">@T("Profile.LatestPosts")</a></li>
+                }
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab1">
+                    @Html.Action("info", new { userProfileId = Model.UserProfileId })
+                </div>
+                @if (Model.ForumsEnabled)
+                { 
+                    <div class="tab-pane" id="tab2">
+                        @Html.Action("posts", new { userProfileId = Model.UserProfileId, page = Model.PostsPage })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

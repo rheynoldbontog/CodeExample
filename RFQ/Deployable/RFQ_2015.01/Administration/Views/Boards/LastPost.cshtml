@@ -1,0 +1,39 @@
+﻿@model LastPostModel
+@using SSG.Core.Infrastructure;
+@using SSG.Web.Models.Boards;
+@using SSG.Services.Users;
+@using SSG.Services.Forums;
+@using SSG.Services.Helpers;
+@using SSG.Services.Seo;
+@if (@Model.Id > 0)
+{
+    <div class="last-post">
+        <div class="createdon">@Model.PostCreatedOnStr</div>
+        @if (Model.ShowTopic)
+        {
+            <div>
+                <text>@T("Forum.In"):</text>
+                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })
+            </div>
+        }
+        @if (@Model.UserId > 0)
+        {
+            <div>
+                @if (Model.AllowViewingProfiles && !Model.IsUserGuest)
+                {
+                    @T("Forum.By")<text>:</text> @Html.RouteLink(Model.UserName, "UserProfile", new { Id = Model.UserId })
+                }
+                else
+                {
+                    @T("Forum.By")<text>:</text> @Model.UserName
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="nopost">
+        @T("Forum.NoPosts")
+    </div>
+}

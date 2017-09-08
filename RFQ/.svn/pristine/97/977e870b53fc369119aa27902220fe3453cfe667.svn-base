@@ -1,0 +1,107 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Domain.Directory;
+
+namespace SSG.Core.Domain.RFQ
+{
+    public partial class RFQLine : BaseAuditEntity
+    {
+        public int RFQLineNo { get; set; }
+
+        public string ItemDescription { get; set; }
+
+        public int Quantity { get; set; }
+
+        public string Maker { get; set; }
+
+        public string MakerPN { get; set; }
+
+        public string RequestPurpose { get; set; }
+
+        public string LinksAndReferences { get; set; }
+
+        public bool ROHSCompliant { get; set; }
+
+        public string OtherTechnicalDetails { get; set; }
+
+        public string NoteToBuyer { get; set; }
+
+        public string TestEquipmentApplication { get; set; }
+
+        public DateTime? RentalPeriodFrom { get; set; }
+
+        public DateTime? RentalPeriodTo { get; set; }
+
+        public bool Active { get; set; }
+
+        //REFERENCES
+        #region RFQ
+
+        public virtual int RFQId { get; set; }
+
+        public virtual RFQ RFQ { get; set; }
+
+        public virtual  ICollection<RFQStatusHistory> RfqStatusHistories { get; set; }
+        #endregion
+
+        #region "Line Type"
+
+        public virtual int LineTypeId { get; set; }
+
+        public virtual RFQLineType LineType { get; set; }
+
+        #endregion
+
+        #region "Form Type"
+
+        public virtual int FormTypeId { get; set; }
+
+        public virtual RFQLineFormType FormType { get; set; }
+
+        #endregion
+
+        #region Test Equipment Purchase Type
+
+        public virtual int? TestEquipmentPurchaseTypeId { get; set; }
+
+        public virtual EquipmentPurchaseType TestEquipmentPurchaseType { get; set; }
+
+        #endregion
+
+        #region Test Equipment Calibration Type
+
+        public virtual int? TestEquipmentCalibrationTypeId { get; set; }
+
+        public virtual EquipmentCalibrationType TestEquipmentCalibrationType { get; set; }
+
+        #endregion
+
+        #region "Currency"
+
+        public virtual int CurrencyId { get; set; }
+        public virtual Currency Currency { get; set; }
+
+        #endregion
+
+        #region "Quantity Unit"
+
+        public virtual int QuantityUnitId { get; set; }
+        public virtual UOM QuantityUnit { get; set; }
+
+        #endregion
+
+        #region Quotations
+
+        public virtual ICollection<Quotation> Quotations { get; set; }
+
+        #endregion
+
+        #region "File Attachments"
+
+        public virtual ICollection<FileAttachment> Attachments { get; set; }
+
+        #endregion
+    }
+}

@@ -1,0 +1,53 @@
+﻿
+@using PagedList
+@using PagedList.Mvc
+@using SSG.Web.Models.PSP
+@using SSG.Web.Extensions
+@model IPagedList<SSG.Web.Models.PSP.SupportCodeModel>
+
+<table class="table table-condensed table-bordered table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(Model, s => s.SupportCodes)
+        </th>
+        <th>
+             @Html.DisplayNameFor(Model, s => s.SupportCodeDescription)
+        </th>
+        <th>
+             @Html.DisplayNameFor(Model, s => s.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SupportCodes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SupportCodeDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) 
+@*            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+        </td>
+    </tr>
+}
+
+</table>
+
+<div class="text-center">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing((
+            new PagedListRenderOptions
+            {
+                DisplayLinkToFirstPage = true,
+                DisplayLinkToLastPage = true
+            }
+        ), "#grid-list")
+    )
+</div>

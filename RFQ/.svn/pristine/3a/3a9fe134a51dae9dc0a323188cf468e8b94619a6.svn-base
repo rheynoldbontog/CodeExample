@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SSG.Core.Domain.RFQ
+{
+    public partial class FileAttachment : BaseAuditEntity
+    {
+        public string Filename { get; set; }
+
+        public string FileUrl { get; set; }
+
+        public bool Active { get; set; }
+
+        // Relationships
+        public virtual int? RFQLineId { get; set; }
+        public virtual RFQLine RFQLine { get; set; }
+    }
+}

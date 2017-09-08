@@ -1,0 +1,25 @@
+﻿@using SSG.Core;
+@using SSG.Core.Infrastructure;
+@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+}
+@if (supportRtl)
+{
+    //not supported
+    //this theme supports RTL
+    //Html.AppendCssFileParts(Url.Content("~/Themes/SSGDefault/Content/styles.rtl.css"));
+}
+else
+{
+    Html.AppendCssFileParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/css/bootstrap-switch.min.css"));
+    Html.AppendCssFileParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/css/bootstrap-multiselect.css"));
+    Html.AppendCssFileParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/css/bootstrap-tagsinput.css"));
+    Html.AppendCssFileParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/css/bootstrap.css"));
+    
+
+    Html.AppendScriptParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/js/bootstrap-switch.min.js"));
+    Html.AppendScriptParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/js/bootstrap-multiselect.js"));
+    Html.AppendScriptParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/js/bootstrap-tagsinput.min.js"));
+    Html.AppendScriptParts(ResourceLocation.Foot, Url.Content("~/Themes/Template/Content/bootstrap/js/bootstrap.js"));
+        
+}

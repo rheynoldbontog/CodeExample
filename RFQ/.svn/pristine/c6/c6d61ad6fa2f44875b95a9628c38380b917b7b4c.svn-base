@@ -1,0 +1,455 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SSG.Services.RFQ;
+using SSG.Core.Domain.Common;
+using SSG.Core;
+using SSG.Services.Security;
+using System.Web.Mvc;
+using SSG.Web.Models.RFQ;
+using AutoMapper;
+using SSG.Services.Directory;
+using SSG.Web.Models.FineUploader;
+using System.IO;
+using SSG.Core.Domain.RFQ;
+using FluentValidation.Mvc;
+using SSG.Core.EntityExtensions;
+using SSG.Services.Logging;
+
+namespace SSG.Web.Controllers
+{
+    public partial class RFQLineController : BaseSSGController
+    {
+        #region Fields
+
+        private readonly IRFQLineService _rfqLineService;
+        private readonly IRFQService _rfqService;
+        private readonly IUOMService _uomService;
+        private readonly IRFQLineTypeService _rfqLineTypeService;
+        private readonly IRFQLineFormTypeService _rfqLineFormTypeService;
+        private readonly IRFQLineStatusService _rfqLineStatusService;
+        private readonly IRFQLineStatusHistoryService _rfqLineStatusHistoryService;
+        private readonly IEquipmentPurchaseTypeService _rfqLineEquipmentPurchaseTypeService;
+        private readonly IEquipmentCalibrationTypeService _rfqLineEquipmentCalibrationTypeService;
+        private readonly IFileAttachmentService _fileAttachmentService;
+        private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IPermissionService _permissionService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ILogger _logger;
+        
+        #endregion
+
+        #region ctor
+
+        public RFQLineController(IRFQLineService rfqLineService,
+            IRFQService rfqService,
+            IUOMService uomService,
+            IRFQLineTypeService rfqLineTypeService,
+            IRFQLineFormTypeService rfqLineFormTypeService,
+            IRFQLineStatusService rfqLineStatusService,
+            IRFQLineStatusHistoryService rfqLineStatusHistoryService,
+            IEquipmentPurchaseTypeService rfqLineEquipmentPurchaseTypeService,
+            IEquipmentCalibrationTypeService rfqLineEquipmentCalibrationTypeService,
+            ICurrencyService currencyService,
+            IFileAttachmentService fileAttachmentService,
+            AdminAreaSettings adminAreaSettings,
+            IWorkContext workContext,
+            IPermissionService permissionService,
+            ILogger logger
+            )
+        {
+            this._rfqLineService = rfqLineService;
+            this._rfqService = rfqService;
+            this._uomService = uomService;
+            this._rfqLineTypeService = rfqLineTypeService;
+            this._rfqLineFormTypeService = rfqLineFormTypeService;
+            this._rfqLineStatusService = rfqLineStatusService;
+            this._rfqLineStatusHistoryService = rfqLineStatusHistoryService;
+            this._rfqLineEquipmentPurchaseTypeService = rfqLineEquipmentPurchaseTypeService;
+            this._rfqLineEquipmentCalibrationTypeService = rfqLineEquipmentCalibrationTypeService;
+            this._currencyService = currencyService;
+            this._fileAttachmentService = fileAttachmentService;
+            this._adminAreaSettings = adminAreaSettings;
+            this._workContext = workContext;
+            this._permissionService = permissionService;
+            this._logger = logger;
+        }
+
+        #endregion
+
+        #region Methods
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual ActionResult Create([Bind(Exclude = "upload_url")] RFQLineModel rfqLine)
+        {
+            if (ModelState.IsValid)
+            {
+                if (rfqLine.Attachments == null)
+                    rfqLine.Attachments = new List<FileAttachmentModel>();
+
+                //Remove deleted attachments...
+                rfqLine.Attachments = rfqLine.Attachments.Where(x => x.IsDeleted == false && !String.IsNullOrWhiteSpace(x.Filename)).ToList();
+
+                var line = Mapper.Map<RFQLine>(rfqLine);
+
+                foreach (var attachment in line.Attachments)
+                {
+                    attachment.FileAttachmentType = (int)FileAttachmentType.RFQLineAttachment;
+                    attachment.PopulateAuditFieldsForSave(_workContext.CurrentUser.Id);
+                    attachment.Active = true;
+                }
+
+                line.PopulateAuditFieldsForSave(_workContext.CurrentUser.Id);
+                line.Active = true;
+                line.RFQLineStatusId = _rfqLineStatusService.GetRfqLineStatusById((int)RFQLineStates.Open).Id;
+
+                //Save RFQ to database...
+                try
+                {
+                    _rfqLineService.SaveRFQLine(line);
+
+                    //Save to status history table...
+                    _rfqLineStatusHistoryService.SaveStatusHistory(line.Id, line.RFQLineStatusId, line.RFQLineStatusId, _workContext.CurrentUser.Id);
+
+                    string url = Url.Action("Lines", "RFQLine", new { id = rfqLine.RFQId });
+                    return Json(new { success = true, url = url });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    _logger.Error(string.Format("Error in creating RFQ Line. {0}", ex.Message), ex);
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            PopulateLookupsForLineModel(rfqLine);
+
+            return PartialView("_CreateEdit", rfqLine);
+        }
+
+        private void PopulateLookupsForLineModel(RFQLineModel rfqLine)
+        {
+            //Available Units
+            var units = _uomService.GetAllUOMsQueryable(true).ToList();
+            rfqLine.AvailableUnits = new List<SelectListItem>();
+
+            foreach (var unit in units)
+            {
+                rfqLine.AvailableUnits.Add(new SelectListItem() { Text = unit.Name, Value = unit.Id.ToString() });
+            }
+
+            //Available Currencies
+            var currencies = _currencyService.GetAllCurrencies(false);
+            rfqLine.AvailableCurrencies = new List<SelectListItem>();
+
+            foreach (var currency in currencies)
+            {
+                rfqLine.AvailableCurrencies.Add(new SelectListItem() { Text = currency.CurrencyCode, Value = currency.Id.ToString() });
+            }
+
+            //Available Line Types
+            var lineTypes = _rfqLineTypeService.GetAllRFQLineTypesQueryable(true).ToList();
+            rfqLine.AvailableLineTypes = new List<SelectListItem>();
+
+            foreach (var lineType in lineTypes)
+            {
+                rfqLine.AvailableLineTypes.Add(new SelectListItem() { Text = lineType.Name, Value = lineType.Id.ToString() });
+            }
+
+            //Available Line Form Types
+            var lineFormTypes = _rfqLineFormTypeService.GetAllRFQLineFormTypesQueryable(true).ToList();
+            rfqLine.AvailableFormTypes = new List<SelectListItem>();
+
+            foreach (var lineFormType in lineFormTypes)
+            {
+                rfqLine.AvailableFormTypes.Add(new SelectListItem() { Text = lineFormType.Name, Value = lineFormType.Id.ToString() });
+            }
+
+            //Available Equipment Purchase Types
+            var equipmentPurchaseTypes = _rfqLineEquipmentPurchaseTypeService.GetAllEquipmentPurchaseTypeQueryable(true).ToList();
+            rfqLine.AvailableEquipmentPurchaseTypes = new List<SelectListItem>();
+
+            foreach (var purchaseType in equipmentPurchaseTypes)
+            {
+                rfqLine.AvailableEquipmentPurchaseTypes.Add(new SelectListItem() { Text = purchaseType.Name, Value = purchaseType.Id.ToString() });
+            }
+
+            //Available Equipment Calibration Types
+            var equipmentCalibrationTypes = _rfqLineEquipmentCalibrationTypeService.GetAllEquipmentCalibrationTypeQueryable(true).ToList();
+            rfqLine.AvailableEquipmentCalibrationTypes = new List<SelectListItem>();
+
+            foreach (var calibrationType in equipmentCalibrationTypes)
+            {
+                rfqLine.AvailableEquipmentCalibrationTypes.Add(new SelectListItem() { Text = calibrationType.Name, Value = calibrationType.Id.ToString() });
+            }
+        }
+
+        [HttpGet]
+        public virtual JsonResult Delete(int lineId)
+        {
+            var rfqLine = _rfqLineService.GetRFQLineById(lineId);
+
+            if (rfqLine != null)
+            {
+                if (rfqLine.UserCanDeleteLine(_workContext.CurrentUser))
+                {
+                    try
+                    {
+                        var oldStatusId = rfqLine.RFQLineStatusId;
+                        var newStatusId = (int)RFQLineStates.Deleted;
+
+                        rfqLine.RFQLineStatusId = newStatusId;
+                        rfqLine.Active = false;
+                        rfqLine.PopulateAuditFieldsForEdit(_workContext.CurrentUser.Id);
+
+                        _rfqLineService.SaveRFQLine(rfqLine);
+
+                        // Add change in status history...
+                        _rfqLineStatusHistoryService.SaveStatusHistory(rfqLine.Id, oldStatusId, newStatusId, _workContext.CurrentUser.Id);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(string.Format("Error in updating RFQ Line. {0}", ex.Message), ex);
+                        return Json(new { success = false, errorMessage = String.Format("Error in deleting line with ID: {0}!", lineId) }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                    return Json(new { success = false, errorMessage = String.Format("You must be the specified requestor or buyer inorder to delete a line!", lineId) }, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(new { success = false, errorMessage = String.Format("RFQ Line with ID: {0} does not exist in the database!", lineId) }, JsonRequestBehavior.AllowGet);
+
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public virtual ActionResult Edit([Bind(Exclude = "upload_url")] RFQLineModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingRFQLine = _rfqLineService.GetRFQLineById(model.Id);
+            
+                if (existingRFQLine != null)
+                {
+                    if (existingRFQLine.UserCanEditLine(_workContext.CurrentUser))
+                    {
+                        if (model.Attachments == null)
+                            model.Attachments = new List<FileAttachmentModel>();
+
+                        // Remove deleted attachments first before validating...
+                        // Filename and URL is required in attachment so validation will fail...
+                        model.Attachments = model.Attachments.Where(x => x.IsDeleted == false && !String.IsNullOrWhiteSpace(x.Filename)).ToList();
+
+                        //Remove attachments in existing line...
+                        var attachmentsToDelete = new List<FileAttachment>();
+
+                        foreach (var attachment in existingRFQLine.Attachments)
+                        {
+                            attachmentsToDelete.Add(_fileAttachmentService.GetFileAttachmentById(attachment.Id));
+                        }
+
+                        foreach (var attachment in attachmentsToDelete)
+                        {
+                            existingRFQLine.Attachments.Remove(attachment);
+                        }
+
+                        existingRFQLine.ItemDescription = model.ItemDescription;
+                        existingRFQLine.Quantity = model.Quantity;
+                        existingRFQLine.Maker = model.Maker;
+                        existingRFQLine.MakerPN = model.MakerPN;
+                        existingRFQLine.ReferenceLinks = model.ReferenceLinks;
+                        existingRFQLine.ROHSCompliant = model.ROHSCompliant;
+                        existingRFQLine.OtherTechnicalDetails = model.OtherTechnicalDetails;
+                        existingRFQLine.NoteToBuyer = model.NoteToBuyer;
+                        existingRFQLine.TestEquipmentApplication = model.TestEquipmentApplication;
+                        existingRFQLine.FirstUploadDate = model.FirstUploadDate;
+                        existingRFQLine.LineTypeId = model.LineTypeId;
+                        existingRFQLine.FormTypeId = model.FormTypeId;
+                        existingRFQLine.TestEquipmentPurchaseTypeId = model.TestEquipmentPurchaseTypeId;
+                        existingRFQLine.TestEquipmentCalibrationTypeId = model.TestEquipmentCalibrationTypeId;
+                        existingRFQLine.CurrencyId = model.CurrencyId;
+                        existingRFQLine.QuantityUnitId = model.QuantityUnitId;
+
+                        existingRFQLine.PopulateAuditFieldsForEdit(_workContext.CurrentUser.Id);
+
+                        foreach (var attachment in model.Attachments)
+                        {
+                            if (!String.IsNullOrWhiteSpace(attachment.Filename))
+                            {
+                                var lineAttachment  = new FileAttachment() {
+                                    Filename = attachment.Filename,
+                                    FileUrl = attachment.FileUrl,
+                                    Active = true,
+                                    FileAttachmentType = (int)FileAttachmentType.RFQLineAttachment
+                                 };
+
+                                 lineAttachment.PopulateAuditFieldsForSave(_workContext.CurrentUser.Id);
+                                 existingRFQLine.Attachments.Add(lineAttachment);
+                            }
+                        }
+
+                        try
+                        {
+                            _rfqLineService.SaveRFQLine(existingRFQLine);
+
+                            string url = Url.Action("Lines", "RFQLine", new { id = existingRFQLine.RFQId });
+                            return Json(new { success = true, url = url });
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("", ex);
+                            _logger.Error(string.Format("Error in updating RFQ Line. {0}", ex.Message), ex);
+                        }
+                }
+                else
+                    return AccessDeniedPage("You must be the specified requestor or buyer to edit an RFQ Line");
+            }
+            else
+                return ResourceNotFound(String.Format("RFQ Line with ID: {0} not found in database!", model.Id));    
+            }
+
+            //If we got this far, something failed, redisplay form
+            PopulateLookupsForLineModel(model);
+
+            return PartialView("_CreateEdit", model);
+        }
+
+        public virtual ActionResult Edit(int rfqLineId)
+        {
+            var rfqLine = _rfqLineService.GetRFQLineById(rfqLineId);
+            var rfqVm = new RFQLineModel();
+
+            if (rfqLine != null)
+            {
+                if (rfqLine.UserCanEditLine(_workContext.CurrentUser))
+                {
+                    rfqVm = Mapper.Map<RFQLineModel>(rfqLine);
+
+                    var indx = 0;
+
+                    foreach (var attachmentVm in rfqVm.Attachments)
+                    {
+                        attachmentVm.Index = indx.ToString();
+                        indx++;
+                    }
+                }
+                else
+                    return AccessDeniedPage("You must be the specified requestor or buyer to edit an RFQ Line");
+                
+            }
+            else
+                return ResourceNotFound(String.Format("RFQ Line with ID: {0} not found in database!", rfqLineId));
+
+            PopulateLookupsForLineModel(rfqVm);
+
+            return PartialView("_CreateEdit", rfqVm);
+        }
+
+        public virtual ActionResult Create(int rfqId, int lineCount)
+        {
+            var rfq = _rfqService.GetById(rfqId);
+
+            if (rfq != null)
+            {
+                if (rfq.UserCanAddLine(_workContext.CurrentUser))
+                {
+                    var rfqLine = new RFQLineModel
+                    {
+                        RFQLineNo = lineCount + 1,
+                        RFQId = rfqId,
+                        Attachments = new List<FileAttachmentModel>(),
+                    };
+
+                    PopulateLookupsForLineModel(rfqLine);
+
+                    var defaultLineType = _rfqLineTypeService.GetRFQLineTypeById((int)RFQLineTypes.Goods);
+
+                    if (defaultLineType != null)
+                    {
+                        rfqLine.LineTypeId = defaultLineType.Id;
+                        rfqLine.LineType = defaultLineType.Name;
+                    }
+
+                    var defaultLineFormType = _rfqLineFormTypeService.GetRFQLineFormTypeById((int)RFQLineFormTypes.GeneralForm);
+
+                    if (defaultLineFormType != null)
+                    {
+                        rfqLine.FormTypeId = defaultLineFormType.Id;
+                        rfqLine.FormType = defaultLineFormType.Name;
+                    }
+
+                    var defaultCurrency = _currencyService.GetCurrencyByCode("PHP");
+
+                    if (defaultCurrency != null)
+                    {
+                        rfqLine.CurrencyId = defaultCurrency.Id;
+                        rfqLine.Currency = defaultCurrency.CurrencyCode;
+                    }
+
+                    return PartialView("_CreateEdit", rfqLine);
+                }
+                else
+                    return AccessDeniedPage("You must be the specified requestor to add a line in an RFQ");
+            }
+            else
+                return ResourceNotFound(String.Format("RFQ with ID: {0} not found in database!", rfqId));
+        }
+
+        public virtual ActionResult Lines(int id)
+        {
+            var rfqLines = _rfqLineService.GetAllRFQLinesQueryable(true).Where(x => x.RFQId == id).OrderBy(x => x.RFQLineNo).ToList();
+            var rfqLinesVm = new List<RFQLineModel>();
+
+            foreach (var line in rfqLines)
+            {
+                var lineVm = Mapper.Map<RFQLineModel>(line);
+
+                lineVm.Attachments = new List<FileAttachmentModel>();
+
+                foreach (var attachment in line.Attachments)
+                {
+                    lineVm.Attachments.Add(Mapper.Map<FileAttachmentModel>(attachment));
+                }
+
+                rfqLinesVm.Add(lineVm);
+            }
+
+            return PartialView("_Lines", rfqLinesVm);
+        }
+
+        [HttpPost]
+        public virtual FineUploaderResult UploadRFQLineAttachment(FineUpload upload)
+        {
+            var dir = Server.MapPath("~/Attachments/RFQLine/");
+            var uuid = HttpContext.Request["qquuid"];
+
+            return SaveUploadedFile(upload, dir, uuid);
+        }
+
+        private FineUploaderResult SaveUploadedFile(FineUpload upload, string dir, string uuid)
+        {
+            var filePath = Path.Combine(dir, upload.Filename);
+            try
+            {
+                upload.SaveAs(filePath, true, true);
+            }
+            catch (Exception ex)
+            {
+                return new FineUploaderResult(false, error: ex.Message);
+            }
+
+            var fileName = upload.Filename;
+            var fileUrl = System.Web.HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + Url.Content("~/Attachments/RFQLine/") + upload.Filename;
+
+            // the anonymous object in the result below will be convert to json and set back to the browser
+            return new FineUploaderResult(true, new { filename = fileName, fileurl = fileUrl });
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data.Entity.ModelConfiguration;
+
+namespace SSG.Data.Mapping.RFQ
+{
+    public class QuotationMap : EntityTypeConfiguration<SSG.Core.Domain.RFQ.Quotation>
+    {
+        public QuotationMap()
+        {
+            // Primary Key
+            this.HasKey(t => t.Id);
+
+            // Properties
+            this.Property(t => t.QuotationNo).IsRequired().HasColumnName("QuotationNo");
+            this.Property(t => t.QuoteUploadDate).IsRequired().HasColumnName("QuoteUploadDate");
+            this.Property(t => t.QuoteItemDescription).IsRequired().HasMaxLength(100).HasColumnName("QuoteItemDescription");
+            this.Property(t => t.Commodity).IsOptional().HasMaxLength(100).HasColumnName("Commodity");
+            this.Property(t => t.MakerPN).IsOptional().HasMaxLength(50).HasColumnName("MakerPN");
+            this.Property(t => t.UnitPrice).HasPrecision(18, 2).IsRequired().HasColumnName("UnitPrice");
+            this.Property(t => t.DiscountedPrice).HasPrecision(18, 2).IsOptional().HasColumnName("DiscountedPrice");
+            this.Property(t => t.MinimumOrderQuantity).IsOptional().HasColumnName("MinimumOrderQuantity");
+            this.Property(t => t.PaymentTerms).IsOptional().HasMaxLength(100).HasColumnName("PaymentTerms");
+            this.Property(t => t.Supplier).IsRequired().HasMaxLength(200).HasColumnName("Supplier");
+            this.Property(t => t.DeliveryLeadTime).IsOptional().HasMaxLength(100).HasColumnName("DeliveryLeadTime");
+            this.Property(t => t.WarrantyPeriod).IsOptional().HasMaxLength(50).HasColumnName("WarrantyPeriod");
+            this.Property(t => t.BuyerRemarks).IsOptional().HasMaxLength(250).HasColumnName("BuyerRemarks");
+            this.Property(t => t.RequesterRemarks).IsOptional().HasMaxLength(250).HasColumnName("RequesterRemarks");
+
+            // References
+            this.HasRequired(t => t.RFQLine).WithMany(t => t.Quotations).HasForeignKey(t => t.RFQLineId).WillCascadeOnDelete(false);
+            this.HasRequired(t => t.Currency).WithMany().HasForeignKey(t => t.CurrencyId).WillCascadeOnDelete(false);
+            this.HasMany(t => t.QuoteAttachment).WithOptional().WillCascadeOnDelete(false);
+            this.HasMany(t => t.ROHSDocumentAttachment).WithOptional().WillCascadeOnDelete(false);
+            this.HasMany(t => t.MSDSDocumentAttachment).WithOptional().WillCascadeOnDelete(false);
+            this.HasMany(t => t.OtherAttachments).WithOptional().WillCascadeOnDelete(false);
+
+            // Table & Column Mappings
+            this.ToTable("quotation", "rfq");
+            this.Property(t => t.Id).HasColumnName("Id");
+            this.Property(t => t.Active).HasColumnName("Active");
+            this.Property(t => t.DateCreatedOnUtc).HasColumnName("DateCreatedOnUtc");
+            this.Property(t => t.DateUpdatedOnUtc).HasColumnName("DateUpdatedOnUtc");
+            this.Property(t => t.CreatedByUserId).HasColumnName("CreatedByUserId");
+            this.Property(t => t.UpdatedByUserId).HasColumnName("UpdatedByUserId");
+        }
+    }
+}

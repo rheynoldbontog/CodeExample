@@ -1,0 +1,347 @@
+﻿@model SSG.Web.Models.RFQ.RFQLineModel
+@{
+    
+    var title = Model.Id == 0 ? "Add RFQ Line" : "Edit RFQ Line";
+    
+}
+@using (Html.BeginHorizontalForm("modal_form"))
+{ 
+    @Html.AntiForgeryToken()
+    
+    <div class="modal-header dark-primary-color">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: White">
+            &times;</button>
+        <h4 class="modal-title color4" id="myModalLabel">@title</h4>
+    </div>
+
+    <div class="modal-body" style="max-height: 800px;">
+        <div class="page">
+            <div class="page-body">
+                <div class="row-fluid">
+                    <div class="span12 master-wrapper-center-1">
+                        @Html.ValidationSummary(false, "Please fix the following errors:", new { @class = "alert alert-danger" })
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6 master-wrapper-center-2">
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.RFQId)
+                        @Html.HiddenFor(model => model.Active)
+                        @Html.HiddenFor(model => model.CreatedByUserId)
+                        @Html.HiddenFor(model => model.UpdatedByUserId)
+                        @Html.HiddenFor(model => model.DateCreatedOnUtc)
+                        @Html.HiddenFor(model => model.DateUpdatedOnUtc)
+                        @Html.Hidden("initial_form_type", Model.FormTypeId)
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Form Type:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.HiddenFor(model => model.FormTypeId);   
+                                    @Html.TextBoxFor(model => model.FormType, new { @placeholder = "Form Type", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.FormTypeId, Model.AvailableFormTypes, null, new { @class = "form-control", @onchange = "ChangeFormType(this);" })
+                                }
+
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(m => m.FormTypeId, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Line No:</label>
+                            <div class="span8 controls">
+                                @Html.TextBoxFor(model => model.RFQLineNo, new { @placeholder = "RFQ Line No", @required = "required", @readonly = "readonly" })
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.RFQLineNo, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Line Type:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.HiddenFor(model => model.LineTypeId);   
+                                    @Html.TextBoxFor(model => model.LineType, new { @placeholder = "Line Type", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.LineTypeId, Model.AvailableLineTypes, "Select Line Type", new { @class = "form-control" })
+                                }
+
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(m => m.LineTypeId, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Item Description:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.TextAreaFor(model => model.ItemDescription, new { @class = "form-control rfo-medium-textbox", placeholder = "Item Description", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.TextAreaFor(model => model.ItemDescription, new { @class = "form-control rfo-medium-textbox", placeholder = "Item Description" })
+                                }
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.ItemDescription, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Currency:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.HiddenFor(model => model.CurrencyId);   
+                                    @Html.TextBoxFor(model => model.Currency, new { @placeholder = "Currency", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies, "Select Currency", new { @class = "form-control" })
+                                }
+
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(m => m.CurrencyId, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Quantity:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.TextBoxFor(model => model.Quantity, new { @placeholder = "RFQ Line No", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.Quantity, new { @placeholder = "RFQ Line No" })
+                                    
+                                }
+
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.Quantity, string.Empty, new { @class = "help-inline" })
+                                
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Unit:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.HiddenFor(model => model.QuantityUnitId);   
+                                    @Html.TextBoxFor(model => model.QuantityUnit, new { @placeholder = "Unit", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.QuantityUnitId, Model.AvailableUnits, "Select Unit", new { @class = "form-control" })
+                                }
+                                    
+                                
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(m => m.QuantityUnitId, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Maker:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.TextBoxFor(model => model.Maker, new { @placeholder = "Maker", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.Maker, new { @placeholder = "Maker" })
+                                }
+                                
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.Maker, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                MakerPN:</label>
+                            <div class="span8 controls">
+                                @if (Model.RFQIsSubmitted)
+                                {
+                                    @Html.TextBoxFor(model => model.MakerPN, new { @placeholder = "Maker PN", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.MakerPN, new { @placeholder = "Maker PN" })
+                                }
+                                
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.MakerPN, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                        <div id="general_form_optional_fields">
+                            <div class="control-group">
+                                <label class="span3 control-label" style="font-weight: bold">
+                                    Reference Links:</label>
+                                <div class="span8 controls">
+                                    @if (Model.RFQIsSubmitted)
+                                    {
+                                        @Html.TextAreaFor(model => model.ReferenceLinks, new { @class = "form-control rfo-medium-textbox", placeholder = "Links And References", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextAreaFor(model => model.ReferenceLinks, new { @class = "form-control rfo-medium-textbox", placeholder = "Links And References" })
+                                    }
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="span3 control-label" style="font-weight: bold">
+                                    ROHS Compliant:</label>
+                                <div class="span8 controls">
+                                    @if (Model.RFQIsSubmitted)
+                                    {
+                                        @Html.CheckBoxFor(model => model.ROHSCompliant, new { @disabled = "disabled" } )
+                                    }
+                                    else
+                                    {
+                                        @Html.CheckBoxFor(model => model.ROHSCompliant)
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div id="technical_form_optional_fields">
+                            <div class="control-group">
+                                <label class="span3 control-label" style="font-weight: bold">
+                                    Test Equipment Purchase Type:</label>
+                                <div class="span8 controls">
+                                    @if (Model.RFQIsSubmitted)
+                                    {
+                                        @Html.HiddenFor(model => model.TestEquipmentPurchaseTypeId);   
+                                        @Html.TextBoxFor(model => model.TestEquipmentPurchaseType, new { @placeholder = "Purchase Type", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.TestEquipmentPurchaseTypeId, Model.AvailableEquipmentPurchaseTypes, "Select Purchase Type", new { @class = "form-control" })
+                                    
+                                    }
+                                    @Html.RequiredHint()
+                                    @Html.ValidationMessageFor(m => m.TestEquipmentPurchaseTypeId, string.Empty, new { @class = "help-inline" })
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="span3 control-label" style="font-weight: bold">
+                                    Test Equipment Application:</label>
+                                <div class="span8 controls">
+                                    @if (Model.RFQIsSubmitted)
+                                    {
+                                        @Html.TextBoxFor(model => model.TestEquipmentApplication, new { @placeholder = "TestEquipmentApplication", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.TestEquipmentApplication, new { @placeholder = "TestEquipmentApplication" })
+                                    }
+                                    
+                                    @Html.ValidationMessageFor(model => model.TestEquipmentApplication, string.Empty, new { @class = "help-inline" })
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="span3 control-label" style="font-weight: bold">
+                                    Test Equipment Calibration Type:</label>
+                                <div class="span8 controls">
+                                    @if (Model.RFQIsSubmitted)
+                                    {
+                                        @Html.HiddenFor(model => model.TestEquipmentCalibrationTypeId);   
+                                        @Html.TextBoxFor(model => model.TestEquipmentCalibrationType, new { @placeholder = "Calibration Type", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.TestEquipmentCalibrationTypeId, Model.AvailableEquipmentCalibrationTypes, "Select Calibration Type", new { @class = "form-control" })
+                                    }
+                                    
+                                    @Html.RequiredHint()
+                                    @Html.ValidationMessageFor(m => m.TestEquipmentCalibrationTypeId, string.Empty, new { @class = "help-inline" })
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="span3 control-label" style="font-weight: bold">
+                                    Other Technical Details:</label>
+                                <div class="span8 controls">
+                                    @if (Model.RFQIsSubmitted)
+                                    {
+                                        @Html.TextAreaFor(model => model.OtherTechnicalDetails, new { @class = "form-control rfo-medium-textbox", placeholder = "Other Technical Details", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextAreaFor(model => model.OtherTechnicalDetails, new { @class = "form-control rfo-medium-textbox", placeholder = "Other Technical Details" })
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span6 master-wrapper-center-2">
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Attachments:</label>
+                            <div class="span8 controls">
+                                <div class="row-fluid">
+                                    <div class="span12 master-wrapper-center-1">
+                                        @if (Model.RFQIsSubmitted)
+                                        {
+                                            <button type="button" class="btn btn-default" disabled onclick="addLineAttachment('@Url.Action("Create", "FileAttachment", new { rfqId = @Model.Id })')">
+                                                <i class="icon-plus"></i>Add Attachment
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-default" onclick="addLineAttachment('@Url.Action("Create", "FileAttachment", new { rfqId = @Model.Id })')">
+                                                <i class="icon-plus"></i>Add Attachment
+                                            </button>
+                                        }
+                                        
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    @Html.Hidden("last_attachment_index", Model.Attachments.Count, new { id = "last_attachment_index" })
+                                    @Html.Hidden("upload_url", @Url.Action("UploadRFQLineAttachment", "RFQLine"))
+                                    <div id="attachment_container" class="span12" style="margin-left: 12px; margin-bottom: 10px;">
+                                        @foreach (var attachment in Model.Attachments)
+                                        {
+                                            @Html.Partial("~/Views/FileAttachment/_CreateEdit.cshtml", attachment)
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="span3 control-label" style="font-weight: bold">
+                                Note to Buyer:</label>
+                            <div class="span8 controls">
+                                @Html.TextAreaFor(model => model.NoteToBuyer, new { @class = "form-control rfo-medium-textbox", placeholder = "Note To Buyer" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12 master-wrapper-center-2">
+                        <button id="submit_line_form" type="submit" class="btn btn-success" style="display: none;">
+                            <i class="icon-pencil icon-white"></i>Save RFQ Line
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">
+            Cancel</button>
+        <button class="btn btn-success" type="button" onclick="$('#submit_line_form').click();">
+            <i class="icon-pencil icon-white"></i>Save RFQ Line</button>
+    </div>
+}

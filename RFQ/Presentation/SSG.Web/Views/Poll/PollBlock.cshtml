@@ -1,0 +1,12 @@
+﻿@model PollModel
+@using SSG.Web.Models.Polls;
+<div class="block block-poll">
+    <div class="title">
+        <h4>@T("Polls.Title")</h4>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="listbox">
+        @Html.Partial("_Poll", Model)
+    </div>
+</div>

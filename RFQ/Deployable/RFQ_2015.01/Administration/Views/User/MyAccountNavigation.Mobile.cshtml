@@ -1,0 +1,46 @@
+﻿@model UserNavigationModel
+@using SSG.Web.Models.User;
+<ul data-role="listview" data-inset="true" data-filter="false">
+    @Html.Widget("mobile_account_navigation_before")
+    @if (!Model.HideInfo)
+    {
+        <li><a href="@Url.RouteUrl("UserInfo")">@T("Account.UserInfo")</a></li>
+    }
+    @if (!Model.HideAddresses)
+    {
+        <li><a href="@Url.RouteUrl("UserAddresses")">@T("Account.UserAddresses")</a></li>
+    }
+    @if (!Model.HideOrders)
+    {
+        <li><a href="@Url.RouteUrl("UserOrders")">@T("Account.UserOrders")</a></li>
+    }
+    @if (!Model.HideReturnRequests)
+    {
+        <li><a href="@Url.RouteUrl("UserReturnRequests")">@T("Account.UserReturnRequests")</a></li>
+    }
+    @if (!Model.HideDownloadableProducts)
+    {
+        <li><a href="@Url.RouteUrl("UserDownloadableProducts")">@T("Account.DownloadableProducts")</a></li>
+    }
+    @if (!Model.HideBackInStockSubscriptions)
+    {
+        <li><a href="@Url.RouteUrl("UserBackInStockSubscriptions")">@T("Account.BackInStockSubscriptions")</a></li>
+    }
+    @if (!Model.HideRewardPoints)
+    {
+        <li><a href="@Url.RouteUrl("UserRewardPoints")">@T("Account.RewardPoints")</a></li>
+    }
+    @if (!Model.HideChangePassword)
+    {
+        <li><a href="@Url.RouteUrl("UserChangePassword")">@T("Account.ChangePassword")</a></li>
+    }
+    @if (!Model.HideAvatar)
+    {
+        <li><a href="@Url.RouteUrl("UserAvatar")">@T("Account.Avatar")</a></li>
+    }
+    @if (!Model.HideForumSubscriptions)
+    {
+        <li><a href="@Url.RouteUrl("UserForumSubscriptions")">@T("Account.ForumSubscriptions")</a></li>
+    }
+    @Html.Widget("mobile_account_navigation_after")
+</ul>

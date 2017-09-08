@@ -1,0 +1,154 @@
+﻿    using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Domain.Directory;
+
+namespace SSG.Core.Domain.RFQ
+{
+    public partial class Quotation : BaseAuditEntity
+    {
+        public Quotation()
+        {
+            InitializeAttachments();
+        }
+
+        public int QuotationNo { get; set; }
+
+        public DateTime QuoteUploadDate { get; set; }
+
+        public string Commodity { get; set; }
+
+        public string QuoteValidity { get; set; }
+
+        public string QuoteItemDescription { get; set; }
+
+        public string MakerPN { get; set; }
+
+        public decimal UnitPrice { get; set; }
+
+        public decimal DiscountedPrice { get; set; }
+
+        public int MinimumOrderQuantity { get; set; }
+
+        public string PaymentTerms { get; set; }
+
+        public string Supplier { get; set; }
+
+        public string DeliveryLeadTime { get; set; }
+
+        public string WarrantyPeriod { get; set; }
+
+        public string BuyerRemarks { get; set; }
+
+        public string RequesterRemarks { get; set; }
+
+        public bool Active { get; set; }
+
+        //REFERENCES
+        #region RFQLine
+
+        public virtual int RFQLineId { get; set; }
+
+        public virtual RFQLine RFQLine { get; set; } 
+
+        #endregion
+
+        #region "Currency"
+
+        public virtual int CurrencyId { get; set; }
+        public virtual Currency Currency { get; set; }
+
+        #endregion
+
+        #region "Quote Attachment"
+
+        public virtual ICollection<FileAttachment> QuoteAttachment { get; set; }
+
+        #endregion
+
+        #region "ROHS Document"
+
+        public virtual ICollection<FileAttachment> ROHSDocumentAttachment { get; set; }
+
+        #endregion
+
+        #region "MSDS Document"
+
+        public virtual ICollection<FileAttachment> MSDSDocumentAttachment { get; set; }
+
+        #endregion
+
+        #region "Other Attachments"
+
+        public virtual ICollection<FileAttachment> OtherAttachments { get; set; }
+
+        #endregion
+
+        #region helper methods
+
+        private void InitializeAttachments()
+        {
+            if (this.QuoteAttachment == null)
+                this.QuoteAttachment = new List<FileAttachment>();
+
+            if (this.ROHSDocumentAttachment == null)
+                this.ROHSDocumentAttachment = new List<FileAttachment>();
+
+            if (this.MSDSDocumentAttachment == null)
+                this.MSDSDocumentAttachment = new List<FileAttachment>();
+
+            if (this.OtherAttachments == null)
+                this.OtherAttachments = new List<FileAttachment>();
+        }
+
+        public FileAttachment GetAttachmentById(int id, FileAttachmentType attachmentType)
+        {
+            InitializeAttachments();
+
+            FileAttachment attachment = new FileAttachment();
+
+            if (attachmentType == FileAttachmentType.QuoteAttachment)
+                attachment = this.QuoteAttachment.Where(x => x.Id == attachment.Id).FirstOrDefault();
+            else if (attachmentType == FileAttachmentType.ROHSDocumentAttachment)
+                attachment = this.ROHSDocumentAttachment.Where(x => x.Id == attachment.Id).FirstOrDefault();
+            else if (attachmentType == FileAttachmentType.MSDSDocumentAttachment)
+                attachment = this.MSDSDocumentAttachment.Where(x => x.Id == attachment.Id).FirstOrDefault();
+            else
+                attachment = this.OtherAttachments.Where(x => x.Id == attachment.Id).FirstOrDefault();
+
+            return attachment;
+        }
+
+        public void RemoveAttachment(FileAttachment attachmentToDelete, FileAttachmentType attachmentType)
+        {
+            InitializeAttachments();
+
+            if (attachmentType == FileAttachmentType.QuoteAttachment)
+                this.QuoteAttachment.Remove(attachmentToDelete);
+            else if (attachmentType == FileAttachmentType.ROHSDocumentAttachment)
+                this.ROHSDocumentAttachment.Remove(attachmentToDelete);
+            else if (attachmentType == FileAttachmentType.MSDSDocumentAttachment)
+                this.MSDSDocumentAttachment.Remove(attachmentToDelete);
+            else
+                this.OtherAttachments.Remove(attachmentToDelete);
+
+        }
+
+        public void AddAttachment(FileAttachment newAttachment, FileAttachmentType attachmentType)
+        {
+            InitializeAttachments();
+
+            if (attachmentType == FileAttachmentType.QuoteAttachment)
+                this.QuoteAttachment.Add(newAttachment);
+            else if (attachmentType == FileAttachmentType.ROHSDocumentAttachment)
+                this.ROHSDocumentAttachment.Add(newAttachment);
+            else if (attachmentType == FileAttachmentType.MSDSDocumentAttachment)
+                this.MSDSDocumentAttachment.Add(newAttachment);
+            else
+                this.OtherAttachments.Add(newAttachment);
+        }
+
+        #endregion
+    }
+}

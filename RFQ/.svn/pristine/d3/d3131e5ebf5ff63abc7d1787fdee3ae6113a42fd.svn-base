@@ -1,0 +1,21 @@
+﻿@model SSG.Web.Models.RFQ.FileAttachmentModel
+
+<div class="row-fluid" style="margin-top: 5px;" id = "Attachments_Container_@(Model.Index)">
+    @Html.HiddenFor(model => model.FileUrl, new { id = "Attachments_" + Model.Index + "__FileUrl", Name = "Attachments[" + Model.Index + "].FileUrl" })
+    @Html.HiddenFor(model => model.IsDeleted, new { id = "Attachments_" + Model.Index + "__IsDeleted", Name = "Attachments[" + Model.Index + "].IsDeleted" })
+        
+    <div class="input-append">
+        @Html.TextBoxFor(model => model.Filename, new { id = "Attachments_" + Model.Index + "__Filename", Name = "Attachments[" + Model.Index + "].Filename", @class = "span12", @readonly = "readonly" })
+        
+        @if (!Model.RFQIsSubmitted)
+        {
+            <div id="Attachments_@(Model.Index)__Uploader" class="btn btn-sm btn-default">
+                <i class="icon-arrow-up"></i>
+            </div>
+            <div id="Attachments_@(Model.Index)__Deleter" class="btn btn-sm btn-default" onclick="removeAttachment(@Model.Index);">
+                <i class="icon-trash"></i>
+            </div>
+        }
+        
+    </div>
+</div>

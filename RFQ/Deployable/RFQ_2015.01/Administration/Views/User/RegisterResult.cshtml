@@ -1,0 +1,20 @@
+﻿<!-- done -->
+@model RegisterResultModel
+@using SSG.Web.Models.User;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Register").Text);
+}
+<div class="page registration-page">
+    <div class="page-header">
+        <h2>@T("Account.Register")</h2>
+    </div>
+    <div class="page-body">
+        @*<div class="alert alert-block alert-info">
+            <p class="lead">@Model.Result</p>
+        </div>*@
+        <p class="lead">@Model.Result</p>
+    </div>
+</div>

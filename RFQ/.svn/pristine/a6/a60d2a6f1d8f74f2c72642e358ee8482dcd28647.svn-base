@@ -1,0 +1,139 @@
+﻿@model SSG.Web.Models.RFQ.RFQLineModel
+<style type="text/css">
+    .borderless td, .borderless th, .borderless tr {
+        border: none !important;
+        background: #f9f9f9 !important;
+    }
+    label {
+        font-size: 11px !important;
+    }
+</style>
+<div class="modal-header default-primary-color color3">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 id="myModalLabel">RFQ Line Details </h4>
+</div>
+<div class="modal-body" style="max-height: calc(100vh - 250px); overflow-y: auto;">
+    <div class="row-fluid">
+        <div class="span12 master-wrapper-center-1">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th width="400px">@Html.LabelFor(model => model.RFQLineNo)</th>
+                    <th width="400px">
+                        <div align="center">@Html.DisplayFor(model => model.RFQLineNo)</div>
+                    </th>
+                </tr>
+                <tr>
+                    <th><div class="custom">@Html.LabelFor(model => model.FormTypeId)</div></th>
+                    <th>
+                        <div align="center">@Html.DisplayFor(model => model.FormType)</div></th>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(model => model.LineTypeId)</th>
+                    <th>
+                        <div align="center">@Html.DisplayFor(model => model.LineType)</div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(model => model.DateCreatedOnUtc)</th>
+                    <th>
+                        <div align="center">@Html.DisplayFor(model => model.DateCreatedOnUtc)</div></th>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(model => model.Status)</th>
+                    <th>
+                        <div align="center">@Html.DisplayFor(model => model.Status)</div></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ItemDescription)</td>
+                    <td>@Html.DisplayFor(model => model.ItemDescription)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Quantity)</td>
+                    <td>@Html.DisplayFor(model => model.Quantity)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.QuantityUnitId)</td>
+                    <td>@Html.DisplayFor(model => model.QuantityUnit)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.CurrencyId)</td>
+                    <td>@Html.DisplayFor(model => model.Currency)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Maker)</td>
+                    <td>@Html.DisplayFor(model => model.Maker)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.MakerPN)</td>
+                    <td>@Html.DisplayFor(model => model.MakerPN)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ReferenceLinks)</td>
+                    <td>@Html.DisplayFor(model => model.ReferenceLinks)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ROHSCompliant)</td>
+                    <td>@Html.DisplayFor(model => model.ROHSCompliant)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.OtherTechnicalDetails)</td>
+                    <td>@Html.DisplayFor(model => model.OtherTechnicalDetails)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.NoteToBuyer)</td>
+                    <td>@Html.DisplayFor(model => model.NoteToBuyer)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.FirstUploadDate)</td>
+                    <td>@Html.DisplayFor(model => model.FirstUploadDate)</td>
+                </tr>
+                @if (Model.FormTypeId == 2)
+                {
+                    <tr>
+                        <td>@Html.LabelFor(model => model.TestEquipmentApplication)</td>
+                        <td>@Html.DisplayFor(model => model.TestEquipmentApplication)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.TestEquipmentPurchaseType)</td>
+                        <td>@Html.DisplayFor(model => model.TestEquipmentPurchaseType)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.TestEquipmentCalibrationType)</td>
+                        <td>@Html.DisplayFor(model => model.TestEquipmentCalibrationType)</td>
+                    </tr>
+                }
+
+                <!--Attachments -->
+                <tr>
+                    <td colspan="2">
+                        <div align="center">@Html.LabelFor(model => model.Attachments)</div></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <table class="table borderless">
+                            <tr>
+                                @foreach (var item in Model.Attachments)
+                                {
+                                    int i = 1;
+                                    <td>
+                                        <div align="center"><strong>@i.</strong> <a target="_blank" href="@item.FileUrl">@item.Filename</a>
+                                        </div></td>
+                                    i++;
+                                }
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+</div> 

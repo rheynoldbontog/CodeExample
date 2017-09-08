@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+
+namespace SSG.Services.RFQ
+{
+    public class QuotationService : IQuotationService
+    {
+        #region Fields
+
+        private readonly IRepository<Quotation> _quotationRepository;
+
+        #endregion
+
+        #region ctor
+
+        public QuotationService(IRepository<Quotation> quotationRepository)
+        {
+            this._quotationRepository = quotationRepository;
+        }
+
+        #endregion
+
+        #region Methods
+                
+        #endregion
+    }
+}

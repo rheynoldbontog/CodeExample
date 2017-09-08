@@ -1,0 +1,17 @@
+﻿<!-- done -->
+@model AccountActivationModel
+@using SSG.Web.Models.User;
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.AccountActivation").Text);
+}
+
+<div class="page-header">
+    <h2>@T("Account.AccountActivation")</h2>
+</div>
+<br />
+<p class="text-info">
+    @Model.Result
+</p>

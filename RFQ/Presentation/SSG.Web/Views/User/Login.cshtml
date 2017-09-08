@@ -1,0 +1,109 @@
+﻿<!-- done -->
+@model LoginModel
+@using SSG.Web.Models.User;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Login").Text);
+}
+<div class="page login-page">
+    <div class="page-header">
+        <h2>@T("Account.Login.Welcome")</h2>
+    </div>
+    @Html.Partial("_ExternalAuthentication.AssociateMessage")
+    <div class="clearfix"></div>
+    @Html.Partial("_ExternalAuthentication.Errors")
+    <div class="clearfix"></div>
+    <div class="page-body">
+        @if (Model.CheckoutAsGuest)
+        {
+            <div class="checkout-as-guest">
+                <p class="lead">@T("Account.Login.CheckoutAsGuestOrRegister")</p>
+                @Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })
+            </div>
+            <div class="form-actions">
+                <input type="button" class="btn btn-primary checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />                
+            </div>
+        }
+        else
+        {
+            <div class="register-block">
+                <p class="lead">@T("Account.Login.NewUser")</p>
+                <span>@T("Account.Login.NewUserText")</span>
+                <h4>
+                    <input type="button" class="btn btn-small register-button" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
+                </h4>
+            </div>
+        }
+        <div class="returning-wrapper">
+            <hr class="bs-docs-separator" />
+            <p class="lead">@T("Account.Login.ReturningUser")</p>
+            @using (Html.BeginHorizontalForm())
+            {
+                if (!ViewData.ModelState.IsValid) { 
+                    <div class="alert alert-block alert-error">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <h4>Warning!</h4>
+                        <p>@Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)</p>
+                    </div>
+                }
+                if (Model.UsernamesEnabled)
+                { 
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.Username, new { @class = "control-label" })
+                        <div class="controls">
+                            <div class="input-prepend">
+                                <span class="add-on"><i class="icon-user"></i></span>
+                                @Html.TextBoxFor(m => m.Username, new { @class = "input-large", id = "usernameIcon", placeholder = T("Account.Login.Fields.Username"), required = "required" })
+                                @Html.ValidationMessageFor(m => m.Username, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                { 
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                        <div class="controls">
+                            <div class="input-prepend">
+                                <span class="add-on"><i class="icon-envelope"></i></span>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "input-large", id = "emailIcon", placeholder = T("Account.Login.Fields.Email"), required = "required" })
+                                @Html.ValidationMessageFor(m => m.Email, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                    <div class="controls">
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-lock"></i></span>
+                            @Html.PasswordFor(m => m.Password, new { @class = "input-large", id = "lockIcon", placeholder = T("Account.Login.Fields.Password"), required = "required" })
+                            @Html.ValidationMessageFor(m => m.Password, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <label class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </label>
+@*  TODO: Captcha need to integrate
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>*@
+                        <input class="btn btn-primary login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                        &nbsp;&nbsp;&nbsp;
+                        @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="clearfix"></div>
+        <div class="externalauthentication">
+            @Html.Action("ExternalMethods", "ExternalAuthentication")
+        </div>
+    </div>
+</div>

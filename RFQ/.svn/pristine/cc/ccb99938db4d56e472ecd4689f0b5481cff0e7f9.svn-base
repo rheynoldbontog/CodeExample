@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap>
+    <siteMapNode title="Home" controller="Home" action="Overview">
+        <siteMapNode title="Dashboard" ssgResource="Admin.Dashboard" controller="Home" action="Index" ImageUrl="~/Administration/Content/images/ico-dashboard.png" />
+        <siteMapNode title="Users" ssgResource="Admin.Users" PermissionNames="ManageUsers, ManageUserRoles" ImageUrl="~/Administration/Content/images/ico-users.png" >
+          <siteMapNode title="Users" ssgResource="Admin.Users.Users" PermissionNames="ManageUsers" controller="User" action="List" />
+          <siteMapNode title="User roles" ssgResource="Admin.Users.UserRoles" PermissionNames="ManageUserRoles" controller="UserRole" action="List" />
+          <siteMapNode title="Online users" ssgResource="Admin.Users.OnlineUsers" PermissionNames="ManageUsers" controller="OnlineUser" action="List" />
+          <siteMapNode title="User reports" ssgResource="Admin.Users.Reports" PermissionNames="ManageUsers" controller="User" action="Reports" />
+        </siteMapNode>
+        <siteMapNode title="Content&#160;Management" ssgResource="Admin.ContentManagement" PermissionNames="ManagePolls, ManageNews, ManageBlog, ManageWidgets, ManageTopics, ManageForums, ManageMessageTemplates" ImageUrl="~/Administration/Content/images/ico-content.png">
+          <siteMapNode title="Polls" ssgResource="Admin.ContentManagement.Polls" PermissionNames="ManagePolls" controller="Poll" action="List" />
+          <siteMapNode title="News" ssgResource="Admin.ContentManagement.News" PermissionNames="ManageNews">
+            <siteMapNode title="News items" ssgResource="Admin.ContentManagement.News.NewsItems" controller="News" action="List" />
+            <siteMapNode title="News comments" ssgResource="Admin.ContentManagement.News.Comments" controller="News" action="Comments"/>
+          </siteMapNode>
+          <siteMapNode title="Widgets" ssgResource="Admin.ContentManagement.Widgets" PermissionNames="ManageWidgets" controller="Widget" action="List" />
+          <siteMapNode title="Topics" ssgResource="Admin.ContentManagement.Topics" PermissionNames="ManageTopics" controller="Topic" action="List" />
+          <siteMapNode title="Manage forums" ssgResource="Admin.ContentManagement.Forums" PermissionNames="ManageForums" controller="Forum" action="List" />
+          <siteMapNode title="Message templates" ssgResource="Admin.ContentManagement.MessageTemplates" PermissionNames="ManageMessageTemplates" controller="MessageTemplate" action="List" />
+        </siteMapNode>
+        <siteMapNode title="Configuration" ssgResource="Admin.Configuration" PermissionNames="ManageCountries,ManageLanguages,ManageSettings,ManagePaymentMethods,ManageExternalAuthenticationMethods,ManageTaxSettings,ManageShippingSettings,ManageCurrencies,ManageMeasures,ManageActivityLog,ManageACL,ManageEmailAccounts,ManagePlugins" 
+					 ImageUrl="~/Administration/Content/images/ico-configuration.png">
+          <siteMapNode title="Settings" ssgResource="Admin.Configuration.Settings" PermissionNames="ManageSettings" >
+            <siteMapNode title="General and common settings" ssgResource="Admin.Configuration.Settings.GeneralCommon" controller="Setting" action="GeneralCommon"/>
+            <siteMapNode title="User and user settings" ssgResource="Admin.Configuration.Settings.UserUser" controller="Setting" action="UserUser" />
+            <siteMapNode title="Media settings" ssgResource="Admin.Configuration.Settings.Media" controller="Setting" action="Media" />
+            <siteMapNode title="News settings" ssgResource="Admin.Configuration.Settings.News" controller="Setting" action="News" />
+            <siteMapNode title="Forums settings" ssgResource="Admin.Configuration.Settings.Forums" controller="Setting" action="Forum" />
+            <siteMapNode title="All settings (settings)" ssgResource="Admin.Configuration.Settings.AllSettings" controller="Setting" action="AllSettings"/>
+          </siteMapNode>
+          <siteMapNode title="Countries" ssgResource="Admin.Configuration.Countries" PermissionNames="ManageCountries" controller="Country" action="List"/>
+          <siteMapNode title="Languages" ssgResource="Admin.Configuration.Languages" PermissionNames="ManageLanguages" controller="Language" action="List"/>
+          <siteMapNode title="Currencies" ssgResource="Admin.Configuration.Currencies" PermissionNames="ManageCurrencies" controller="Currency" action="List"/>
+          <siteMapNode title="Measures" ssgResource="Admin.Configuration.Measures" PermissionNames="ManageMeasures">
+            <siteMapNode title="Weights" ssgResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
+            <siteMapNode title="Dimensions" ssgResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
+          </siteMapNode>
+          <siteMapNode title="EmailAccounts" ssgResource="Admin.Configuration.EmailAccounts" PermissionNames="ManageEmailAccounts" controller="EmailAccount" action="List"/>
+          <siteMapNode title="Activity Log" ssgResource="Admin.Configuration.ActivityLog" PermissionNames="ManageActivityLog">
+            <siteMapNode title="Activity Types" ssgResource="Admin.Configuration.ActivityLog.ActivityLogType" controller="ActivityLog" action="ListTypes"/>
+            <siteMapNode title="Activity Log" ssgResource="Admin.Configuration.ActivityLog.ActivityLog" controller="ActivityLog" action="ListLogs"/>
+          </siteMapNode>
+          <siteMapNode title="Access control list" ssgResource="Admin.Configuration.ACL" PermissionNames="ManageACL" controller="Security" action="Permissions" />
+          <siteMapNode title="External authentication methods" ssgResource="Admin.Configuration.ExternalAuthenticationMethods" PermissionNames="ManageExternalAuthenticationMethods" controller="ExternalAuthentication" action="Methods"/>
+          <siteMapNode title="Plugins" ssgResource="Admin.Configuration.Plugins" PermissionNames="ManagePlugins" controller="Plugin" action="List"/>
+        </siteMapNode>
+        <siteMapNode title="System" ssgResource="Admin.System" ImageUrl="~/Administration/Content/images/ico-system.png">
+            <siteMapNode title="Log" ssgResource="Admin.System.Log" PermissionNames="ManageSystemLog" controller="Log" action="List" />
+            <siteMapNode title="QueuedEmails" ssgResource="Admin.System.QueuedEmails" PermissionNames="ManageMessageQueue" controller="QueuedEmail" action="List" />
+            <siteMapNode title="Maintenance" ssgResource="Admin.System.Maintenance" PermissionNames="ManageMaintenance" controller="Common" action="Maintenance" />
+            <siteMapNode title="Warnings" ssgResource="Admin.System.Warnings" controller="Common" action="Warnings" />
+            <siteMapNode title="System information" ssgResource="Admin.System.SystemInfo" controller="Common" action="SystemInfo" />
+        </siteMapNode>
+        <siteMapNode title="Help" ssgResource="Admin.Help" ImageUrl="~/Administration/Content/images/ico-help.png">
+          <siteMapNode title="Help topics" ssgResource="Admin.Help.Topics" url="http://jeepme/webapp/documentation.aspx" />
+          <siteMapNode title="Community forums" ssgResource="Admin.Help.Forums" url="http://jeepme/webapp/boards/" />
+        </siteMapNode>
+    </siteMapNode>
+</siteMap>
+

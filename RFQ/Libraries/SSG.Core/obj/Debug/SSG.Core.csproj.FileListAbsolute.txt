@@ -1,0 +1,53 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\bin\Debug\SSG.Core.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\bin\Debug\SSG.Core.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\bin\Debug\Autofac.Configuration.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\bin\Debug\Autofac.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\bin\Debug\Autofac.xml
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\obj\Debug\SSG.Core.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\obj\Debug\SSG.Core.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Project.2014\Web\FRACAS.2014\branches\2014.1\Libraries\SSG.Core\obj\Debug\SSG.Core.csprojResolveAssemblyReference.cache
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\bin\Debug\SSG.Core.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\bin\Debug\SSG.Core.pdb
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.Configuration.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.xml
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\obj\Debug\SSG.Core.dll
+C:\Users\hoyf\Desktop\repo\psp1.20160216\Libraries\SSG.Core\obj\Debug\SSG.Core.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\bin\Debug\SSG.Core.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\bin\Debug\SSG.Core.pdb
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.Configuration.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\bin\Debug\Autofac.xml
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\obj\Debug\SSG.Core.csprojResolveAssemblyReference.cache
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\obj\Debug\SSG.Core.dll
+C:\Mia Files\SSG Repository\Web\PSP.2016\branches\psp1.20160216\Libraries\SSG.Core\obj\Debug\SSG.Core.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\bin\Debug\SSG.Core.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\bin\Debug\SSG.Core.pdb
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.Configuration.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.xml
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\obj\Debug\SSG.Core.csprojResolveAssemblyReference.cache
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\obj\Debug\SSG.Core.dll
+C:\Users\hoyf\Desktop\repo\Template.2016r2\Libraries\SSG.Core\obj\Debug\SSG.Core.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\bin\Debug\SSG.Core.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\bin\Debug\SSG.Core.pdb
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.Configuration.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\bin\Debug\Autofac.xml
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\obj\Debug\SSG.Core.csprojResolveAssemblyReference.cache
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\obj\Debug\SSG.Core.dll
+C:\Mia Files\SSG Repo for Template\Template.2016r2\Libraries\SSG.Core\obj\Debug\SSG.Core.pdb
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Debug\SSG.Core.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Debug\SSG.Core.pdb
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Debug\Autofac.Configuration.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Debug\Autofac.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Debug\Autofac.Integration.Mvc.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Debug\Autofac.xml
+C:\Repository\RFQ\Libraries\SSG.Core\obj\Debug\SSG.Core.dll
+C:\Repository\RFQ\Libraries\SSG.Core\obj\Debug\SSG.Core.pdb
+C:\Repository\RFQ\Libraries\SSG.Core\obj\Debug\SSG.Core.csprojResolveAssemblyReference.cache

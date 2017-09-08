@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data.Entity.ModelConfiguration;
+
+namespace SSG.Data.Mapping.RFQ
+{
+    public class RFQMap : EntityTypeConfiguration<SSG.Core.Domain.RFQ.RFQ>
+    {
+        public RFQMap()
+        {
+            // Primary Key
+            this.HasKey(t => t.Id);
+            
+            // Properties
+            this.Property(t => t.Department).IsRequired().HasMaxLength(100).HasColumnName("Department");
+            this.Property(t => t.NeedByDate).IsRequired().HasColumnName("NeedByDate");
+            this.Property(t => t.Subject).IsRequired().HasMaxLength(200).HasColumnName("Subject");
+            this.Property(t => t.NoteToBuyer).IsOptional().HasMaxLength(100).HasColumnName("NoteToBuyer");
+            this.Property(t => t.SubmittedDate).IsOptional().HasColumnName("SubmittedDate");
+            this.Ignore(t => t.EmailAttachmentFilename);
+            this.Ignore(t => t.EditUrl);
+
+            // References
+            this.HasRequired(t => t.RFQStatus).WithMany(t => t.QuoteRequests).HasForeignKey(t => t.RFQStatusId).WillCascadeOnDelete(false);
+            this.HasRequired(t => t.Buyer).WithMany().HasForeignKey(t => t.BuyerId).WillCascadeOnDelete(false);
+            this.HasMany(t => t.Lines).WithRequired(t => t.RFQ).HasForeignKey(t => t.RFQId).WillCascadeOnDelete(false);
+            this.HasMany(x => x.BuyerChanges).WithRequired(x => x.RFQ).HasForeignKey(x => x.RFQId).WillCascadeOnDelete(false);
+
+            // Table & Column Mappings
+            this.ToTable("rfq", "rfq");
+            this.Property(t => t.Id).HasColumnName("Id");
+            this.Property(t => t.Active).HasColumnName("Active");
+            this.Property(t => t.DateCreatedOnUtc).HasColumnName("DateCreatedOnUtc");
+            this.Property(t => t.DateUpdatedOnUtc).HasColumnName("DateUpdatedOnUtc");
+            this.Property(t => t.CreatedByUserId).HasColumnName("CreatedByUserId");
+            this.Property(t => t.UpdatedByUserId).HasColumnName("UpdatedByUserId");
+        }
+    }
+}

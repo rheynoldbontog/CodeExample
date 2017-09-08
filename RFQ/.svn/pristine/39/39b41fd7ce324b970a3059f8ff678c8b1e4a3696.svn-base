@@ -1,0 +1,45 @@
+﻿@model Telerik.Web.Mvc.GridModel<UserRoleModel>
+@using Telerik.Web.Mvc.UI
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Users.UserRoles").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-users.png")" alt="" />
+        @T("Admin.Users.UserRoles")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<UserRoleModel>()
+                    .Name("userroles-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name).Width(150);
+                        columns.Bound(x => x.Active)
+                            .Width(100)
+                            .Centered()
+                            .Template(x => x.Active.ToString().ToLower());
+                        columns.Bound(x => x.IsSystemRole)
+                            .Width(100)
+                            .Centered()
+                            .Template(x => x.IsSystemRole.ToString().ToLower());
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate(T("Admin.Common.Edit").Text)
+                            .Filterable(false);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "UserRole"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

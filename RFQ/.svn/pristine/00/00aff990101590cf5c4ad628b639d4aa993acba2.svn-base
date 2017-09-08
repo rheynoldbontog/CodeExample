@@ -1,0 +1,40 @@
+﻿@model Telerik.Web.Mvc.GridModel<OnlineUserModel>
+@using Telerik.Web.Mvc.UI
+@{
+    var gridPageSize = EngineContext.Current.Resolve<SSG.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    //page title
+    ViewBag.Title = @T("Admin.Users.OnlineUsers").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-users.png")" alt="" />
+        @T("Admin.Users.OnlineUsers")
+    </div>
+    <div class="options">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<OnlineUserModel>()
+                    .Name("onlineusers-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.UserInfo)
+                            .Template(x => Html.ActionLink(x.UserInfo, "Edit", "User", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/User/Edit/") + "<#= Id #>\"><#= UserInfo #></a>");
+                        columns.Bound(x => x.LastIpAddress);
+                        columns.Bound(x => x.Location)
+                            .Width(150);
+                        columns.Bound(x => x.LastActivityDate)
+                            .Width(150);
+                        columns.Bound(x => x.LastVisitedPage);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "OnlineUser"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,68 @@
+﻿@model HighLevelBucketingListModel
+@using SSG.Web.Models.Fracas
+@using Telerik.Web.Mvc.UI
+@using SSG.Core.Infrastructure
+@using SSG.Core.Domain.Common
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    var gridPageSize = EngineContext.Current.Resolve<AdminAreaSettings>().GridPageSize;
+
+    ViewBag.Title = @T("FRACAS.Title.HighLevelBucketing").Text;
+}
+
+@using (Html.BeginHorizontalForm())
+{
+    <div class="page-header search-header">
+        <h2>@ViewBag.Title</h2>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="pull-right">
+                    <a href="@Url.Action("Create")" class="btn btn-primary btn-small" id="create">@T("FRACAS.Button.Add")</a> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        @Html.AntiForgeryToken()
+        <div class="clearfix"></div>
+        <div class="adminContent">
+            <div class="row-fluid">
+                <div class="span12">
+                    @(Html.Telerik().Grid<HighLevelBucketingModel>(Model.HighLevelBucketings.Data)
+                        .Name("hlbucket-grid")
+                        .ClientEvents(events => events
+                            .OnDataBinding("onDataBinding"))
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.HLBucket)
+                                .Template(x => Html.ActionLink(x.HLBucket, "Edit", new { @class = "active", id = x.Id }))
+                                .ClientTemplate("<a href=\"" + @Url.Content("~/HighLevelBucketing/Edit/") + "<#= Id #>\"><#= HLBucket #></a>")
+                                .Width(200);
+
+                            columns.Bound(x => x.Description)
+                                .Width(200);
+                        })
+                        .Pageable(settings => settings.Total(Model.HighLevelBucketings.Total).PageSize(gridPageSize).Position(GridPagerPosition.Bottom))
+                        .DataBinding(databinding => databinding.Ajax().Select("List", "HighLevelBucketing"))
+                        .EnableCustomBinding(true)
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   @* <script type="text/javascript">
+
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchCode: $('#@Html.FieldIdFor(model => model.SearchCode)').val(),
+                SearchCategoryId: $('#@Html.FieldIdFor(model => model.SearchCategoryId)').val()
+            };
+            e.data = searchModel;
+        }
+    
+    </script>*@
+}

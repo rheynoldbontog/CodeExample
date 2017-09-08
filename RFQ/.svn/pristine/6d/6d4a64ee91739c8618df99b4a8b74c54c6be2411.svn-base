@@ -1,0 +1,273 @@
+﻿@using Org.BouncyCastle.Asn1
+@using PagedList
+@using PagedList.Mvc
+@using SSG.Core.Infrastructure
+@using SSG.Services.Users
+@using SSG.Core.Domain.RFQ
+@using SSG.Web.Extensions
+@model PagedList.IPagedList<SSG.Web.Models.RFQ.PageIndex>
+@{
+    var _workContext = EngineContext.Current.Resolve<SSG.Core.IWorkContext>();
+
+}
+<style type="text/css">
+    .custom
+    {
+        font-size: 11px !important;
+    }
+    .table th {
+        vertical-align: middle !important;
+    }
+</style>
+<div class="table-responsive" style="max-width: calc(100vw-400px); overflow-x: auto">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <div class="custom" align="center">RFQ</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Subject</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">RFQ Status</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">RFQ Line No.</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">RFQ Creation Date</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Item Description</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Quantity</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">UOM</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Maker PN</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Requester</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Department</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Buyer</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Line Status</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Type</div>
+                </th>
+                <th><div class="custom" align="center">Commodity</div></th>
+                <th>
+                    <div class="custom" align="center">ROHS Compliant?</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Purchase of Test Equipment</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Callibration Type</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Note to Buyer</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Closed Date</div>
+                </th>
+                <th>
+                    <div class="custom" align="center">Action</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    var statusStyle = item.RfqLineModel != null ? "color:black" : "color:green";
+                    var rfqStatusStyle = item.RfqModel.Status == "Draft" ? "color:#26a65b" : "color:#33577b";
+                    var rfqLineCondition = item.RfqLineModel != null;
+                    <tr>
+                        <td>
+                            @if (item.RfqModel.UserCanEdit)
+                            {
+                                <div class="custom" align="center">@Html.ActionLink(item.RfqModel.RFQNo, "Edit", "RFQ", new { id = item.RfqModel.Id }, null)</div>
+                            }
+                            else
+                            {
+                                <div class="custom" align="center">@Html.ActionLink(item.RfqModel.RFQNo, "ViewRFQ", "RFQ", new { id = item.RfqModel.Id }, null)</div>
+                            }
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Subject)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center" style="font-weight: bold; @rfqStatusStyle">@Html.DisplayFor(model => item.RfqModel.Status)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.RFQLineNo)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.DateCreatedOnUtc)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.ItemDescription)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.Quantity)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.QuantityUnit)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.MakerPN)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Requester)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Department)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Buyer)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center" style="font-weight: bold; @statusStyle">@(item.RfqLineModel != null ? item.RfqLineModel.Status : "No RFQLine")</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.FormType)</div>
+                        </td>
+                        <td></td>
+                        <td>
+                            <div class="custom" align="center">@Html.CheckBoxFor(model => item.RfqLineModel.ROHSCompliant, new { @disabled = "disabled" })</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.TestEquipmentPurchaseType)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.TestEquipmentCalibrationType)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.NoteToBuyer)</div>
+                        </td>
+                        <td>
+                            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.FirstUploadDate)</div>
+                        </td>
+                        <td>
+                            <div align="center">
+                                <div class="btn-group">
+                                    @if (item.RfqLineModel != null)
+                                    {
+                                        <button class="btn btn-default btn-sm btnViewMatrix" title="View Matrix" data-id="@Html.DisplayFor(model => item.RfqLineModel.Id)">
+                                            <i class="fa fa-search color6"></i>
+                                        </button>
+                                        if (item.RfqLineModel.IsUserCanEditable)
+                                        {
+                                            if (ViewBag.IsRequestor)
+                                            {
+                                                @Html.NoEncodeActionLink("<i class='fa fa-pencil color6'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.RfqLineModel.Id }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default btn-sm", data_user_role = "requestor" })
+                                            }
+                                            else if (ViewBag.IsBuyer)
+                                            {
+                                                @Html.NoEncodeActionLink("<i class='fa fa-pencil color6'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.RfqLineModel.Id }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default btn-sm", data_user_role = "buyer" })
+                                            }
+                                        }
+                                    }
+                                    @if (item.RfqLineModel == null)
+                                    {
+                                        <button class="btn btn-default btn-sm" onclick="location.href='@Url.Action("Edit", "RFQ", new { id = Html.DisplayFor(model => item.RfqModel.Id) })'">
+                                            <i class="fa fa-pencil color6"></i>
+                                        </button>
+                                    
+                                    }
+                                    @if (item.RfqLineModel != null)
+                                    {
+                                        if (item.RfqLineModel.IsUserCanDeletable)
+                                        {
+                                            <button class="btn btn-default" onclick="rfqModal.deleteLine('@Url.Action("Delete", "RFQLine", new { lineId = Html.DisplayFor(model => item.RfqLineModel.Id) })');">
+                                                <i class="fa fa-trash color6"></i>
+                                            </button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    if (item.RfqLineModel.Quotations.Count > 0)
+                    {
+                        <tr>@Html.Partial("_RFQLineQuotation",Model)</tr>
+                    }
+
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="18">
+                        <div class="custom" align="center">
+                            No Data Found</div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="text-center">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing((
+            new PagedListRenderOptions
+            {
+                DisplayLinkToFirstPage = true,
+                DisplayLinkToLastPage = true
+            }
+            ), "#grid-list")
+        )
+</div>
+<div id="displayModal" class="modal fade">
+</div>
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in hide'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.edit').on('click', function () {
+
+            $.ajax({
+                url: '@Url.Action(MVC.RFQLine.Edit())',
+                type: 'POST',
+                data: { rfqLineId: $(this).attr('data-id') },
+                success: function (result) {
+                    $('#displayModal').html(result);
+                    $('#displayModal').modal('show');
+                }
+            });
+        });
+        $('.btnViewMatrix').on('click', function () {
+            $.ajax({
+                url: '@Url.Action(MVC.Quotation.QuotationMatrix())',
+                type: 'POST',
+                data: { rfqLineId: $(this).attr('data-id') },
+                success: function (result) {
+                    $('#displayModal').html(result);
+                    $('#displayModal').modal('show');
+                }
+
+            });
+        });
+    });
+</script>

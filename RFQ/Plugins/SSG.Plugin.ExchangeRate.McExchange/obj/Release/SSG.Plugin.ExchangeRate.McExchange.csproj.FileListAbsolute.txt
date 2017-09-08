@@ -1,0 +1,8 @@
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Release\ResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Release\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Repository\RFQ\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\Description.txt
+C:\Repository\RFQ\Presentation\SSG.Web\Plugins\ExchangeRate.McExchange\SSG.Plugin.ExchangeRate.McExchange.dll
+C:\Repository\RFQ\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Release\SSG.Plugin.ExchangeRate.McExchange.csprojResolveAssemblyReference.cache
+C:\Repository\RFQ\Plugins\SSG.Plugin.ExchangeRate.McExchange\obj\Release\SSG.Plugin.ExchangeRate.McExchange.dll

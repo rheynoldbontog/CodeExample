@@ -1,0 +1,17 @@
+﻿@using SSG.Web.Models.RFQ
+@using PagedList.Mvc
+@using PagedList
+@model IEnumerable<UOMModel>
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    ViewBag.Title = " Unit Of Measurement";
+}
+
+<h2>
+    @ViewBag.Title</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div id="grid-list">
+    @Html.Partial("_Table", Model)
+</div>

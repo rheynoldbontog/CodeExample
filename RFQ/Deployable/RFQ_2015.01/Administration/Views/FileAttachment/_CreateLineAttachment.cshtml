@@ -1,0 +1,28 @@
+﻿@model SSG.Web.Models.RFQ.FileAttachmentModel
+<div class="row-fluid fu_upload_item" style="margin-top: 5px;" id = "Attachments_@(Model.Index)__Container">
+    @Html.HiddenFor(model => model.Id, new { id = "Attachments_" + Model.Index + "__Id", Name = "Attachments[" + Model.Index + "].Id", @class = "fu_upload_id" })
+    @Html.HiddenFor(model => model.RFQLineId, new { id = "Attachments_" + Model.Index + "__RFQLineId", Name = "Attachments[" + Model.Index + "].RFQLineId", @class = "fu_upload_rfq_line_id" })
+    @Html.HiddenFor(model => model.FileAttachmentType, new { id = "Attachments_" + Model.Index + "__FileAttachmentType", Name = "Attachments[" + Model.Index + "].FileAttachmentType", @class = "fu_upload_file_attachment_type" })
+    @Html.HiddenFor(model => model.FileUrl, new { id = "Attachments_" + Model.Index + "__FileUrl", Name = "Attachments[" + Model.Index + "].FileUrl", @class = "fu_upload_file_url" })
+    @Html.HiddenFor(model => model.IsDeleted, new { id = "Attachments_" + Model.Index + "__IsDeleted", Name = "Attachments[" + Model.Index + "].IsDeleted", @class = "fu_upload_file_is_deleted" })
+    @Html.HiddenFor(model => model.Active, new { id = "Attachments_" + Model.Index + "__Active", Name = "Attachments[" + Model.Index + "].Active", @class = "fu_upload_active" })
+    @Html.HiddenFor(model => model.Index, new { id = "Attachments_" + Model.Index + "__Index", Name = "Attachments[" + Model.Index + "].Index", @class = "fu_upload_index" })
+    @Html.HiddenFor(model => model.QuotationIndex, new { id = "Attachments_" + Model.Index + "__QuotationIndex", Name = "Attachments[" + Model.Index + "].QuotationIndex", @class = "fu_upload_quotation_index" })
+    
+
+    @Html.HiddenFor(model => model.CreatedByUserId, new { id = "Attachments_" + Model.Index + "__CreatedByUserId", Name = "Attachments[" + Model.Index + "].CreatedByUserId", @class = "fu_upload_created_by_user_id" })
+    @Html.HiddenFor(model => model.UpdatedByUserId, new { id = "Attachments_" + Model.Index + "__UpdatedByUserId", Name = "Attachments[" + Model.Index + "].UpdatedByUserId", @class = "fu_upload_updated_by_user_id" })
+    @Html.HiddenFor(model => model.DateCreatedOnUtc, new { id = "Attachments_" + Model.Index + "__DateCreatedOnUtc", Name = "Attachments[" + Model.Index + "].DateCreatedOnUtc", @class = "fu_upload_date_created" })
+    @Html.HiddenFor(model => model.DateUpdatedOnUtc, new { id = "Attachments_" + Model.Index + "__DateUpdatedOnUtc", Name = "Attachments[" + Model.Index + "].DateUpdatedOnUtc", @class = "fu_upload_date_updated" })
+    
+
+    <div class="input-append">
+        @Html.TextBoxFor(model => model.Filename, new { id = "Attachments_" + Model.Index + "__Filename", Name = "Attachments[" + Model.Index + "].Filename", @class = "span12 fu_upload_file_name", @readonly = "readonly" })
+        <div id="Attachments_@(Model.Index)__Uploader" class="btn btn-sm btn-default fu_upload_file_uploader">
+            <i class="fa fa-upload color6"></i>
+        </div>
+        <div id="Attachments_@(Model.Index)__Deleter" class="btn btn-sm btn-default fu_upload_file_deleter">
+            <i class="fa fa-trash color9"></i>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+﻿@using SSG.Core.Infrastructure
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    var _workContext = EngineContext.Current.Resolve<SSG.Core.IWorkContext>();
+}
+<div class="page home-page">
+    @*<div class="page-header" style="height:2000px;">
+        @Html.Widget("home_page_top")
+        @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
+
+@* TODO: Clean and enable news and poll        
+        <div class="clearfix"></div>
+        @Html.Action("HomePageNews", "News")
+        <div class="clearfix"></div>
+        @Html.Action("HomePagePolls", "Poll")
+        @Html.Widget("home_page_bottom")
+    </div>*@
+    <div class="hero-unit">
+        <h1>Request For Quote (RFQ)</h1>
+        <p></p>
+        @if (_workContext.CurrentUser.Username == null)
+        { 
+            <p>
+                <a id="login" class="btn btn-primary btn-large" href="javascript:void(0)">Log me in
+                    &rsaquo;&rsaquo;</a>
+            </p>
+        }
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $('#login').on('click', function () {
+        location.href = '@Url.Action(MVC.User.Login())';
+    });
+</script> 

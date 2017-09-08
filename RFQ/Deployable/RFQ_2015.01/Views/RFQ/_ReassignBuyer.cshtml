@@ -1,0 +1,50 @@
+﻿@model SSG.Web.Models.RFQ.ReassignBuyerModel
+@using (Html.BeginHorizontalForm("modal_form"))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.RFQId)
+
+    <div class="modal-header dark-primary-color">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: White">
+            &times;</button>
+        <h4 class="modal-title color4" id="myModalLabel">
+            Reassign Buyer</h4>
+    </div>
+    
+    <div class="modal-body">
+        <div class="span12 master-wrapper-center-1">
+            <div class="row-fluid">
+                <div class="control-group">
+                    <label class="span2 control-label" style="font-weight: bold">
+                        Buyer:</label>
+                    <div class="span10 controls">
+                        @Html.DropDownListFor(model => model.BuyerId, Model.BuyersList, "Select Buyer", new { @class = "form-control" })
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(m => m.BuyerId, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="span2 control-label" style="font-weight: bold">
+                        Reason For Change:</label>
+
+                    <div class="span10 controls">
+                        @Html.TextAreaFor(model => model.ChangeReason, new { @class = "form-control rfo-medium-textbox", placeholder = "Reason For Change", required = "required", data_container = "body", data_toggle = "tooltip", title = "Reason For Change. Why do you want to reassign buyer!", data_placement = "right" })
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(m => m.ChangeReason, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="submit_change_buyer_form" type="submit" class="btn btn-success" style="display: none;">
+            <i class="fa fa-save"></i>&nbsp;&nbsp;Reassign Buyer
+        </button>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">
+            <i class="fa fa-close"></i>&nbsp;&nbsp;Cancel</button>
+        <button class="btn btn-success" type="button" onclick="$('#submit_change_buyer_form').click();">
+            <i class="fa fa-save"></i>&nbsp;&nbsp;Reassign Buyer</button>
+    </div>
+}

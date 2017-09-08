@@ -1,0 +1,39 @@
+﻿<!-- done -->
+@model ProfilePostsModel
+@using SSG.Web;
+@using SSG.Web.Extensions;
+@using SSG.Web.Models.Profile;
+<div class="user-last-posts">
+    @if (Model.Posts.Count > 0)
+    {
+        <table class="table table-hover table-bordered">
+            <col />
+            <tbody>
+                @for (int i = 0; i < Model.Posts.Count; i++)
+                {
+                    var item = Model.Posts[i];
+                    <tr>
+                        <td class="a-left">
+                            <div class="topic">
+                                <p class="lead">@T("Profile.Topic"):
+                                <span>@Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })</span></p>
+                                <p>@Html.Raw(item.ForumPostText)</p>
+                                <small><span>@T("Profile.PostedOn")</span>: <span>@item.Posted</span></small>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @T("Profile.LatestPosts.NoPosts")
+    }
+    @if (Model.PagerModel.TotalPages > 1)
+    {
+        <div class="latest-posts-grid-pager-style">
+            @Html.Pager(Model.PagerModel)
+        </div>
+    }
+</div>

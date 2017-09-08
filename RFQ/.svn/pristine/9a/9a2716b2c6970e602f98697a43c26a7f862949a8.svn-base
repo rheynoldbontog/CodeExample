@@ -1,0 +1,205 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SSG.Services.RFQ;
+using SSG.Core.Domain.Common;
+using SSG.Core;
+using SSG.Services.Security;
+using SSG.Core.Domain.RFQ;
+using SSG.Web.Models.RFQ;
+using System.Web.Mvc;
+using SSG.Services.Users;
+using SSG.Core.Domain.Users;
+using SSG.Web.Models.User;
+using SSG.Web.Models.FineUploader;
+using System.IO;
+using AutoMapper;
+
+namespace SSG.Web.Controllers
+{
+    public partial class RFQController : BaseSSGController
+    {
+        #region Fields
+
+        private readonly IRFQService _rfqService;
+        private readonly IEquipmentPurchaseTypeService _equipmentPurchaseTypeService;
+        private readonly IEquipmentCalibrationTypeService _equipmentCalibrationTypeService;
+        private readonly IRFQStatusService _rfqStatusService;
+        private readonly IDepartmentService _departmentService;
+        private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IPermissionService _permissionService;
+        private readonly IUserService _userService;
+
+        #endregion
+
+        #region ctor
+
+        public RFQController(IRFQService rfqService,
+            IUserService userService,
+            IEquipmentPurchaseTypeService equipmentPurchaseTypeService,
+            IEquipmentCalibrationTypeService equipmentCalibrationTypeService,
+            IDepartmentService departmentService,
+            IRFQStatusService rfqStatusService,
+            AdminAreaSettings adminAreaSettings,
+            IWorkContext workContext,
+            IPermissionService permissionService
+            )
+        {
+            this._rfqService = rfqService;
+            this._equipmentPurchaseTypeService = equipmentPurchaseTypeService;
+            this._equipmentCalibrationTypeService = equipmentCalibrationTypeService;
+            this._departmentService = departmentService;
+            this._userService = userService;
+            this._adminAreaSettings = adminAreaSettings;
+            this._workContext = workContext;
+            this._permissionService = permissionService;
+            this._rfqStatusService = rfqStatusService;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public virtual ActionResult Edit(int id)
+        {
+            var rfq = _rfqService.GetById(id);
+
+            var model = Mapper.Map<RFQModel>(rfq);
+
+            // Requestors list...
+            var registeredRoleIds = new[] { _userService.GetUserRoleBySystemName(SystemUserRoleNames.Registered).Id };
+            var requestors = _userService.GetUsersByUserRoleId(registeredRoleIds[0]).ToList();
+
+            foreach (var requestor in requestors)
+            {
+                model.RequestersList.Add(new SelectListItem() { Text = requestor.GetFullName(), Value = requestor.Id.ToString() });
+            }
+
+            // Buyers List...
+            var buyersRoleIds = new[] { _userService.GetUserRoleBySystemName(SystemUserRoleNames.Buyer).Id };
+            var buyers = _userService.GetUsersByUserRoleId(buyersRoleIds[0]).ToList();
+
+            foreach (var buyer in buyers)
+            {
+                model.BuyersList.Add(new SelectListItem() { Text = buyer.GetFullName(), Value = buyer.Id.ToString() });
+            }
+
+            return View(MVC.RFQ.Views.CreateEdit, model);
+        }
+
+        [HttpPost]
+        public virtual ActionResult Create(RFQModel model)
+        {
+            var newRFQNo = _rfqService.GetNextRFQNo();
+
+            if (newRFQNo == null)
+                ModelState.AddModelError("", "Error in generating next RFQ number!");
+
+            if (ModelState.IsValid)
+            {
+                var rfq = Mapper.Map<RFQ>(model);
+
+                rfq.RFQNo = _rfqService.GetNextRFQNo();
+                rfq.DateCreatedOnUtc = DateTime.UtcNow;
+                rfq.DateUpdatedOnUtc = DateTime.UtcNow;
+                rfq.CreatedByUserId = _workContext.CurrentUser.Id;
+                rfq.UpdatedByUserId = _workContext.CurrentUser.Id;
+                rfq.Active = true;
+
+                //Save RFQ to database...
+                try
+                {
+                    _rfqService.SaveRFQ(rfq);
+                    return RedirectToAction("Edit", new { id = rfq.Id });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex);
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+
+            return View(MVC.RFQ.Views.CreateEdit, model);
+        }
+
+        public virtual ActionResult Create()
+        {
+            //if (!(_permissionService.Authorize(StandardPermissionProvider.) || _workContext.IsAdmin))
+            //    return AccessDenied();
+            var defaultStatus = _rfqStatusService.GetRFQStatusByName("Open");
+
+            var rfq = new RFQModel
+            {
+                RequesterId = _workContext.CurrentUser.Id,
+                Active = true,
+                StatusId = defaultStatus.Id,
+                Status = defaultStatus.Name,
+            };
+
+            if (_workContext.CurrentUser.Department != null)
+            {
+                rfq.Department = _workContext.CurrentUser.Department.Name;
+                //Get default buyer for department...
+                var defaultDepartment = _departmentService.GetDepartmentById(_workContext.CurrentUser.DepartmentId.GetValueOrDefault());
+                rfq.BuyerId = defaultDepartment.GetDefaultBuyer().Id;
+            }
+            
+            // Requestors list...
+            var registeredRoleIds = new[] { _userService.GetUserRoleBySystemName(SystemUserRoleNames.Registered).Id };
+            var requestors = _userService.GetUsersByUserRoleId(registeredRoleIds[0]).ToList();
+            
+            foreach (var requestor in requestors)
+            {
+                rfq.RequestersList.Add(new SelectListItem() { Text = requestor.GetFullName(), Value = requestor.Id.ToString() });
+            }
+
+            // Buyers List...
+            var buyersRoleIds = new[] { _userService.GetUserRoleBySystemName(SystemUserRoleNames.Buyer).Id };
+            var buyers = _userService.GetUsersByUserRoleId(buyersRoleIds[0]).ToList();
+            
+            foreach (var buyer in buyers)
+            {
+                rfq.BuyersList.Add(new SelectListItem() { Text = buyer.GetFullName(), Value = buyer.Id.ToString() });
+            }
+
+                       
+            return View(MVC.RFQ.Views.CreateEdit, rfq);
+        }
+
+        [HttpPost]
+        public virtual FineUploaderResult UploadRFQLineAttachment(FineUpload upload)
+        {
+            var dir = Server.MapPath("~/App_Data/Attachments/RFQLine/");
+            var uuid = HttpContext.Request["qquuid"];
+
+            return SaveUploadedFile(upload, dir, uuid);
+        }
+
+        private FineUploaderResult SaveUploadedFile(FineUpload upload, string dir, string uuid)
+        {
+            var filePath = Path.Combine(dir, upload.Filename);
+            try
+            {
+                upload.SaveAs(filePath, true, true);
+            }
+            catch (Exception ex)
+            {
+                return new FineUploaderResult(false, error: ex.Message);
+            }
+
+            var attachment = new FileAttachmentViewModel
+            {
+                name = upload.Filename,
+                uuid = uuid
+            };
+
+            // the anonymous object in the result below will be convert to json and set back to the browser
+            return new FineUploaderResult(true, new { fileAttachment = attachment });
+        }
+
+        #endregion
+    }
+}

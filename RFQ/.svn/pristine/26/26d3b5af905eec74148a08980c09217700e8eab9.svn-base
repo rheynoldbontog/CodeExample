@@ -1,0 +1,75 @@
+﻿@using SSG.Core;
+@using SSG.Core.Infrastructure;
+@using SSG.Core.Infrastructure.DependencyManagement;
+@using Telerik.Web.Mvc.UI;
+@using Telerik.Web.Mvc;
+@{
+    var displayMiniProfiler = EngineContext.Current.Resolve<SSG.Core.Domain.SiteInformationSettings>().DisplayMiniProfilerInPublicSite;
+    
+    //resources
+    Html.AppendCssFileParts(@Url.Content("~/Themes/Template/Content/fineuploader/fine-uploader.css"));
+    Html.AppendCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
+    Html.AppendCssFileParts(@Url.Content("~/Content/custom.css"));
+    Html.AppendCssFileParts(@Url.Content("~/Themes/Template/Content/datatables/media/css/jquery.dataTables.min.css"));
+
+    Html.AppendScriptParts(@Url.Content("~/Scripts/rfq-modal-form.js"));
+    Html.AppendScriptParts(@Url.Content("~/Themes/Template/Content/datatables/media/js/jquery.dataTables.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Themes/Template/Content/fineuploader/fine-uploader.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Themes/Template/Content/moment/moment.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/public.ajaxcart.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/public.common.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.validate.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+    
+}
+<!DOCTYPE html>
+<html @Html.Partial("LanguageAttributes")>
+<head>
+    <title>@Html.SSGTitle(true)</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.SSGMetaDescription())" />
+    <meta name="keywords" content="@(Html.SSGMetaKeywords())" />
+    @*This is used so that themes can inject content into the header*@
+    @Html.Partial("Head")
+    @Html.Widget("head_html_tag")
+    @Html.SSGCssFiles(ResourceLocation.Head)
+    @Html.SSGScripts(ResourceLocation.Head)
+    @Html.SSGCanonicalUrls()
+    @Html.Action("RssHeaderLink", "News")
+    @*Favicon - upload favicon.ico file to the root directory*@
+    @Html.Action("Favicon", "Common")
+    @if (displayMiniProfiler)
+    {
+        @StackExchange.Profiling.MiniProfiler.RenderIncludes();
+    }
+    <!--Powered by SSGTemplate - http://www.SSGTemplate.com-->
+    <!--Copyright (c) 2008-2012-->
+</head>
+<body>
+<!--[if IE]>
+<script>
+window.alert("CSO HELPDESK DOES NOT SUPPORT INTERNET EXPLORER PLEASE USE CHROME OR FIREFOX");
+document.execCommand("Stop");
+</script>
+<![endif]-->
+    @RenderBody()
+    @(Html.Telerik().StyleSheetRegistrar()
+        .DefaultGroup(group => group
+            .Add("telerik.common.min.css")
+            .Add("telerik.vista.min.css")
+            .Add("telerik.rtl.min.css")
+            //uncomment the lines below in order to combine and compress CSS files
+            //.Combined(true)
+            //.Compress(true)
+            ))
+    @(Html.Telerik().ScriptRegistrar()
+            .jQuery(false)
+            .jQueryValidation(false)
+            )
+    @Html.SSGCssFiles(ResourceLocation.Foot)
+    @Html.SSGScripts(ResourceLocation.Foot)
+</body>
+</html>

@@ -1,0 +1,2 @@
+DataProvider: mysql
+DataConnectionString: Integrated Security=False;server=localhost;database=rfq;User Id=rheynold;password=Default@123;Persist Security Info=False

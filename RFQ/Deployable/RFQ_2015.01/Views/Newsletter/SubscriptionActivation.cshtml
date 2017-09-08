@@ -1,0 +1,18 @@
+﻿@*done*@
+@model SubscriptionActivationModel
+@using SSG.Web.Models.Newsletter;
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
+<div class="page newsletter-page">
+    <div class="page-header">
+        <h2>@T("Newsletter.Title")</h2>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="page-body">
+        <strong>
+            @Model.Result
+        </strong>
+    </div>
+</div>

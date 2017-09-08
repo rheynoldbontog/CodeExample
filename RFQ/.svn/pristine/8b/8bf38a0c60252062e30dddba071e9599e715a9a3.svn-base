@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.UI.WebControls.Expressions;
+using AutoMapper;
+using SSG.Core.Domain.RFQ;
+using SSG.Services.RFQ;
+using SSG.Web.Framework;
+using SSG.Web.Models.RFQ;
+
+namespace SSG.Web.Controllers
+{
+    public partial class QuotationController : BaseSSGController
+    {
+        //
+        // GET: /Quotation/
+
+        private readonly IQuotationService _quotationService;
+        private readonly IRFQLineService _rfqLineService;
+        public QuotationController(IQuotationService quotationService,IRFQLineService rfqLineService)
+        {
+            this._quotationService = quotationService;
+            this._rfqLineService = rfqLineService;
+        }
+        public virtual ActionResult Index()
+        {
+            return View();
+        }
+        [HttpPost]
+        public virtual ActionResult QuotationMatrix(int rfqLineId)
+        {
+            var query = _quotationService.GetAllQuotations().Where(x => x.RFQLineId == rfqLineId);
+            var result = (from q in query
+                          select new QuotationModel()
+                          {
+                              QuotationNo = q.QuotationNo,
+                              QuoteUploadDate = q.QuoteUploadDate,
+                              Commodity = q.Commodity,
+                              QuoteItemDescription = q.QuoteItemDescription,
+                              MakerPN = q.MakerPN,
+                              UnitPrice = q.UnitPrice,
+                              DiscountedPrice = q.DiscountedPrice,
+                              MinimumOrderQuantity = q.MinimumOrderQuantity,
+                              PaymentTerms = q.PaymentTerms,
+                              Supplier = q.Supplier,
+                              DeliveryLeadTime = q.DeliveryLeadTime,
+                              WarrantyPeriod = q.WarrantyPeriod,
+                              BuyerRemarks = q.BuyerRemarks,
+                              RequesterRemarks = q.RequesterRemarks,
+                              Active = q.Active,
+                              RFQLineId = q.RFQLineId,
+
+                          }).ToList();
+
+            var queryRfqLine = _rfqLineService.GetRFQLineById(rfqLineId);
+
+            var rfqLineIndexModel = new RFQLineIndexModel
+            {
+                RFQNo = queryRfqLine.RFQ.RFQNo,
+                RFQLineNo = queryRfqLine.RFQLineNo,
+                RFQCreationDate = queryRfqLine.DateCreatedOnUtc
+            };
+            var model = new QuotationViewModel()
+            {
+                RfqLineIndexModel = rfqLineIndexModel,
+                QuotationModel = result
+            };
+            return View(MVC.Quotation.Views._QuotationMatrix, model);
+        }
+
+    }
+}

@@ -1,0 +1,14 @@
+﻿<!-- done -->
+@{
+    var openAuthParameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(false);
+}
+@using SSG.Services.Authentication.External;
+@if (openAuthParameters != null)
+{
+    <div class="clearfix"></div>
+    <div class="page-header">
+        <h2>@T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo")</h2><br />
+        <h4><span class="identifier">@openAuthParameters.ExternalIdentifier</span></h4>
+        <a href="@Url.Action("RemoveParameterAssociation", "ExternalAuthentication", new { ReturnUrl = Request.Url.ToString() })" class="btn btn-warning">Remove</a>
+    </div>
+}

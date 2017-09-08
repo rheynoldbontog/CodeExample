@@ -1,0 +1,107 @@
+﻿@model DefectCodeListModel
+@using SSG.Web.Models.Fracas
+@using Telerik.Web.Mvc.UI
+@using SSG.Core.Infrastructure
+@using SSG.Core.Domain.Common
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    var gridPageSize = EngineContext.Current.Resolve<AdminAreaSettings>().GridPageSize;
+
+    ViewBag.Title = @T("FRACAS.Title.DefectCode").Text;
+}
+
+@using (Html.BeginHorizontalForm())
+{
+    <div class="page-header search-header">
+        <h2>@ViewBag.Title</h2>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="pull-right">
+                    <a href="@Url.Action("Create")" class="btn btn-primary btn-small" id="create">@T("FRACAS.Button.Add")</a> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                    <div class="span4">
+                        <div class="control-group">
+                            @Html.SearchLabelFor(model => model.SearchCode, true)
+                            <div class="search-controls">
+                                @Html.TextBoxFor(model => model.SearchCode, new { @class = "input-medium" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <div class="control-group">
+                            @Html.SearchLabelFor(model => model.SearchCategoryId, true)
+                            <div class="search-controls">
+                                @Html.DropDownListFor(model => model.SearchCategoryId, Model.DefectCategoryList, new { @class = "input-medium" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span3 pull-right">
+                        <input type="submit" value="@T("FRACAS.Button.Search")" id="search-filter" class="btn btn-small pull-right" style="margin-top: 2px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="adminContent">
+            <div class="row-fluid">
+                <div class="span12">
+                    @(Html.Telerik().Grid<DefectCodeModel>(Model.DefectCodes.Data)
+                        .Name("defectcode-grid")
+                        .ClientEvents(events => events
+                            .OnDataBinding("onDataBinding"))
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.Code)
+                                .Template(x => Html.ActionLink(x.Code, "Edit", new { @class = "active", id = x.Id }))
+                                .ClientTemplate("<a href=\"" + @Url.Content("~/DefectCode/Edit/") + "<#= Id #>\"><#= Code #></a>")
+                                .Width(200);
+
+                            columns.Bound(x => x.Description)
+                                .Width(200);
+
+                            columns.Bound(x => x.DefectCategory)
+                                .Width(200);
+                        })
+                        .Pageable(settings => settings.Total(Model.DefectCodes.Total).PageSize(gridPageSize).Position(GridPagerPosition.Bottom))
+                        .DataBinding(databinding => databinding.Ajax().Select("List", "DefectCode"))
+                        .EnableCustomBinding(true)
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // Search button
+            $('#search-filter').click(function () {
+                var grid = $('#defectcode-grid').data('tGrid');
+                grid.CurrentPage = 1;
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchCode: $('#@Html.FieldIdFor(model => model.SearchCode)').val(),
+                SearchCategoryId: $('#@Html.FieldIdFor(model => model.SearchCategoryId)').val()
+            };
+            e.data = searchModel;
+        }
+    
+    </script>
+}

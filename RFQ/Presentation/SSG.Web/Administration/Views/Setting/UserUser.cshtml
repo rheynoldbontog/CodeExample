@@ -1,0 +1,499 @@
+﻿@model UserUserSettingsModel
+@using Telerik.Web.Mvc.UI;
+@using SSG.Core.Domain.Users;
+@using SSG.Core.Domain.Security;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.UserUser").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.UserUser")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.UserSettings.AllowUsersToUploadAvatars)").click(toggleAvatar);
+            $("#@Html.FieldIdFor(model => model.UserSettings.UsernamesEnabled)").click(toggleUsername);
+            $("#@Html.FieldIdFor(model => model.UserSettings.CountryEnabled)").click(toggleCountryFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.CompanyEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.DepartmentEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.StreetAddressEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.StreetAddress2Enabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.ZipPostalCodeEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.CityEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.PhoneEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.UserSettings.FaxEnabled)").click(toggleRequiredFormField);
+
+
+            toggleAvatar();
+            toggleUsername();
+            toggleCountryFormField();
+            toggleRequiredFormField();
+        });
+
+        function toggleAvatar() {
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.AllowUsersToUploadAvatars)').is(':checked')) {
+                $('#pnlDefaultAvatarEnabled').show();
+            }
+            else {
+                $('#pnlDefaultAvatarEnabled').hide();
+            }
+        }
+
+        function toggleUsername() {
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.UsernamesEnabled)').is(':checked')) {
+                $('#pnlAllowUsersToChangeUsernames').show();
+                $('#pnlCheckUsernameAvailability').show();
+            }
+            else {
+                $('#pnlAllowUsersToChangeUsernames').hide();
+                $('#pnlCheckUsernameAvailability').hide();
+            }
+        }
+
+        function toggleCountryFormField() {
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.CountryEnabled)').is(':checked')) {
+                $('#pnlStateProvincEnabled').show();
+            }
+            else {
+                $('#pnlStateProvincEnabled').hide();
+            }
+        }
+
+        function toggleRequiredFormField() {
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.CompanyEnabled)').is(':checked')) {
+                $('#pnlCompanyRequired').show();
+            }
+            else {
+                $('#pnlCompanyRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.StreetAddressEnabled)').is(':checked')) {
+                $('#pnlStreetAddressRequired').show();
+            }
+            else {
+                $('#pnlStreetAddressRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.StreetAddress2Enabled)').is(':checked')) {
+                $('#pnlStreetAddress2Required').show();
+            }
+            else {
+                $('#pnlStreetAddress2Required').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.ZipPostalCodeEnabled)').is(':checked')) {
+                $('#pnlZipPostalCodeRequired').show();
+            }
+            else {
+                $('#pnlZipPostalCodeRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.CityEnabled)').is(':checked')) {
+                $('#pnlCityRequired').show();
+            }
+            else {
+                $('#pnlCityRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.PhoneEnabled)').is(':checked')) {
+                $('#pnlPhoneRequired').show();
+            }
+            else {
+                $('#pnlPhoneRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.FaxEnabled)').is(':checked')) {
+                $('#pnlFaxRequired').show();
+            }
+            else {
+                $('#pnlFaxRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.UserSettings.DepartmentEnabled)').is(':checked')) {
+                $('#pnlDepartmentRequired').show();
+            }
+            else {
+                $('#pnlDepartmentRequired').hide();
+            }
+        }
+        
+    </script>
+    
+    @Html.ValidationSummary(false)
+
+    
+    @Html.Telerik().TabStrip().Name("usersettings-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Configuration.Settings.UserUser.UserSettings").Text).Content(TabUserSettings().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Settings.UserUser.DateTimeSettings").Text).Content(TabDateTimeSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.UserUser.ExternalAuthenticationSettings").Text).Content(TabExternalAuthenticationSettings().ToHtmlString());
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "usersettings-edit"));
+})
+}
+@helper TabUserSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.UsernamesEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.UsernamesEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.UsernamesEnabled)
+            </td>
+        </tr>
+        <tr id="pnlAllowUsersToChangeUsernames">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.AllowUsersToChangeUsernames):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.AllowUsersToChangeUsernames)
+                @Html.ValidationMessageFor(model => model.UserSettings.AllowUsersToChangeUsernames)
+            </td>
+        </tr>
+        <tr id="pnlCheckUsernameAvailability">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.CheckUsernameAvailabilityEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.CheckUsernameAvailabilityEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.CheckUsernameAvailabilityEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.UserRegistrationType):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.UserSettings.UserRegistrationType, ((UserRegistrationType)Model.UserSettings.UserRegistrationType).ToSelectList())
+                @Html.ValidationMessageFor(model => model.UserSettings.UserRegistrationType)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.AllowUsersToUploadAvatars):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.AllowUsersToUploadAvatars)
+                @Html.ValidationMessageFor(model => model.UserSettings.AllowUsersToUploadAvatars)
+            </td>
+        </tr>
+        <tr id="pnlDefaultAvatarEnabled">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.DefaultAvatarEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.DefaultAvatarEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.DefaultAvatarEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.ShowUsersLocation):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.ShowUsersLocation)
+                @Html.ValidationMessageFor(model => model.UserSettings.ShowUsersLocation)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.ShowUsersJoinDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.ShowUsersJoinDate)
+                @Html.ValidationMessageFor(model => model.UserSettings.ShowUsersJoinDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.AllowViewingProfiles):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.AllowViewingProfiles)
+                @Html.ValidationMessageFor(model => model.UserSettings.AllowViewingProfiles)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.NotifyNewUserRegistration):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.NotifyNewUserRegistration)
+                @Html.ValidationMessageFor(model => model.UserSettings.NotifyNewUserRegistration)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.UserNameFormat):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.UserSettings.UserNameFormat, ((UserNameFormat)Model.UserSettings.UserNameFormat).ToSelectList())
+                @Html.ValidationMessageFor(model => model.UserSettings.UserNameFormat)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.DefaultPasswordFormat):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.UserSettings.DefaultPasswordFormat, ((PasswordFormat)Model.UserSettings.DefaultPasswordFormat).ToSelectList())
+                @Html.ValidationMessageFor(model => model.UserSettings.DefaultPasswordFormat)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.HideNewsletterBlock):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.HideNewsletterBlock)
+                @Html.ValidationMessageFor(model => model.UserSettings.HideNewsletterBlock)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr />
+                <strong>Form fields:</strong>
+                <br />
+                <em>You can create and manage the form fields available during registration (public site) below.</em>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.GenderEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.GenderEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.GenderEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.DateOfBirthEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.DateOfBirthEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.DateOfBirthEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.CompanyEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.CompanyEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.CompanyEnabled)
+            </td>
+        </tr>
+        <tr id="pnlCompanyRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.CompanyRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.CompanyRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.CompanyRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.DepartmentEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.DepartmentEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.DepartmentEnabled)
+            </td>
+        </tr>
+        <tr id="pnlDepartmentRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.DepartmentRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.DepartmentRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.DepartmentRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.StreetAddressEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.StreetAddressEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.StreetAddressEnabled)
+            </td>
+        </tr>
+        <tr id="pnlStreetAddressRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.StreetAddressRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.StreetAddressRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.StreetAddressRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.StreetAddress2Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.StreetAddress2Enabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.StreetAddress2Enabled)
+            </td>
+        </tr>
+        <tr id="pnlStreetAddress2Required">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.StreetAddress2Required):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.StreetAddress2Required)
+                @Html.ValidationMessageFor(model => model.UserSettings.StreetAddress2Required)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.ZipPostalCodeEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.ZipPostalCodeEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.ZipPostalCodeEnabled)
+            </td>
+        </tr>
+        <tr id="pnlZipPostalCodeRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.ZipPostalCodeRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.ZipPostalCodeRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.ZipPostalCodeRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.CityEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.CityEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.CityEnabled)
+            </td>
+        </tr>
+        <tr id="pnlCityRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.CityRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.CityRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.CityRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.CountryEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.CountryEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.CountryEnabled)
+            </td>
+        </tr>
+        <tr id="pnlStateProvincEnabled">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.StateProvinceEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.StateProvinceEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.StateProvinceEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.PhoneEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.PhoneEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.PhoneEnabled)
+            </td>
+        </tr>
+        <tr id="pnlPhoneRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.PhoneRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.PhoneRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.PhoneRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.FaxEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.FaxEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.FaxEnabled)
+            </td>
+        </tr>
+        <tr id="pnlFaxRequired">
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.FaxRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.FaxRequired)
+                @Html.ValidationMessageFor(model => model.UserSettings.FaxRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.UserSettings.NewsletterEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UserSettings.NewsletterEnabled)
+                @Html.ValidationMessageFor(model => model.UserSettings.NewsletterEnabled)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabDateTimeSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.DateTimeSettings.AllowUsersToSetTimeZone):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DateTimeSettings.AllowUsersToSetTimeZone)
+                @Html.ValidationMessageFor(model => model.DateTimeSettings.AllowUsersToSetTimeZone)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.DateTimeSettings.DefaultSiteTimeZoneId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DateTimeSettings.DefaultSiteTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
+                @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultSiteTimeZoneId)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabExternalAuthenticationSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.SSGLabelFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+                @Html.ValidationMessageFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+            </td>
+        </tr>
+    </table>
+}

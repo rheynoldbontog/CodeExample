@@ -1,0 +1,16 @@
+﻿using FluentValidation;
+using SSG.Admin.Models.Polls;
+using SSG.Services.Localization;
+
+namespace SSG.Admin.Validators.Polls
+{
+    public class PollAnswerValidator : AbstractValidator<PollAnswerModel>
+    {
+        public PollAnswerValidator(ILocalizationService localizationService)
+        {
+            RuleFor(x => x.Name)
+                .NotNull()
+                .WithMessage(localizationService.GetResource("Admin.ContentManagement.Polls.Answers.Fields.Name.Required"));
+        }
+    }
+}

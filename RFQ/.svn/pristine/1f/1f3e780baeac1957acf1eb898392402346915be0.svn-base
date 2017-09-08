@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Domain.Directory;
+
+namespace SSG.Core.Domain.RFQ
+{
+    public partial class Quotation : BaseAuditEntity
+    {
+        public string QuotationNo { get; set; }
+
+        public DateTime? QuoteUploadDate { get; set; }
+
+        public string Commodity { get; set; }
+
+        public string QuoteItemDescription { get; set; }
+
+        public string MakerPN { get; set; }
+
+        public decimal UnitPrice { get; set; }
+
+        public decimal DiscountedPrice { get; set; }
+
+        public int MinimumOrderQuantity { get; set; }
+
+        public string PaymentTerms { get; set; }
+
+        public string Supplier { get; set; }
+
+        public string DeliveryLeadTime { get; set; }
+
+        public string WarrantyPeriod { get; set; }
+
+        public string BuyerRemarks { get; set; }
+
+        public string RequesterRemarks { get; set; }
+
+        public string QuotationAttachment { get; set; }
+
+        public string ROHSDocument { get; set; }
+
+        public string MSDSAttachment { get; set; }
+
+        public string OtherAttachment1 { get; set; }
+
+        public string OtherAttachment2 { get; set; }
+
+        public string OtherAttachment3 { get; set; }
+
+        public string OtherAttachment4 { get; set; }
+
+        public string OtherAttachment5 { get; set; }
+
+        public bool Active { get; set; }
+
+        //REFERENCES
+        #region RFQLine
+
+        public virtual int RFQLineId { get; set; }
+
+        public virtual RFQLine RFQLine { get; set; } 
+
+        #endregion
+
+        #region "Currency"
+
+        public virtual int CurrencyId { get; set; }
+        public virtual Currency Currency { get; set; }
+
+        #endregion
+    }
+}

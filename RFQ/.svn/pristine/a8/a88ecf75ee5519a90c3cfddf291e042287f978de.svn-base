@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+using System.Transactions;
+
+namespace SSG.Services.RFQ
+{
+    public class FileAttachmentService : IFileAttachmentService
+    {
+        #region Fields
+
+        private readonly IRepository<FileAttachment> _fileAttachmentRepository;
+        
+        #endregion
+
+        #region ctor
+
+        public FileAttachmentService(IRepository<FileAttachment> fileAttachmentRepository)
+        {
+            this._fileAttachmentRepository = fileAttachmentRepository;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public IEnumerable<FileAttachment> GetAllFileAttachmentsEnumerableForRFQLine(int rfqLineId, bool activeOnly = false)
+        {
+            return this._fileAttachmentRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1) && s.FileAttachmentType == (int)FileAttachmentType.RFQLineAttachment && s.Id == rfqLineId)
+                .AsEnumerable();
+        }
+
+        public IQueryable<FileAttachment> GetAllFileAttachmentsQueryableForRFQLine(int rfqLineId, bool activeOnly = false)
+        {
+            return this._fileAttachmentRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1) && s.FileAttachmentType == (int)FileAttachmentType.RFQLineAttachment && s.Id == rfqLineId)
+                .AsQueryable();
+        }
+
+        public void SaveFileAttachment(FileAttachment attachment)
+        {
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    if (attachment.Id == 0)
+                    {
+                        this._fileAttachmentRepository.Insert(attachment);
+                    }
+                    else
+                    {
+                        this._fileAttachmentRepository.Update(attachment);
+                    }
+                    scope.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Theme title="SSG Default" 
+	   supportRTL="true"
+	   mobileTheme="false"
+       previewImageUrl="~/Themes/SSGDefault/preview.png"
+       previewText="This is the 'SSG Default' site theme.">
+</Theme>

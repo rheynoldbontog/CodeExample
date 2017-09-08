@@ -1,0 +1,226 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Web;
+using System.Web.DynamicData;
+using System.Web.Mvc;
+using PagedList;
+using SSG.Core;
+using SSG.Core.Domain.Common;
+using SSG.Core.Domain.RFQ;
+using SSG.Core.Domain.Users;
+using SSG.Services.Directory;
+using SSG.Services.RFQ;
+using SSG.Services.Security;
+using SSG.Services.Users;
+using SSG.Web.Models.RFQ;
+using System.Data.Objects;
+using System.Globalization;
+
+namespace SSG.Web.Controllers
+{
+    public partial class RFQIndexController : BaseSSGController
+    {
+        #region Fields
+
+        private readonly IRFQLineService _rfqLineService;
+        private readonly IUOMService _uomService;
+        private readonly IRFQLineTypeService _rfqLineTypeService;
+        private readonly IRFQLineFormTypeService _rfqLineFormTypeService;
+        private readonly IEquipmentPurchaseTypeService _rfqLineEquipmentPurchaseTypeService;
+        private readonly IEquipmentCalibrationTypeService _rfqLineEquipmentCalibrationTypeService;
+        private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IPermissionService _permissionService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IUserService _userService;
+        private readonly IRFQLineStatusService _rfqLineStatusService;
+
+        #endregion
+        // GET: /RFQIndex/
+        public RFQIndexController(
+            IRFQLineService rfqLineService,
+            IUOMService uomService,
+            IRFQLineTypeService rfqLineTypeService,
+            IRFQLineFormTypeService rfqLineFormTypeService,
+            IEquipmentPurchaseTypeService rfqLineEquipmentPurchaseTypeService,
+            IEquipmentCalibrationTypeService rfqLineEquipmentCalibrationTypeService,
+            ICurrencyService currencyService,
+            AdminAreaSettings adminAreaSettings,
+            IWorkContext workContext,
+            IPermissionService permissionService,
+            IUserService userService,
+            IRFQLineStatusService rfqLineStatusService
+        )
+        {
+            this._rfqLineService = rfqLineService;
+            this._uomService = uomService;
+            this._rfqLineTypeService = rfqLineTypeService;
+            this._rfqLineFormTypeService = rfqLineFormTypeService;
+            this._rfqLineEquipmentPurchaseTypeService = rfqLineEquipmentPurchaseTypeService;
+            this._rfqLineEquipmentCalibrationTypeService = rfqLineEquipmentCalibrationTypeService;
+            this._currencyService = currencyService;
+            this._adminAreaSettings = adminAreaSettings;
+            this._workContext = workContext;
+            this._permissionService = permissionService;
+            this._userService = userService;
+            this._rfqLineStatusService = rfqLineStatusService;
+        }
+        public virtual ActionResult Index(int? page, RFQLineIndexModel rfqLineIndexModel)
+        {
+            if (!_workContext.CurrentUser.IsRegistered())
+            {
+                return View(MVC.Home.Views.Index);
+            }
+
+            page = page ?? 1;
+            var query = _rfqLineService.GetAllRFQLinesQueryable()
+                .Where(x => (x.RFQ.RequestorId == _workContext.CurrentUser.Id || x.Status.Id == (int)RFQLineStates.Open) || x.RFQ.Department == _workContext.CurrentUser.Department.Name);
+
+            query = query.OrderBy(s => s.DateUpdatedOnUtc).Skip((page.Value - 1) * _adminAreaSettings.GridPageSize).Take(_adminAreaSettings.GridPageSize);
+            var rfqLines = (from rfql in query
+                select new RFQLineIndexModel()
+                {
+                    RFQID = rfql.RFQ.Id,
+                    RFQLineID = rfql.Id,
+                    RFQNo = rfql.RFQ.RFQNo,
+                    RFQLineNo = rfql.RFQLineNo,
+                    RFQCreationDate = rfql.DateCreatedOnUtc,
+                    ItemDescription = rfql.ItemDescription,
+                    Quantity = rfql.Quantity,
+                    UOM = rfql.QuantityUnit.Name,
+                    MakerPN = rfql.MakerPN,
+                    RequesterId = rfql.RFQ.RequestorId,
+                    Department = rfql.RFQ.Department,
+                    BuyerId = rfql.RFQ.BuyerId,
+                    Status = rfql.Status.Name,
+                    Type = rfql.FormType.Name,
+                    ROHSCompliant = rfql.ROHSCompliant,
+                    TestEquipmentPurchaseType = rfql.TestEquipmentPurchaseType.Name,
+                    CallibrationType = rfql.TestEquipmentCalibrationType.Name,
+                    NoteToBuyer = rfql.NoteToBuyer,
+                    ClosedDate = rfql.FirstUploadDate.Value
+
+                }).ToList();
+
+            foreach (var line in rfqLines)
+            {
+                var rfqLine = _rfqLineService.GetRFQLineById(line.RFQLineID);
+                line.Requester = _userService.GetUserById(line.RequesterId).GetFullName();
+                line.Buyer = _userService.GetUserById(line.BuyerId).GetFullName();
+                line.IsUserCanEditable = rfqLine.UserCanEditLine(_workContext.CurrentUser);
+                line.IsUserCanDeletable = rfqLine.UserCanDeleteLine(_workContext.CurrentUser);
+            }
+
+
+            int totalCount = query.Count();
+            var pagedList = new StaticPagedList<RFQLineIndexModel>(rfqLines, page.Value, _adminAreaSettings.GridPageSize, totalCount);
+
+            if (Request.IsAjaxRequest())
+            {
+                return View(MVC.RFQIndex.Views._Tables, pagedList);
+            }
+
+            var rfqLineModel = new RFQLineModel();
+            var status = _rfqLineStatusService.GetAllStatus(false);
+            rfqLineModel.StatusSelectListItems = new List<SelectListItem>();
+
+            foreach (var stats in status)
+            {
+                rfqLineModel.StatusSelectListItems.Add(new SelectListItem() { Text = stats.Name, Value = stats.Id.ToString() });
+            }
+
+            // Buyers List...
+            var rfqModel = new RFQModel();
+            var buyersRoleIds = new[] { _userService.GetUserRoleBySystemName(SystemUserRoleNames.Buyer).Id };
+            var buyers = _userService.GetUsersByUserRoleId(buyersRoleIds[0]).ToList();
+
+            foreach (var buyer in buyers)
+            {
+                rfqModel.BuyersList.Add(new SelectListItem() { Text = buyer.GetFullName(), Value = buyer.Id.ToString() });
+            }
+
+            var model = new RFQLineModelIndexes()
+            {
+                RfqLineIndexModels = pagedList,
+                RfqLineIndex = rfqLineIndexModel,
+                RfqLineModel = rfqLineModel,
+                RfqModel = rfqModel
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public virtual ActionResult Search(RFQLineModelIndexes rfqLineModelIndexes, int? page)
+        {
+            page = page ?? 1;
+            DateTime startDateTime = new DateTime(rfqLineModelIndexes.StartDate.Value.Year,
+                rfqLineModelIndexes.StartDate.Value.Month, rfqLineModelIndexes.StartDate.Value.Day, 0, 0, 0, 0);
+            DateTime endDateTime = new DateTime(rfqLineModelIndexes.EndDate.Value.Year, rfqLineModelIndexes.EndDate.Value.Month, rfqLineModelIndexes.EndDate.Value.Day, 23, 59, 59,
+                999);
+            var query = _rfqLineService
+                .GetAllRFQLinesQueryable()
+                .Where(x =>
+                    x.RFQ.RFQNo == (string.IsNullOrEmpty(rfqLineModelIndexes.RfqLineIndex.RFQNo)? x.RFQ.RFQNo : rfqLineModelIndexes.RfqLineIndex.RFQNo) &&
+                    x.RFQ.BuyerId == (rfqLineModelIndexes.RfqModel.BuyerId == 0? x.RFQ.BuyerId : rfqLineModelIndexes.RfqModel.BuyerId) &&
+                    x.RFQLineStatusId == (rfqLineModelIndexes.RfqLineModel.StatusId == 0? x.RFQLineStatusId : rfqLineModelIndexes.RfqLineModel.StatusId) &&
+                    x.DateCreatedOnUtc >= startDateTime && x.DateCreatedOnUtc <= endDateTime &&
+                    (
+                        x.ItemDescription == (string.IsNullOrEmpty(rfqLineModelIndexes.SearchOthers) ? x.ItemDescription : rfqLineModelIndexes.SearchOthers) ||
+                        x.QuantityUnit.Name == (string.IsNullOrEmpty(rfqLineModelIndexes.SearchOthers) ? x.QuantityUnit.Name : rfqLineModelIndexes.SearchOthers) ||
+                        x.MakerPN == (string.IsNullOrEmpty(rfqLineModelIndexes.SearchOthers) ? x.MakerPN : rfqLineModelIndexes.SearchOthers) ||
+                        x.RFQ.Department == (string.IsNullOrEmpty(rfqLineModelIndexes.SearchOthers) ? x.RFQ.Department : rfqLineModelIndexes.SearchOthers)
+                    )
+                );
+            
+            int totalCount = query.Count();
+            query = query.OrderBy(s => s.DateUpdatedOnUtc).Skip((page.Value - 1) * _adminAreaSettings.GridPageSize).Take(_adminAreaSettings.GridPageSize);
+            var rfqLines = (from rfql in query
+                select new RFQLineIndexModel()
+                {
+                    RFQID = rfql.RFQ.Id,
+                    RFQNo = rfql.RFQ.RFQNo,
+                    RFQLineNo = rfql.RFQLineNo,
+                    RFQCreationDate = rfql.DateCreatedOnUtc,
+                    ItemDescription = rfql.ItemDescription,
+                    Quantity = rfql.Quantity,
+                    UOM = rfql.QuantityUnit.Name,
+                    MakerPN = rfql.MakerPN,
+                    RequesterId = rfql.RFQ.RequestorId,
+                    Department = rfql.RFQ.Department,
+                    BuyerId = rfql.RFQ.BuyerId,
+                    Status = rfql.Status.Name,
+                    Type = rfql.FormType.Name,
+                    ROHSCompliant = rfql.ROHSCompliant,
+                    TestEquipmentPurchaseType = rfql.TestEquipmentPurchaseType.Name,
+                    CallibrationType = rfql.TestEquipmentCalibrationType.Name,
+                    NoteToBuyer = rfql.NoteToBuyer,
+                    ClosedDate = rfql.FirstUploadDate.Value
+
+                }).ToList();
+
+            foreach (var line in rfqLines)
+            {
+                var rfqLine = _rfqLineService.GetRFQLineById(line.RFQLineID);
+                line.Requester = _userService.GetUserById(line.RequesterId).GetFullName();
+                line.Buyer = _userService.GetUserById(line.BuyerId).GetFullName();
+                line.IsUserCanEditable = rfqLine.UserCanEditLine(_workContext.CurrentUser);
+                line.IsUserCanDeletable = rfqLine.UserCanDeleteLine(_workContext.CurrentUser);
+            }
+
+            var pagedList = new StaticPagedList<RFQLineIndexModel>(rfqLines, page.Value, _adminAreaSettings.GridPageSize, totalCount);
+
+            if (Request.IsAjaxRequest())
+            {
+                return View(MVC.RFQIndex.Views._Tables, pagedList);
+            }
+            var model = new RFQLineModelIndexes()
+            {
+                RfqLineIndexModels = pagedList
+            };
+            return View(MVC.RFQIndex.Views.Index, model);
+        }
+
+    }
+}

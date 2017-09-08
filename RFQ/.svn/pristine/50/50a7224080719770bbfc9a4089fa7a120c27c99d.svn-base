@@ -1,0 +1,354 @@
+﻿@model SSG.Web.Models.RFQ.QuotationModel
+@{ ViewContext.FormContext = new FormContext(); }
+
+@Html.HiddenFor(model => model.Id, new { id = "Quotations_" + Model.Index + "__Id", Name = "Quotations[" + Model.Index + "].Id" })
+@Html.HiddenFor(model => model.Index, new { id = "Quotations_" + Model.Index + "__Index", Name = "Quotations[" + Model.Index + "].Index" })
+@Html.HiddenFor(model => model.IsDeleted, new { id = "Quotations_" + Model.Index + "__IsDeleted", Name = "Quotations[" + Model.Index + "].IsDeleted" })
+@Html.HiddenFor(model => model.RFQLineId, new { id = "Quotations_" + Model.Index + "__RFQLineId", Name = "Quotations[" + Model.Index + "].RFQLineId" })
+@Html.HiddenFor(model => model.QuotationNo, new { id = "Quotations_" + Model.Index + "__QuotationNo", Name = "Quotations[" + Model.Index + "].QuotationNo" })
+
+@Html.HiddenFor(model => model.Active, new { id = "Quotations_" + Model.Index + "__Active", Name = "Quotations[" + Model.Index + "].Active" })
+@Html.HiddenFor(model => model.CreatedByUserId, new { id = "Quotations_" + Model.Index + "__CreatedByUserId", Name = "Quotations[" + Model.Index + "].CreatedByUserId" })
+@Html.HiddenFor(model => model.UpdatedByUserId, new { id = "Quotations_" + Model.Index + "__UpdatedByUserId", Name = "Quotations[" + Model.Index + "].UpdatedByUserId" })
+@Html.HiddenFor(model => model.DateCreatedOnUtc, new { id = "Quotations_" + Model.Index + "__DateCreatedOnUtc", Name = "Quotations[" + Model.Index + "].DateCreatedOnUtc" })
+@Html.HiddenFor(model => model.DateUpdatedOnUtc, new { id = "Quotations_" + Model.Index + "__DateUpdatedOnUtc", Name = "Quotations[" + Model.Index + "].DateUpdatedOnUtc" })
+
+<div class="@( Model.Index == "0" ? "tab-pane panel-body active" : "tab-pane panel-body")" id="@("quotation" + Model.Index)">
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <td style="width: 15%;">@Html.LabelFor(model => model.Supplier)
+                </td>
+                <td style="width: 35%;">
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.Supplier, new { id = "Quotations_" + Model.Index + "__Supplier", Name = "Quotations[" + Model.Index + "].Supplier", @placeholder = "Supplier", @class = "rfo-large-textbox ajax-typeahead", @readonly = "readonly", data_link = @Url.Action("SupplierLookup", "Quotation"), autocomplete = "off" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.Supplier, new { id = "Quotations_" + Model.Index + "__Supplier", Name = "Quotations[" + Model.Index + "].Supplier", @placeholder = "Supplier", @class = "rfo-large-textbox ajax-typeahead", data_link = @Url.Action("SupplierLookup", "Quotation"), autocomplete = "off" })
+                    }
+                    @Html.RequiredHint()
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].Supplier", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__Supplier" })
+                </td>
+                <td style="width: 15%;">@Html.LabelFor(model => model.QuoteUploadDate)
+                </td>
+                <td style="width: 35%;">
+                    @if (Model.Id > 0)
+                    {
+                        @Html.DisplayFor(model => model.QuoteUploadDate)
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">@Html.LabelFor(model => model.QuoteValidity)
+                </td>
+                <td style="width: 35%;">
+                     @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.QuoteValidity, new { id = "Quotations_" + Model.Index + "__QuoteValidity", Name = "Quotations[" + Model.Index + "].QuoteValidity", @placeholder = "Quote Validity", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.QuoteValidity, new { id = "Quotations_" + Model.Index + "__QuoteValidity", Name = "Quotations[" + Model.Index + "].QuoteValidity", @placeholder = "Quote Validity", @class = "rfo-large-textbox" })
+                    }
+                    
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].QuoteValidity", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__QuoteValidity" })
+                </td>
+                <td style="width: 15%;">@Html.LabelFor(model => model.QuoteAttachment)
+                </td>
+                <td style="width: 35%;">
+                    <div id="quote_attachments_@(Model.RFQLineId)_@(Model.QuotationNo)" class="fu_container">
+                        @Html.Hidden("fu_upload_index", Model.Index)
+                        @Html.Hidden("fu_create_url", Url.Action("CreateQuoteAttachment", "FileAttachment", new { rfqLineId = @Model.RFQLineId }))
+                        @Html.Hidden("fu_upload_url", Url.Action("UploadAttachment", "FileAttachment", new { path = "~/Attachments/Quotation/" }))
+                        @Html.Hidden("fu_upload_count", Model.QuoteAttachment.Count)
+                        <div class="row-fluid">
+                            <div class="span12 master-wrapper-center-1 fu_button_container">
+                                <button type="button" class="btn btn-default fu_button">
+                                    <i class="fa fa-plus color6"></i>&nbsp;&nbsp;Add Attachment
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="quote_attachments_upload_container_@(Model.RFQLineId)_@(Model.QuotationNo)" class="span12 fu_uploads_container" style="margin-left: 12px; margin-bottom: 10px;">
+                                @foreach (var attachment in Model.QuoteAttachment)
+                                {
+                                    @Html.Partial("~/Views/FileAttachment/_CreateEditQuoteAttachment.cshtml", attachment)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">@Html.LabelFor(model => model.Commodity)
+                </td>
+                <td style="width: 35%;">
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.Commodity, new { id = "Quotations_" + Model.Index + "__Commodity", Name = "Quotations[" + Model.Index + "].Commodity", @placeholder = "Commodity", @class = "rfo-large-textbox ajax-typeahead", @readonly = "readonly", data_link = @Url.Action("CommodityLookup", "Quotation"), autocomplete = "off" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.Commodity, new { id = "Quotations_" + Model.Index + "__Commodity", Name = "Quotations[" + Model.Index + "].Commodity", @placeholder = "Commodity", @class = "rfo-large-textbox ajax-typeahead", data_provide = "typeahead", data_link = @Url.Action("CommodityLookup", "Quotation"), autocomplete = "off" })
+                    }
+                    
+                    @Html.RequiredHint()
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].Commodity", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__Commodity" })
+                </td>
+                <td style="width: 15%;">@Html.LabelFor(model => model.ROHSDocumentAttachment)
+                </td>
+                <td style="width: 35%;">
+                    <div id="rohs_attachments_@(Model.RFQLineId)_@(Model.QuotationNo)" class="fu_container">
+                        @Html.Hidden("fu_upload_index", Model.Index)
+                        @Html.Hidden("fu_create_url", Url.Action("CreateROHSDocumentAttachment", "FileAttachment", new { rfqLineId = @Model.RFQLineId }))
+                        @Html.Hidden("fu_upload_url", Url.Action("UploadAttachment", "FileAttachment", new { path = "~/Attachments/ROHS/" }))
+                        @Html.Hidden("fu_upload_count", Model.ROHSDocumentAttachment.Count)
+                        <div class="row-fluid">
+                            <div class="span12 master-wrapper-center-1 fu_button_container">
+                                <button type="button" class="btn btn-default fu_button">
+                                    <i class="fa fa-plus color6"></i>&nbsp;&nbsp;Add Attachment
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="rohs_attachments_upload_container_@(Model.RFQLineId)_@(Model.QuotationNo)" class="span12 fu_uploads_container" style="margin-left: 12px; margin-bottom: 10px;">
+                                @foreach (var attachment in Model.ROHSDocumentAttachment)
+                                {
+                                    @Html.Partial("~/Views/FileAttachment/_CreateROHSDocumentAttachment.cshtml", attachment)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.QuoteItemDescription)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextAreaFor(model => model.QuoteItemDescription, new { id = "Quotations_" + Model.Index + "__QuoteItemDescription", Name = "Quotations[" + Model.Index + "].QuoteItemDescription", @class = "form-control rfo-large-textbox", placeholder = "Item Description", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextAreaFor(model => model.QuoteItemDescription, new { id = "Quotations_" + Model.Index + "__QuoteItemDescription", Name = "Quotations[" + Model.Index + "].QuoteItemDescription", @class = "form-control rfo-large-textbox", placeholder = "Item Description" })
+                    }
+
+                    @Html.RequiredHint()
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].QuoteItemDescription", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__QuoteItemDescription" })
+                </td>
+                <td style="width: 15%;">@Html.LabelFor(model => model.MSDSDocumentAttachment)
+                </td>
+                <td style="width: 35%;">
+                    <div id="msds_attachments_@(Model.RFQLineId)_@(Model.QuotationNo)" class="fu_container">
+                        @Html.Hidden("fu_upload_index", Model.Index)
+                        @Html.Hidden("fu_create_url", Url.Action("CreateMSDSDocumentAttachment", "FileAttachment", new { rfqLineId = @Model.RFQLineId }))
+                        @Html.Hidden("fu_upload_url", Url.Action("UploadAttachment", "FileAttachment", new { path = "~/Attachments/MSDS/" }))
+                        @Html.Hidden("fu_upload_count", Model.MSDSDocumentAttachment.Count)
+                        <div class="row-fluid">
+                            <div class="span12 master-wrapper-center-1 fu_button_container">
+                                <button type="button" class="btn btn-default fu_button">
+                                    <i class="fa fa-plus color6"></i>&nbsp;&nbsp;Add Attachment
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="msds_attachment_uploads_container_@(Model.RFQLineId)_@(Model.QuotationNo)" class="span12 fu_uploads_container" style="margin-left: 12px; margin-bottom: 10px;">
+                                @foreach (var attachment in Model.MSDSDocumentAttachment)
+                                {
+                                    @Html.Partial("~/Views/FileAttachment/_CreateMSDSDocumentAttachment.cshtml", attachment)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.MakerPN)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.MakerPN, new { id = "Quotations_" + Model.Index + "__MakerPN", Name = "Quotations[" + Model.Index + "].MakerPN", @placeholder = "MakerPN", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.MakerPN, new { id = "Quotations_" + Model.Index + "__MakerPN", Name = "Quotations[" + Model.Index + "].MakerPN", @placeholder = "MakerPN", @class = "rfo-large-textbox" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].MakerPN", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__MakerPN" })
+                </td>
+                <td style="width: 15%;">@Html.LabelFor(model => model.OtherAttachments)
+                </td>
+                <td style="width: 35%;">
+                    <div id="other_attachments_@(Model.RFQLineId)_@(Model.QuotationNo)" class="fu_container">
+                        @Html.Hidden("fu_upload_index", Model.Index)
+                        @Html.Hidden("fu_create_url", Url.Action("CreateOtherDocumentAttachment", "FileAttachment", new { rfqLineId = @Model.RFQLineId }))
+                        @Html.Hidden("fu_upload_url", Url.Action("UploadAttachment", "FileAttachment", new { path = "~/Attachments/Other/" }))
+                        @Html.Hidden("fu_upload_count", Model.OtherAttachments.Count)
+                        <div class="row-fluid">
+                            <div class="span12 master-wrapper-center-1 fu_button_container">
+                                <button type="button" class="btn btn-default fu_button">
+                                    <i class="fa fa-plus color6"></i>&nbsp;&nbsp;Add Attachment
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="other_attachments_upload_container_@(Model.RFQLineId)_@(Model.QuotationNo)" class="span12 fu_uploads_container" style="margin-left: 12px; margin-bottom: 10px;">
+                                @foreach (var attachment in Model.OtherAttachments)
+                                {
+                                    @Html.Partial("~/Views/FileAttachment/_CreateOtherDocumentAttachment.cshtml", attachment)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.CurrencyId)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.HiddenFor(model => model.CurrencyId, new { id = "Quotations_" + Model.Index + "__CurrencyId", Name = "Quotations[" + Model.Index + "].CurrencyId", @class = "form-control" });   
+                        @Html.TextBoxFor(model => model.Currency, new { @placeholder = "Currency", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies, "Select Currency", new { id = "Quotations_" + Model.Index + "__CurrencyId", Name = "Quotations[" + Model.Index + "].CurrencyId", @class = "form-control" })
+                    }
+                    @Html.RequiredHint()
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].CurrencyId", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__CurrencyId" })
+                </td>
+                <td rowspan="9" style="width: 15%;">
+                </td>
+                <td rowspan="9" style="width: 35%;">
+                </td>
+            </tr>
+            <tr>
+               <td style="width: 300px;">@Html.LabelFor(model => model.PaymentTerms)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.PaymentTerms, new { id = "Quotations_" + Model.Index + "__PaymentTerms", Name = "Quotations[" + Model.Index + "].PaymentTerms", @placeholder = "PaymentTerms", @class = "rfo-large-textbox ajax-typeahead", @readonly = "readonly", data_link = @Url.Action("PaymentTermsLookup", "Quotation"), autocomplete = "off"  })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.PaymentTerms, new { id = "Quotations_" + Model.Index + "__PaymentTerms", Name = "Quotations[" + Model.Index + "].PaymentTerms", @placeholder = "PaymentTerms", @class = "rfo-large-textbox ajax-typeahead", data_link = @Url.Action("PaymentTermsLookup", "Quotation"), autocomplete = "off" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].PaymentTerms", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__PaymentTerms" })
+                </td>
+                
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.UnitPrice)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.UnitPrice, new { id = "Quotations_" + Model.Index + "__UnitPrice", Name = "Quotations[" + Model.Index + "].UnitPrice", @placeholder = "Unit Price", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.UnitPrice, new { id = "Quotations_" + Model.Index + "__UnitPrice", Name = "Quotations[" + Model.Index + "].UnitPrice", @placeholder = "Unit Price", @class = "rfo-large-textbox" })
+                    }
+                    @Html.RequiredHint()
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].UnitPrice", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__UnitPrice" })
+                </td>
+                
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.DiscountedPrice)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.DiscountedPrice, new { id = "Quotations_" + Model.Index + "__DiscountedPrice", Name = "Quotations[" + Model.Index + "].DiscountedPrice", @placeholder = "Discounted Price", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.DiscountedPrice, new { id = "Quotations_" + Model.Index + "__DiscountedPrice", Name = "Quotations[" + Model.Index + "].DiscountedPrice", @placeholder = "Discounted Price", @class = "rfo-large-textbox" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].DiscountedPrice", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__DiscountedPrice" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.MinimumOrderQuantity)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.MinimumOrderQuantity, new { id = "Quotations_" + Model.Index + "__MinimumOrderQuantity", Name = "Quotations[" + Model.Index + "].MinimumOrderQuantity", @placeholder = "Minimum Order Quantity (MOQ)", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.MinimumOrderQuantity, new { id = "Quotations_" + Model.Index + "__MinimumOrderQuantity", Name = "Quotations[" + Model.Index + "].MinimumOrderQuantity", @placeholder = "Minimum Order Quantity (MOQ)", @class = "rfo-large-textbox" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].MinimumOrderQuantity", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__MinimumOrderQuantity" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.DeliveryLeadTime)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.DeliveryLeadTime, new { id = "Quotations_" + Model.Index + "__DeliveryLeadTime", Name = "Quotations[" + Model.Index + "].DeliveryLeadTime", @placeholder = "Delivery Lead Time", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.DeliveryLeadTime, new { id = "Quotations_" + Model.Index + "__DeliveryLeadTime", Name = "Quotations[" + Model.Index + "].DeliveryLeadTime", @placeholder = "Delivery Lead Time", @class = "rfo-large-textbox" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].DeliveryLeadTime", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__DeliveryLeadTime" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.WarrantyPeriod)
+                </td>
+                <td>
+                    @if (Model.UserIsRequestor)
+                    {
+                        @Html.TextBoxFor(model => model.WarrantyPeriod, new { id = "Quotations_" + Model.Index + "__WarrantyPeriod", Name = "Quotations[" + Model.Index + "].WarrantyPeriod", @placeholder = "Warranty Period", @class = "rfo-large-textbox", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.WarrantyPeriod, new { id = "Quotations_" + Model.Index + "__WarrantyPeriod", Name = "Quotations[" + Model.Index + "].WarrantyPeriod", @placeholder = "Warranty Period", @class = "rfo-large-textbox" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].WarrantyPeriod", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__WarrantyPeriod" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.BuyerRemarks)
+                </td>
+                <td>
+                    @if (Model.UserIsBuyer)
+                    {
+                        @Html.TextAreaFor(model => model.BuyerRemarks, new { id = "Quotations_" + Model.Index + "__BuyerRemarks", Name = "Quotations[" + Model.Index + "].BuyerRemarks", @class = "form-control rfo-large-textbox", placeholder = "Buyer Remarks" })
+                    }
+                    else
+                    {
+                        @Html.TextAreaFor(model => model.BuyerRemarks, new { id = "Quotations_" + Model.Index + "__BuyerRemarks", Name = "Quotations[" + Model.Index + "].BuyerRemarks", @class = "form-control rfo-large-textbox", placeholder = "Buyer Remarks", @readonly = "readonly" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].BuyerRemarks", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__BuyerRemarks" })
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 300px;">@Html.LabelFor(model => model.RequesterRemarks)
+                </td>
+                <td>
+                    @if (Model.UserIsBuyer)
+                    {
+                        @Html.TextAreaFor(model => model.RequesterRemarks, new { id = "Quotations_" + Model.Index + "__RequesterRemarks", Name = "Quotations[" + Model.Index + "].RequesterRemarks", @class = "form-control rfo-large-textbox", placeholder = "Requester Remarks", @readonly = "readonly" })
+                    }
+                    else
+                    {
+                        @Html.TextAreaFor(model => model.RequesterRemarks, new { id = "Quotations_" + Model.Index + "__RequesterRemarks", Name = "Quotations[" + Model.Index + "].RequesterRemarks", @class = "form-control rfo-large-textbox", placeholder = "Requester Remarks" })
+                    }
+                    @Html.ValidationMessage("Quotations[" + Model.Index + "].RequesterRemarks", new { @class = "help-inline", id = "Quotations_" + Model.Index + "__RequesterRemarks" })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

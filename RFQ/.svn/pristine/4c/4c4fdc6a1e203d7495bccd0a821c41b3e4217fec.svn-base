@@ -1,0 +1,120 @@
+﻿@using PagedList.Mvc
+@using SSG.Core.Infrastructure
+@using SSG.Services.Users
+@using SSG.Core.Domain.RFQ
+@using SSG.Web.Extensions
+@model PagedList.IPagedList<SSG.Web.Models.RFQ.PageIndex>
+
+@foreach (var item in Model)
+{
+    foreach (var quote in item.RfqLineModel.Quotations)
+    {
+        var statusStyle = item.RfqLineModel != null ? "color:black" : "color:green";
+        var rfqStatusStyle = item.RfqModel.Status == "Draft" ? "color:#26a65b" : "color:#33577b";
+        var rfqLineCondition = item.RfqLineModel != null;
+        <td>
+            @if (item.RfqModel.UserCanEdit)
+            {
+                <div class="custom" align="center">@Html.ActionLink(item.RfqModel.RFQNo, "Edit", "RFQ", new { id = item.RfqModel.Id }, null)</div>
+            }
+            else
+            {
+                <div class="custom" align="center">@Html.ActionLink(item.RfqModel.RFQNo, "ViewRFQ", "RFQ", new { id = item.RfqModel.Id }, null)</div>
+            }
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Subject)</div>
+        </td>
+        <td>
+            <div class="custom" align="center" style="font-weight: bold; @rfqStatusStyle">@Html.DisplayFor(model => item.RfqModel.Status)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.RFQLineNo)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.DateCreatedOnUtc)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.ItemDescription)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.Quantity)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.QuantityUnit)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.MakerPN)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Requester)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Department)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqModel.Buyer)</div>
+        </td>
+        <td>
+            <div class="custom" align="center" style="font-weight: bold; @statusStyle">@(item.RfqLineModel != null ? item.RfqLineModel.Status : "No RFQLine")</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.FormType)</div>
+        </td>
+        <td><div class="custom" align="center">@Html.DisplayFor(model => quote.Commodity)</div></td>
+        <td>
+            <div class="custom" align="center">@Html.CheckBoxFor(model => item.RfqLineModel.ROHSCompliant, new { @disabled = "disabled" })</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.TestEquipmentPurchaseType)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.TestEquipmentCalibrationType)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.NoteToBuyer)</div>
+        </td>
+        <td>
+            <div class="custom" align="center">@Html.DisplayFor(model => item.RfqLineModel.FirstUploadDate)</div>
+        </td>
+        <td>
+            <div align="center">
+                <div class="btn-group">
+                    @if (item.RfqLineModel != null)
+                    {
+                        <button class="btn btn-default btn-sm btnViewMatrix" title="View Matrix" data-id="@Html.DisplayFor(model => item.RfqLineModel.Id)">
+                            <i class="fa fa-search color6"></i>
+                        </button>
+                        if (item.RfqLineModel.IsUserCanEditable)
+                        {
+                            if (ViewBag.IsRequestor)
+                            {
+                                @Html.NoEncodeActionLink("<i class='fa fa-pencil color6'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.RfqLineModel.Id }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default btn-sm", data_user_role = "requestor" })
+                            }
+                            else if (ViewBag.IsBuyer)
+                            {
+                                @Html.NoEncodeActionLink("<i class='fa fa-pencil color6'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.RfqLineModel.Id }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default btn-sm", data_user_role = "buyer" })
+                            }
+                        }
+                    }
+                    @if (item.RfqLineModel == null)
+                    {
+                        <button class="btn btn-default btn-sm" onclick="location.href='@Url.Action("Edit", "RFQ", new { id = Html.DisplayFor(model => item.RfqModel.Id) })'">
+                            <i class="fa fa-pencil color6"></i>
+                        </button>
+                                    
+                    }
+                    @if (item.RfqLineModel != null)
+                    {
+                        if (item.RfqLineModel.IsUserCanDeletable)
+                        {
+                            <button class="btn btn-default" onclick="rfqModal.deleteLine('@Url.Action("Delete", "RFQLine", new { lineId = Html.DisplayFor(model => item.RfqLineModel.Id) })');">
+                                <i class="fa fa-trash color6"></i>
+                            </button>
+                        }
+                    }
+                </div>
+            </div>
+        </td>
+    }
+}

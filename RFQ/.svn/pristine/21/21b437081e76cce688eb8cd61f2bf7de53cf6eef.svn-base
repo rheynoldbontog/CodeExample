@@ -1,0 +1,193 @@
+﻿@using iTextSharp.text.pdf.qrcode
+@using PagedList
+@using SSG.Core.Infrastructure
+@using SSG.Web.Models.RFQ
+@*@model IEnumerable<SSG.Web.Models.RFQ.RFQLineIndexModel>*@
+@model RFQLineModelIndexes
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    var _workContext = EngineContext.Current.Resolve<SSG.Core.IWorkContext>();
+}
+<div class="page home-page">
+    @*<div class="page-header" style="height:2000px;">
+        @Html.Widget("home_page_top")
+        @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
+
+@* TODO: Clean and enable news and poll        
+        <div class="clearfix"></div>
+        @Html.Action("HomePageNews", "News")
+        <div class="clearfix"></div>
+        @Html.Action("HomePagePolls", "Poll")
+        @Html.Widget("home_page_bottom")
+    </div>*@
+        <div class="hero-unit">
+        <h1>MRO RFQ Tool</h1>
+        <p></p>
+        @if (_workContext.CurrentUser.Username == null)
+        { 
+            <p>
+                <a id="login" class="btn btn-primary btn-large" href="javascript:void(0)">Log me in
+                    &rsaquo;&rsaquo;</a>
+            </p>
+        }
+        else
+        {
+            if (ViewBag.IsRequestor)
+            {
+                <p>
+                    <a id="createRFQ" class="btn btn-primary btn-large" href="javascript:void(0)">Create RFQ
+                    &rsaquo;&rsaquo;</a>
+                </p>
+            }
+            
+        }
+    </div>
+    @if (_workContext.CurrentUser.Username != null)
+    {
+      <div class="row-fluid">
+          <form class="form-horizontal">
+              <h3>Search RFQ By:</h3>
+              <div class="span6 master-wrapper-center-1">
+                  <div class="control-group">
+                      
+                      <div class="span6">
+                          @Html.LabelFor(model => model.RfqLineIndex.RFQNo, new {@class = "control-label"})
+                          <div class="controls">
+                              @Html.TextBoxFor(model => model.RfqLineIndex.RFQNo, new {placeholder = "RFQ No."})
+                          </div>
+                      </div>
+                      <div class="span6">
+                          @Html.LabelFor(model => model.RfqModel.BuyerId, true)
+                          <div class="controls">
+                              @Html.DropDownListFor(model => model.RfqModel.BuyerId, Model.RfqModel.BuyersList, "Select Buyer", new {@class = "form-control"})
+                              @Html.RequiredHint()
+                              @Html.ValidationMessageFor(model => Model.RfqModel.BuyersList, string.Empty, new {@class = "help-inline"})
+                          </div>
+                      </div>
+
+                  </div>
+                  <div class="control-group">
+                      <div class="span6">
+                          <label class="control-label">Commodity</label>
+                          <div class="controls">
+                              @Html.TextBoxFor(model => model.RfqLineIndex.Commodity, new {placeholder = "Commodity"})
+                          </div>
+                      </div>
+                      <div class="span6">
+                          @Html.LabelFor(model => model.SearchOthers, new {@class = "control-label"})
+                          <div class="controls">
+                              @Html.TextBoxFor(model => model.SearchOthers, new {placeholder = "Search"})
+                          </div>
+                      </div>
+                     
+                  </div>
+                  <div class="control-group">
+                      @Html.LabelFor(model => model.RfqLineModel.StatusId, true)
+                      <div class="controls">
+                          @Html.DropDownListFor(model => model.RfqLineModel.StatusId, Model.RfqLineModel.StatusSelectListItems, "Select Status", new {@class = "form-control"})
+                          @Html.RequiredHint()
+                          @Html.ValidationMessageFor(model => model.RfqLineModel.StatusSelectListItems, string.Empty, new {@class = "help-inline"})
+                      </div>
+                  </div>
+                  <div class="control-group">
+                      <div class="span12">
+                          <label class="control-label">@Html.LabelFor(model => model.RfqLineIndex.RFQCreationDate)</label>
+                      </div>
+                  </div>
+                  <div class="control-group">
+                     
+                      <div class="span6 controls">
+                          @Html.LabelFor(model => model.StartDate, new {@class = "control-label"})
+                          <div class="controls">
+                              @Html.TextBoxFor(model => model.StartDate)
+                          </div>
+                      </div>
+                      <div class="span6 controls">
+                          @Html.LabelFor(model => model.EndDate, new {@class = "control-label"})
+                          <div class="controls">
+                              @Html.TextBoxFor(model => model.EndDate)
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </form>
+      </div>
+    }
+</div>
+
+@if (_workContext.CurrentUser.Username != null)
+{
+    <div class="row-fluid">
+        <div class="span12 master-wrapper-center-1">
+            <h3>RFQ Lines</h3>
+        </div>
+    </div>
+
+    <div id="grid-list">    
+        @Html.Partial("_Tables",Model.RfqLineIndexModels )  
+    </div>
+}
+
+<script type="text/javascript">
+    $('#login').on('click', function () {
+        location.href = '@Url.Action(MVC.User.Login())';
+    });
+
+    $('#createRFQ').on('click', function () {
+        location.href = '@Url.Action(MVC.RFQ.Create())';
+    });
+
+
+    $(document).ready(function () {
+        var viewModel = @Html.Raw(Json.Encode(Model));
+        var c,rfqLine = {
+            config: {
+                form : $('form'),
+                status: $('#RfqLineModel_StatusId'),
+                buyer : $('#RfqModel_BuyerId'),
+                startDate : $('#StartDate'),
+                endDate : $('#EndDate')
+            },
+            init:function() {
+                c = this.config;
+                this.bindEvents();
+            },
+            bindEvents:function() {
+                c.form.on('keypress',function() {rfqLine.mainResponse();});
+                c.status.on('change',function() {rfqLine.sendToController();});
+                c.buyer.on('change',function() {rfqLine.sendToController();});
+                c.startDate.datepicker({
+                    onSelect:function() {
+                        rfqLine.sendToController();
+                    }
+                }).datepicker('setDate',new Date());
+                c.endDate.datepicker({
+                    onSelect:function() {
+                        rfqLine.sendToController();
+                    }
+                }).datepicker('setDate',new Date());
+            },
+            mainResponse:function() {
+                if (event.keyCode == 13) {
+                    rfqLine.sendToController();
+                }
+            },
+            sendToController:function() {
+                var data = $('form').serialize();
+                $.ajax({
+                    url: '@Url.Action(MVC.Home.Search())',
+                    type: "POST",
+                    data: data,
+                    success: function (result) {
+                        $("#grid-list").html(result);
+                    }
+                });
+            }
+        }
+        rfqLine.init();
+
+        $('#rfoLinesTable').dataTable({ searching: false });
+    });
+
+</script> 

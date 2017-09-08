@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SSG.Web.Framework;
+using System.Web.Mvc;
+using FluentValidation.Attributes;
+using SSG.Web.Validators.RFQ;
+
+namespace SSG.Web.Models.RFQ
+{
+    [Validator(typeof(ReassignBuyerValidator))]
+    public partial class ReassignBuyerModel
+    {
+        public ReassignBuyerModel()
+        {
+            BuyersList = new List<SelectListItem>();
+        }
+
+        public int RFQId { get; set; }
+
+        [SSGResourceDisplayName("Buyer")]
+        [AllowHtml]
+        public int BuyerId { get; set; }
+        public string Buyer { get; set; }
+        public IList<SelectListItem> BuyersList { get; set; }
+    }
+}

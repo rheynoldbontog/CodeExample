@@ -1,0 +1,148 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+using System.Transactions;
+using SSG.Services.Messages;
+using SSG.Core;
+
+namespace SSG.Services.RFQ
+{
+    public class RFQLineService : IRFQLineService
+    {
+        #region Fields
+
+        private readonly IRepository<RFQLine> _rfqLineRepository;
+        private readonly IRepository<Core.Domain.RFQ.RFQ> _rfqRepository;
+        private readonly IReportService _reportService;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region ctor
+
+        public RFQLineService(IRepository<RFQLine> rfqLineRepository,
+                              IRepository<Core.Domain.RFQ.RFQ> rfqRepository,
+                              IReportService reportService,
+                              IWorkflowMessageService workflowMessageService,
+                              IWorkContext workContext)
+        {
+            this._rfqLineRepository = rfqLineRepository;
+            this._rfqRepository = rfqRepository;
+            this._reportService = reportService;
+            this._workflowMessageService = workflowMessageService;
+            this._workContext = workContext;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public IEnumerable<RFQLine> GetAllRFQLines(bool activeOnly = false)
+        {
+            return this._rfqLineRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsEnumerable();
+        }
+
+        public IQueryable<RFQLine> GetAllRFQLinesQueryable(bool activeOnly = false)
+        {
+            return this._rfqLineRepository.Table
+                .Where(s => (activeOnly ? s.Active : 1 == 1))
+                .AsQueryable();
+        }
+
+        public void SaveRFQLine(RFQLine line)
+        {
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    if (line.Id == 0)
+                    {
+                        this._rfqLineRepository.Insert(line);
+                    }
+                    else
+                    {
+                        var originalValues = _rfqLineRepository.GetEntityOriginalValues(line);
+                        var oldNoteToBuyer = (string)originalValues["NoteToBuyer"];
+                        var oldLineStatusId = (int)originalValues["RFQLineStatusId"];
+
+                        this._rfqLineRepository.Update(line);
+
+                        //Notify status change if applicable...
+                        NotifyNoteToBuyerChanged(oldNoteToBuyer, line);
+                        NotifyLineDeleted(oldLineStatusId, line);
+                    }
+                    scope.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private void NotifyLineDeleted(int oldLineStatusId, RFQLine updatedLine)
+        {
+            if ((oldLineStatusId == (int)RFQLineStates.Open || oldLineStatusId == (int)RFQLineStates.Closed) &&
+                updatedLine.RFQLineStatusId == (int)RFQLineStates.Deleted)
+            {
+                var rfq = _rfqRepository.GetById(updatedLine.RFQId);
+
+                if (rfq != null)
+                {
+                    //Generate PDF...
+                    if (!_reportService.GeneratePdfReport(rfq))
+                        rfq.EmailAttachmentFilename = string.Empty;
+
+                    if (updatedLine.RFQ.UserIsRequestor(_workContext.CurrentUser))
+                        _workflowMessageService.SendRFQLineDeletedNotificationMessage(updatedLine, 1, true);
+                    else
+                        _workflowMessageService.SendRFQLineDeletedNotificationMessage(updatedLine, 1, false);
+
+                }
+            }
+        }
+
+        private void NotifyNoteToBuyerChanged(string oldNoteToBuyer, RFQLine updatedLine)
+        {
+            if (updatedLine.RFQ.RFQStatusId == (int)RFQStates.Submitted && !oldNoteToBuyer.Equals(updatedLine.NoteToBuyer))
+            {
+                var rfq = _rfqRepository.GetById(updatedLine.RFQId);
+
+                if (rfq != null)
+                {
+                    //Generate PDF...
+                    if (!_reportService.GeneratePdfReport(rfq))
+                        rfq.EmailAttachmentFilename = string.Empty;
+
+                    _workflowMessageService.SendNoteToBuyerChangedNotificationMessage(updatedLine, 1);
+                }
+            }
+        }
+
+        public IQueryable<RFQLine> GetPagedRFQLines(int currentPage, int pageSize, out int totalCount)
+        {
+            var query = this._rfqLineRepository.Table.OrderBy(s => s.RFQId);
+
+            totalCount = query.Count();
+
+            var pagedList = query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            return pagedList;
+        }
+
+        public RFQLine GetRFQLineById(int id)
+        {
+            return this._rfqLineRepository.GetById(id);
+        }
+
+        #endregion
+    }
+}

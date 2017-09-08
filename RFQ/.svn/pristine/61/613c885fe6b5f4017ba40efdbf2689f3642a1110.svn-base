@@ -1,0 +1,74 @@
+﻿<!-- done -->
+@model TopicModel
+@using SSG.Web.Models.Topics;
+@if (Model.IsPasswordProtected)
+{
+    <script type="text/javascript">    
+        $(document).ready(function () {
+            $('#ph-topic-@Model.Id').hide();            
+            $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+        });    
+        function OnAuthenticateSuccess@(Model.Id)(context) {
+            if (context.Authenticated)
+            {
+                $('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').html(context.Title);
+                if ($('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').text().length == 0)
+                {
+                    $('#ph-title-@Model.Id').hide();
+                }
+                $('#ph-topic-@Model.Id .topic-html-content-body').html(context.Body);
+                $('#ph-password-@Model.Id').hide();
+                $('#ph-topic-@Model.Id').show();
+            }
+            else
+            {
+                $('#password-error-@Model.Id').text(context.Error);
+                $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+            }
+        }
+    </script>
+    <div id="ph-password-@Model.Id">
+        @using (Ajax.BeginRouteForm("TopicAuthenticate", new AjaxOptions
+        {
+            HttpMethod = "Post",
+            OnSuccess = "OnAuthenticateSuccess" + @Model.Id,
+            LoadingElementId = "authenticate-progress-" + @Model.Id
+        }))
+        {
+            @Html.HiddenFor(model => model.Id)
+            <div class="enter-password-title">
+                <p class="lead">@T("Topic.EnterPassword")</p>
+            </div>
+            <div class="enter-password-form">
+                @Html.Password("password", null, new { id = "password-" + @Model.Id })
+                <input type="submit" value="@T("Topic.Button")" class="btn btn-primary btn-mini topic-password-button"/>
+                <span id="authenticate-progress-@Model.Id" style="display: none;">@T("Common.Wait...")
+                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                </span>
+
+
+            </div>
+            <div class="alert alert-info">
+                <span id="password-error-@Model.Id"></span>
+            </div>
+        }
+    </div>
+    <div class="topic-html-content" id="ph-topic-@Model.Id">
+        <blockquote id="ph-title-@Model.Id">
+            <h2>@Model.Title</h2>
+            <small>@Html.Raw(Model.Body)</small>        
+        </blockquote>
+    </div>
+}
+else
+{
+    <div class="topic-html-content">
+        @if (!String.IsNullOrEmpty(Model.Title))
+        {
+            <span class="topic-html-content-title">
+                <h2>@Html.Raw(Model.Title)</h2>
+                @Html.Raw(Model.Body)
+            </span>
+        }
+    </div>
+}

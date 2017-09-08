@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Theme title="Template" 
+	   supportRTL="true"
+	   mobileTheme="false"
+       previewImageUrl="~/Themes/Template/preview.png"
+       previewText="This is the 'Template' site theme.">
+</Theme>

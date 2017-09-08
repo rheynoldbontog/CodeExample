@@ -1,0 +1,224 @@
+﻿@model SSG.Web.Models.RFQ.RFQLineModel
+
+@{
+    var title = Model.Id == 0 ? "Add RFQ Line" : "Edit RFQ Line";
+    
+}
+
+@using (Html.BeginHorizontalForm("modal_form"))
+{ 
+    @Html.AntiForgeryToken()
+    
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;</button>
+        <h4 class="modal-title" id="myModalLabel">@title</h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="page">
+            <div class="page-body">
+                <ul class="nav nav-pills" id="line_tabs">
+                    <li><a href="#line_form" data-toggle="tab"><span id="form_tab_name">@Model.LineType</span></a></li>
+                    <li><a href="#line_quotations" data-toggle="tab">Quotations</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="line_form">
+                        <div class="row-fluid">
+                             <div class="span12 master-wrapper-center-1">
+                                 @Html.ValidationSummary(false, "Please fix the following errors:", new { @class = "alert alert-danger" })
+                             </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span6 master-wrapper-center-2">
+                                @Html.HiddenFor(model => model.RFQId)
+                                <div class="control-group">
+                                    @Html.Hidden("initial_form_type", Model.FormTypeId)
+                                    
+                                    @Html.LabelFor(model => model.FormTypeId, true)
+                                    <div class="span8 controls">
+                                        @Html.DropDownListFor(model => model.FormTypeId, Model.AvailableFormTypes, null, new { @class = "form-control", @onchange = "ChangeFormType(this);" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(m => m.FormTypeId, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.RFQLineNo, true)
+                                    <div class="span8 controls">
+                                        @Html.TextBoxFor(model => model.RFQLineNo, new { @placeholder = "RFQ Line No", @required = "required", @readonly = "readonly" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(model => model.RFQLineNo, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.LineTypeId, true)
+                                    <div class="span8 controls">
+                                        @Html.DropDownListFor(model => model.LineTypeId, Model.AvailableLineTypes, "Select Line Type", new { @class = "form-control" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(m => m.LineTypeId, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.ItemDescription, true)
+                                    <div class="span8 controls">
+                                        @Html.TextAreaFor(model => model.ItemDescription, new { @class = "form-control rfo-medium-textbox", placeholder = "Item Description", required = "required" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(model => model.ItemDescription, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.CurrencyId, true)
+                                    <div class="span8 controls">
+                                        @Html.DropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies, "Select Currency", new { @class = "form-control" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(m => m.CurrencyId, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Quantity, true)
+                                    <div class="span8 controls">
+                                        @Html.TextBoxFor(model => model.Quantity, new { @placeholder = "RFQ Line No" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(model => model.Quantity, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.QuantityUnitId, true)
+                                    <div class="span8 controls">
+                                        @Html.DropDownListFor(model => model.QuantityUnitId, Model.AvailableUnits, "Select Unit", new { @class = "form-control" })
+                                        @Html.RequiredHint()
+                                        @Html.ValidationMessageFor(m => m.QuantityUnitId, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Maker, true)
+                                    <div class="span8 controls">
+                                        @Html.TextBoxFor(model => model.Maker, new { @placeholder = "Maker" })
+                                        @Html.ValidationMessageFor(model => model.Maker, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.MakerPN, true)
+                                    <div class="span8 controls">
+                                        @Html.TextBoxFor(model => model.MakerPN, new { @placeholder = "Maker PN" })
+                                        @Html.ValidationMessageFor(model => model.MakerPN, string.Empty, new { @class = "help-inline" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 master-wrapper-center-2">
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.NoteToBuyer, true)
+                                    <div class="span8 controls">
+                                        @Html.TextAreaFor(model => model.NoteToBuyer, new { @class = "form-control rfo-medium-textbox", placeholder = "Note To Buyer" })
+                                    </div>
+                                </div>
+                                <div id="general_form_optional_fields">
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.LinksAndReferences, true)
+                                        <div class="span8 controls">
+                                            @Html.TextAreaFor(model => model.LinksAndReferences, new { @class = "form-control rfo-medium-textbox", placeholder = "Links And References" })
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.ROHSCompliant, true)
+                                        <div class="span8 controls">
+                                            @Html.CheckBoxFor(model => model.ROHSCompliant)
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.Attachment1, true)
+                                        <div class="span8 controls">
+                                            @Html.Hidden("upload_url", @Url.Action("UploadRFQLineAttachment", "RFQLine"))
+                                            <div class="row-fluid">
+                                                <div class="input-append">
+                                                    @Html.TextBoxFor(model => model.Attachment1, new { @class = "span12", @readonly = "readonly" })
+                                                    <div id="attachment1_uploader" class="btn btn-success">
+                                                        <i class="icon-arrow-up icon-white"></i>
+                                                    </div>
+                                                    <div id="attachment1_deleter" class="btn btn-danger" onclick="removeAttachment('#Attachment1','#attachment1_uploader','#attachment1_deleter');">
+                                                        <i class="icon-trash icon-white"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row-fluid" style="margin-top: 5px;">
+                                                <div class="input-append">
+                                                    @Html.TextBoxFor(model => model.Attachment2, new { @class = "span12", @readonly = "readonly" })
+                                                    <div id="attachment2_uploader" class="btn btn-success">
+                                                        <i class="icon-arrow-up icon-white"></i>
+                                                    </div>
+                                                    <div id="attachment2_deleter" class="btn btn-danger" onclick="removeAttachment('#Attachment2','#attachment2_uploader','#attachment2_deleter');">
+                                                        <i class="icon-trash icon-white"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row-fluid" style="margin-top: 5px;">
+                                                <div class="input-append">
+                                                    @Html.TextBoxFor(model => model.Attachment3, new { @class = "span12", @readonly = "readonly" })
+                                                    <div id="attachment3_uploader" class="btn btn-success">
+                                                        <i class="icon-arrow-up icon-white"></i>
+                                                    </div>
+                                                    <div id="attachment3_deleter" class="btn btn-danger" onclick="removeAttachment('#Attachment3','#attachment3_uploader','#attachment3_deleter');">
+                                                        <i class="icon-trash icon-white"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.OtherTechnicalDetails, true)
+                                        <div class="span8 controls">
+                                            @Html.TextAreaFor(model => model.OtherTechnicalDetails, new { @class = "form-control rfo-medium-textbox", placeholder = "Other Technical Details" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="technical_form_optional_fields">
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.TestEquipmentPurchaseTypeId, true)
+                                        <div class="span8 controls">
+                                            @Html.DropDownListFor(model => model.TestEquipmentPurchaseTypeId, Model.AvailableEquipmentPurchaseTypes, "Select Purchase Type", new { @class = "form-control" })
+                                            @Html.RequiredHint()
+                                            @Html.ValidationMessageFor(m => m.TestEquipmentPurchaseTypeId, string.Empty, new { @class = "help-inline" })
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.TestEquipmentApplication, true)
+                                        <div class="span8 controls">
+                                            @Html.TextBoxFor(model => model.TestEquipmentApplication, new { @placeholder = "TestEquipmentApplication" })
+                                            @Html.ValidationMessageFor(model => model.TestEquipmentApplication, string.Empty, new { @class = "help-inline" })
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        @Html.LabelFor(model => model.TestEquipmentCalibrationTypeId, true)
+                                        <div class="span8 controls">
+                                            @Html.DropDownListFor(model => model.TestEquipmentCalibrationTypeId, Model.AvailableEquipmentCalibrationTypes, "Select Calibration Type", new { @class = "form-control" })
+                                            @Html.RequiredHint()
+                                            @Html.ValidationMessageFor(m => m.TestEquipmentCalibrationTypeId, string.Empty, new { @class = "help-inline" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span12 master-wrapper-center-2">
+                                @*<input class="btn btn-default" type="submit" value="Save RFQ Line" />*@
+                                <button id="submit_line_form" type="submit" class="btn btn-success" style="display: none;">
+                                    <i class="icon-pencil icon-white"></i>Save RFQ Line
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="line_quotations">
+                        <p>Quotations Here...</p>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-success" type="button" onclick="$('#submit_line_form').click();"><i class="icon-pencil icon-white"></i> Save RFQ Line</button>
+    </div>
+}

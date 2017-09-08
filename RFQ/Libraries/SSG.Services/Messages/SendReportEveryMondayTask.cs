@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Runtime.Remoting.Contexts;
+using System.Text;
+using System.Web;
+using System.Web.Hosting;
+using Org.BouncyCastle.Asn1.Ocsp;
+using SSG.Core;
+using SSG.Core.Domain.RFQ;
+using SSG.Services.RFQ;
+using SSG.Data.Mapping;
+using SSG.Services.Tasks;
+
+namespace SSG.Services.Messages
+{
+    public class SendReportEveryMondayTask : ITask
+    {
+        private readonly IRFQLineService _rfqLineService;
+        private readonly IReportService _reportService;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IQueuedEmailService _queuedEmailService;
+
+        public SendReportEveryMondayTask(
+            IRFQLineService rfqLineService,
+            IReportService reportService, 
+            IWorkflowMessageService workflowMessageService,
+            IScheduleTaskService scheduleTaskService,
+            IQueuedEmailService queuedEmailService)
+        {
+            this._rfqLineService = rfqLineService;
+            this._reportService = reportService;
+            this._workflowMessageService = workflowMessageService;
+            this._scheduleTaskService = scheduleTaskService;
+            this._queuedEmailService = queuedEmailService;
+        }
+        public void Execute()
+        {
+            //Sent Report Every Monday.
+
+            //Find if the email exists in QueueEmail Table
+
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+            {
+                SendMessageFlag.SentFlag = 0;
+            }
+
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Monday && validateTime(DateTime.Now) && SendMessageFlag.SentFlag == 0)
+            {
+                SendMessageFlag.SentFlag = 1;
+                int year = DateTime.Now.Year;
+                DateTime firstDay = new DateTime(year, 1, 1); //First Day of a Year
+                DateTime lastDay = new DateTime(year, 12, 31);//Last Day of a Year
+
+                var getallRfqLine = _rfqLineService
+                    .GetAllRFQLinesQueryable()
+                    .Where(x => x.Status.Name == "Open"
+                                && x.DateCreatedOnUtc >= firstDay
+                                && x.DateCreatedOnUtc <= lastDay
+                    ).ToList();
+
+                string fileName = string.Format("rfq_report_{0}_{1}.xlsx", DateTime.Now.ToString("yyyyMMddHH"), CommonHelper.GenerateRandomDigitCode(2));
+                string filePath = System.IO.Path.Combine(HostingEnvironment.ApplicationPhysicalPath, "content\\files\\ExportImport", fileName);
+
+                _reportService.createExcel(filePath, getallRfqLine);
+                var bytes = System.IO.File.ReadAllBytes(filePath);
+
+                _workflowMessageService.SendEmailForBuyerEveryMonday(getallRfqLine, 1, filePath);
+            }
+        }
+
+        public static bool validateTime(DateTime dateTime)
+        {
+            DateTime startTime = Convert.ToDateTime("7:30 am");
+            DateTime endTime = Convert.ToDateTime("8:00 am");
+
+            if (dateTime >= startTime && dateTime <= endTime){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+}

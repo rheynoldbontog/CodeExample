@@ -1,0 +1,211 @@
+﻿@using iTextSharp.text.pdf.qrcode
+@using PagedList
+@using SSG.Core.Infrastructure
+@using SSG.Web.Models.RFQ
+@model RFQLineModelIndexes
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    var _workContext = EngineContext.Current.Resolve<SSG.Core.IWorkContext>();
+}
+<section class="content-header">
+    <div class="pull-right">
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-home"></i>&nbsp;Home</a> </li>
+        </ol>
+    </div>
+    <i class="fa fa-google-wallet fa-2x fa-pull-left fa-border color9" aria-hidden="true"></i><h3 class="color6">Quotation Requests <small>Find my requests and do something</small></h3>
+    <hr />
+</section>
+</br>
+<h4>
+    Search By:</h4>
+<div class="container">
+    @if (_workContext.CurrentUser.Username != null)
+    {
+        <div class="row">
+            <form class="form-horizontal">
+            @*<div class="span12 master-wrapper-center-1">*@
+            <div class="control-group">
+                <div class="span5">
+                    <label class="control-label custom" style="font-weight: bold">
+                        RFQ No.</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.RfqLineIndex.RFQNo, new { @class = "custom", placeholder = "RFQ No." })
+                    </div>
+                </div>
+                <div class="span7">
+                    <label class="control-label custom" style="font-weight: bold">
+                        Buyer</label>
+                    <div class="controls">
+                        @Html.DropDownListFor(model => model.RfqModel.BuyerId, Model.RfqModel.BuyersList, "Select Buyer", new { @class = "form-control custom" })
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="span5">
+                    <label class="control-label custom" style="font-weight: bold">
+                        Commodity</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.RfqLineIndex.Commodity, new { @class = "custom", placeholder = "Commodity" })
+                    </div>
+                </div>
+                <div class="span7">
+                    <label class="control-label custom" style="font-weight: bold">
+                        Search</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.SearchOthers, new { @class = "custom", placeholder = "Search" })
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label custom" style="font-weight: bold">
+                    Line Status</label>
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.RfqLineModel.StatusId, Model.RfqLineModel.StatusSelectListItems, "Select Status", new { @class = "form-control custom" })
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="span12">
+                    <label class="control-label custom" style="font-weight: bold">
+                        RFQ Creation Date</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="span5 controls">
+                    <label class="control-label custom" style="font-weight: bold">
+                        Start Date</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.StartDate, new { @class = "custom" })
+                    </div>
+                </div>
+                <div class="span7 controls">
+                    <label class="control-label custom" style="font-weight: bold">
+                        End Date</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "custom" })
+                    </div>
+                </div>
+            </div>
+            @* </div>*@
+            </form>
+        </div>
+    }
+</div>
+@if (_workContext.CurrentUser.Username != null)
+{
+    <div class="row-fluid">
+        <div class="span8 master-wrapper-center-1">
+            <h4>
+                Search Results</h4>
+        </div>
+        <div class="span4 master-wrapper-center-1" align="right">
+            <div>
+                <button id="clearBtn" class="btn btn-default btn-medium custom">
+                    <i class="fa fa-eraser color6"></i>&nbsp;&nbsp;Clear</button>
+                <button id="exportToExcel" class="btn btn-success btn-medium custom">
+                    <i class="fa fa-file-excel-o color4"></i>&nbsp;&nbsp;Export To Excel</button>
+                <button id="createRFQ" class="btn btn-primary btn-medium custom" href="javascript:void(0)">
+                    <i class="fa fa-plus color4"></i>&nbsp;&nbsp;Create RFQ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="grid-list" @*style="border-style: dotted;border-color: red"*@>
+        @*@Html.Partial("_Tables",Model.RfqLineIndexModels )  *@
+        @Html.Partial("_Tables", Model.PageIndex)
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var c, rfqLine = {
+            config: {
+                form: $('form'),
+                status: $('#RfqLineModel_StatusId'),
+                buyer: $('#RfqModel_BuyerId'),
+                startDate: $('#StartDate'),
+                endDate: $('#EndDate'),
+                createRFQ: $('#createRFQ'),
+                clearBtn: $('#clearBtn'),
+                exportExcel: $('#exportToExcel')
+            },
+            init: function () {
+                c = this.config;
+                this.bindEvents();
+            },
+            bindEvents: function () {
+                c.form.on('keypress', function () { rfqLine.mainResponse(); });
+                c.status.on('change', function () { rfqLine.sendToController(); });
+                c.buyer.on('change', function () { rfqLine.sendToController(); });
+                c.startDate.datepicker({
+                    onSelect: function (selectDate) {
+                        //rfqLine.sendToController();
+                        c.endDate.datepicker('option', selectDate);
+                        setTimeout(function () {
+                            c.endDate.datepicker('show');
+                        }, 16);
+                    }
+                }).datepicker();
+                c.endDate.datepicker({
+                    onSelect: function () {
+                        rfqLine.sendToController();
+                    }
+                }).datepicker();
+                c.createRFQ.on('click', function () {
+                    rfqLine.goToCreateRFQ();
+                });
+                c.clearBtn.on('click', function () {
+                    rfqLine.clearFields();
+                });
+                c.exportExcel.on('click', function () {
+                    rfqLine.sendToExportExcel();
+                    //rfqLine.exportToExcel();
+                });
+            },
+            mainResponse: function () {
+                if (event.keyCode == 13) {
+                    rfqLine.sendToController();
+                }
+            },
+            sendToController: function () {
+                var data = $('form').serialize();
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action(MVC.RFQIndex.Index())',
+                    type: "POST",
+                    data: data,
+                    success: function (result) {
+                        $("#grid-list").html(result);
+                    }
+                });
+            },
+            goToCreateRFQ: function () {
+                location.href = '@Url.Action(MVC.RFQ.Create())';
+            },
+            clearFields: function () {
+                $('#RfqLineModel_StatusId').val('');
+                $('#RfqModel_BuyerId').val('');
+                $('#RfqLineIndex_RFQNo').val('');
+                $('#RfqLineIndex_Commodity').val('');
+                $('#SearchOthers').val('');
+                $('#StartDate').val('');
+                $('#EndDate').val('');
+            },
+            exportToExcel: function () {
+                window.location.href = '@Url.Action("ExportToExcel", "RFQIndex")';
+            },
+            sendToExportExcel: function () {
+                var data = $('form').serialize();
+                $.ajax({
+                    url: '@Url.Action(MVC.RFQIndex.ExportToExcel())',
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        window.location.href = '@Url.Action("Download", "RFQIndex")?filePath= ' + data.FilePath + '&fileName=' + data.FileName;
+                    }
+                });
+            }
+        }
+        rfqLine.init();
+    });
+
+</script>

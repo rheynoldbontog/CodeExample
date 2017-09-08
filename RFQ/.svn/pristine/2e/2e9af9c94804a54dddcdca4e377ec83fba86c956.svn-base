@@ -1,0 +1,254 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SSG.Services.RFQ;
+using SSG.Core.Domain.Common;
+using SSG.Core;
+using SSG.Services.Security;
+using System.Web.Mvc;
+using SSG.Web.Models.RFQ;
+using AutoMapper;
+using SSG.Services.Directory;
+using SSG.Web.Models.FineUploader;
+using System.IO;
+using SSG.Core.Domain.RFQ;
+
+namespace SSG.Web.Controllers
+{
+    public partial class RFQLineController : BaseSSGController
+    {
+        #region Fields
+
+        private readonly IRFQLineService _rfqLineService;
+        private readonly IUOMService _uomService;
+        private readonly IRFQLineTypeService _rfqLineTypeService;
+        private readonly IRFQLineFormTypeService _rfqLineFormTypeService;
+        private readonly IEquipmentPurchaseTypeService _rfqLineEquipmentPurchaseTypeService;
+        private readonly IEquipmentCalibrationTypeService _rfqLineEquipmentCalibrationTypeService;
+        private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IPermissionService _permissionService;
+        private readonly ICurrencyService _currencyService;
+        
+        #endregion
+
+        #region ctor
+
+        public RFQLineController(IRFQLineService rfqLineService,
+            IUOMService uomService,
+            IRFQLineTypeService rfqLineTypeService,
+            IRFQLineFormTypeService rfqLineFormTypeService,
+            IEquipmentPurchaseTypeService rfqLineEquipmentPurchaseTypeService,
+            IEquipmentCalibrationTypeService rfqLineEquipmentCalibrationTypeService,
+            ICurrencyService currencyService,
+            AdminAreaSettings adminAreaSettings,
+            IWorkContext workContext,
+            IPermissionService permissionService
+            )
+        {
+            this._rfqLineService = rfqLineService;
+            this._uomService = uomService;
+            this._rfqLineTypeService = rfqLineTypeService;
+            this._rfqLineFormTypeService = rfqLineFormTypeService;
+            this._rfqLineEquipmentPurchaseTypeService = rfqLineEquipmentPurchaseTypeService;
+            this._rfqLineEquipmentCalibrationTypeService = rfqLineEquipmentCalibrationTypeService;
+            this._currencyService = currencyService;
+            this._adminAreaSettings = adminAreaSettings;
+            this._workContext = workContext;
+            this._permissionService = permissionService;
+        }
+
+        #endregion
+
+        #region Methods
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual ActionResult Create([Bind(Exclude = "upload_url")] RFQLineModel rfqLine)
+        {
+            if (ModelState.IsValid)
+            {
+                var line = Mapper.Map<RFQLine>(rfqLine);
+
+                line.DateCreatedOnUtc = DateTime.UtcNow;
+                line.DateUpdatedOnUtc = DateTime.UtcNow;
+                line.CreatedByUserId = _workContext.CurrentUser.Id;
+                line.UpdatedByUserId = _workContext.CurrentUser.Id;
+                line.Active = true;
+
+                _rfqLineService.SaveRFQLine(line);
+
+                string url = Url.Action("Lines", "RFQLine", new { id = rfqLine.RFQId });
+                return Json(new { success = true, url = url });
+            }
+
+            //If we got this far, something failed, redisplay form
+            PopulateLookupsForLineModel(rfqLine);
+
+            return PartialView("_CreateEdit", rfqLine);
+        }
+
+        private void PopulateLookupsForLineModel(RFQLineModel rfqLine)
+        {
+            //Available Units
+            var units = _uomService.GetAllUOMsQueryable(true).ToList();
+            rfqLine.AvailableUnits = new List<SelectListItem>();
+
+            foreach (var unit in units)
+            {
+                rfqLine.AvailableUnits.Add(new SelectListItem() { Text = unit.Name, Value = unit.Id.ToString() });
+            }
+
+            //Available Currencies
+            var currencies = _currencyService.GetAllCurrencies(false);
+            rfqLine.AvailableCurrencies = new List<SelectListItem>();
+
+            foreach (var currency in currencies)
+            {
+                rfqLine.AvailableCurrencies.Add(new SelectListItem() { Text = currency.CurrencyCode, Value = currency.Id.ToString() });
+            }
+
+            //Available Line Types
+            var lineTypes = _rfqLineTypeService.GetAllRFQLineTypesQueryable(true).ToList();
+            rfqLine.AvailableLineTypes = new List<SelectListItem>();
+
+            foreach (var lineType in lineTypes)
+            {
+                rfqLine.AvailableLineTypes.Add(new SelectListItem() { Text = lineType.Name, Value = lineType.Id.ToString() });
+            }
+
+            //Available Line Form Types
+            var lineFormTypes = _rfqLineFormTypeService.GetAllRFQLineFormTypesQueryable(true).ToList();
+            rfqLine.AvailableFormTypes = new List<SelectListItem>();
+
+            foreach (var lineFormType in lineFormTypes)
+            {
+                rfqLine.AvailableFormTypes.Add(new SelectListItem() { Text = lineFormType.Name, Value = lineFormType.Id.ToString() });
+            }
+
+            //Available Equipment Purchase Types
+            var equipmentPurchaseTypes = _rfqLineEquipmentPurchaseTypeService.GetAllEquipmentPurchaseTypeQueryable(true).ToList();
+            rfqLine.AvailableEquipmentPurchaseTypes = new List<SelectListItem>();
+
+            foreach (var purchaseType in equipmentPurchaseTypes)
+            {
+                rfqLine.AvailableEquipmentPurchaseTypes.Add(new SelectListItem() { Text = purchaseType.Name, Value = purchaseType.Id.ToString() });
+            }
+
+            //Available Equipment Calibration Types
+            var equipmentCalibrationTypes = _rfqLineEquipmentCalibrationTypeService.GetAllEquipmentCalibrationTypeQueryable(true).ToList();
+            rfqLine.AvailableEquipmentCalibrationTypes = new List<SelectListItem>();
+
+            foreach (var calibrationType in equipmentCalibrationTypes)
+            {
+                rfqLine.AvailableEquipmentCalibrationTypes.Add(new SelectListItem() { Text = calibrationType.Name, Value = calibrationType.Id.ToString() });
+            }
+        }
+
+        public virtual ActionResult Edit(int rfqLineId)
+        {
+            var rfqLine = _rfqLineService.GetRFQLineById(rfqLineId);
+            var rfqVm = new RFQLineModel();
+
+            if (rfqLine != null)
+            {
+                rfqVm = Mapper.Map<RFQLineModel>(rfqLine);
+            }
+
+            PopulateLookupsForLineModel(rfqVm);
+
+            return PartialView("_CreateEdit", rfqVm);
+        }
+
+        public virtual ActionResult Create(int rfqId, int lineCount)
+        {
+            var rfqLine = new RFQLineModel
+            {
+                RFQLineNo = lineCount + 1,
+                RFQId = rfqId
+            };
+
+            PopulateLookupsForLineModel(rfqLine);
+
+            var defaultLineType = _rfqLineTypeService.GetRFQLineTypeByName("Goods");
+
+            if (defaultLineType != null)
+            {
+                rfqLine.FormTypeId = defaultLineType.Id;
+                rfqLine.FormType = defaultLineType.Name;
+            }
+
+            var defaultLineFormType = _rfqLineFormTypeService.GetRFQLineFormTypeByName("General Form");
+
+            if (defaultLineFormType != null)
+            {
+                rfqLine.LineTypeId = defaultLineFormType.Id;
+                rfqLine.LineType = defaultLineFormType.Name;
+            }
+
+            var defaultCurrency = _currencyService.GetCurrencyByCode("PHP");
+
+            if (defaultCurrency != null)
+            {
+                rfqLine.CurrencyId = defaultCurrency.Id;
+                rfqLine.Currency = defaultCurrency.CurrencyCode;
+            }
+
+            return PartialView("_CreateEdit", rfqLine);
+        }
+
+        public virtual ActionResult Lines(int id)
+        {
+            var rfqLines = _rfqLineService.GetAllRFQLinesQueryable().Where(x => x.RFQId == id).OrderBy(x => x.RFQLineNo).ToList();
+            var rfqLinesVm = new List<RFQLineModel>();
+
+            foreach (var line in rfqLines)
+            {
+                var lineVm = Mapper.Map<RFQLineModel>(line);
+
+                //Attachment URLS...
+                lineVm.Attachment1Url = "http://" + Request.Url.Authority + "/Attachments/RFQLine/" + lineVm.Attachment1;
+                lineVm.Attachment2Url = "http://" + Request.Url.Authority + "/Attachments/RFQLine/" + lineVm.Attachment2;
+                lineVm.Attachment3Url = "http://" + Request.Url.Authority + "/Attachments/RFQLine/" + lineVm.Attachment3;
+
+                rfqLinesVm.Add(lineVm);
+            }
+
+            return PartialView("_Lines", rfqLinesVm);
+        }
+
+        [HttpPost]
+        public virtual FineUploaderResult UploadRFQLineAttachment(FineUpload upload)
+        {
+            var dir = Server.MapPath("~/Attachments/RFQLine/");
+            var uuid = HttpContext.Request["qquuid"];
+
+            return SaveUploadedFile(upload, dir, uuid);
+        }
+
+        private FineUploaderResult SaveUploadedFile(FineUpload upload, string dir, string uuid)
+        {
+            var filePath = Path.Combine(dir, upload.Filename);
+            try
+            {
+                upload.SaveAs(filePath, true, true);
+            }
+            catch (Exception ex)
+            {
+                return new FineUploaderResult(false, error: ex.Message);
+            }
+
+            var attachment = new FileAttachmentViewModel
+            {
+                name = upload.Filename,
+                uuid = uuid
+            };
+
+            // the anonymous object in the result below will be convert to json and set back to the browser
+            return new FineUploaderResult(true, new { fileAttachment = attachment });
+        }
+
+        #endregion
+    }
+}

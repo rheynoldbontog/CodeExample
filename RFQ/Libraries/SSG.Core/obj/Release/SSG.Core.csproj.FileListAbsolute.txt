@@ -1,0 +1,9 @@
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Release\SSG.Core.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Release\Autofac.Configuration.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Release\Autofac.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Release\Autofac.Integration.Mvc.dll
+C:\Repository\RFQ\Libraries\SSG.Core\bin\Release\Autofac.xml
+C:\Repository\RFQ\Libraries\SSG.Core\obj\Release\SSG.Core.csprojResolveAssemblyReference.cache
+C:\Repository\RFQ\Libraries\SSG.Core\obj\Release\SSG.Core.dll
+C:\Repository\RFQ\Deployable\RFQ_2015.01\bin\SSG.Core.dll
+C:\Repository\RFQ\Deployable\RFQ_2015.01\Administration\bin\SSG.Core.dll

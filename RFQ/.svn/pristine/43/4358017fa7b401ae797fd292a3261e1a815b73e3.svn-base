@@ -1,0 +1,154 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SSG.Core.Data;
+using SSG.Core.Domain.RFQ;
+using SSG.Services.Messages;
+using SSG.Core.Domain.Messages;
+using SSG.Services.Users;
+using System.IO;
+
+namespace SSG.Services.RFQ
+{
+    public class RFQService : IRFQService
+    {
+        #region Fields
+
+        private readonly IRepository<SSG.Core.Domain.RFQ.RFQ> _rfqRepository;
+        private readonly IRepository<RFQStatus> _rfqStatusRepository;
+        private readonly IRepository<RFQLine> _rfqLineRepository;
+        private readonly IRepository<Quotation> _quotationRepository;
+        private readonly IRepository<SSG.Core.Domain.Users.User> _userRepository;
+        private readonly IRepository<EquipmentPurchaseType> _equipmentPurchaseTypeRepository;
+        private readonly IRepository<EquipmentCalibrationType> _equipmentCalibrationTypeRepository;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IEmailAccountService _emailAccountService;
+        private readonly IReportService _reportService;
+        private const int _rfqNoStartIndex = 6;
+
+        #endregion
+
+        #region ctor
+
+        public RFQService(IRepository<SSG.Core.Domain.RFQ.RFQ> rfqRepository,
+            IRepository<RFQStatus> rfqStatusRepository,
+            IRepository<RFQLine> rfqLineRepository,
+            IRepository<Quotation> quotationRepository,
+            IRepository<SSG.Core.Domain.Users.User> userRepository,
+            IRepository<EquipmentPurchaseType> equipmentPurchaseTypeRepository,
+            IRepository<EquipmentCalibrationType> equipmentCalibrationTypeRepository,
+            IWorkflowMessageService workflowMessageService, 
+            EmailAccountSettings emailAccountSettings,
+            IEmailAccountService emailAccountService,
+            IReportService reportService)
+        {
+            this._rfqRepository = rfqRepository;
+            this._rfqStatusRepository = rfqStatusRepository;
+            this._rfqLineRepository = rfqLineRepository;
+            this._quotationRepository = quotationRepository;
+            this._userRepository = userRepository;
+            this._equipmentPurchaseTypeRepository = equipmentPurchaseTypeRepository;
+            this._equipmentCalibrationTypeRepository = equipmentCalibrationTypeRepository;
+            this._workflowMessageService = workflowMessageService;
+            this._emailAccountSettings = emailAccountSettings;
+            this._emailAccountService = emailAccountService;
+            this._reportService = reportService;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public SSG.Core.Domain.RFQ.RFQ GetById(int id)
+        {
+            return _rfqRepository.GetById(id);
+        }
+
+        public void SaveRFQCopy(SSG.Core.Domain.RFQ.RFQ rfq)
+        {
+            if (rfq == null)
+                throw new ArgumentNullException("user");
+
+            _rfqRepository.Insert(rfq);
+                
+        }
+
+        public void SaveRFQ(SSG.Core.Domain.RFQ.RFQ rfq)
+        { 
+            if (rfq == null)
+                throw new ArgumentNullException("user");
+
+            if (rfq.Id > 0)
+            {
+                var originalValues = _rfqRepository.GetEntityOriginalValues(rfq);
+                var oldStatusId = (int)originalValues["RFQStatusId"];
+                var oldBuyerId = (int)originalValues["BuyerId"];
+                                
+                _rfqRepository.Update(rfq);
+
+                //Notify status change if applicable...
+                NotifyStatusChanged(oldStatusId, rfq);
+                NotifyBuyerChanged(oldBuyerId, rfq);
+            }
+            else
+            {
+                _rfqRepository.Insert(rfq);
+            }
+                
+        }
+
+        private void NotifyStatusChanged(int oldStatus, SSG.Core.Domain.RFQ.RFQ updatedRFQ)
+        {
+            if (oldStatus == (int)RFQStates.Draft && updatedRFQ.RFQStatusId == (int)RFQStates.Submitted)
+            {
+                //Generate PDF...
+                if (!_reportService.GeneratePdfReport(updatedRFQ))
+                    updatedRFQ.EmailAttachmentFilename = string.Empty;
+
+                _workflowMessageService.SendSubmittedRFQNotificationMessage(updatedRFQ, 1, true);
+                _workflowMessageService.SendSubmittedRFQNotificationMessage(updatedRFQ, 1, false);
+            }
+        }
+
+        private void NotifyBuyerChanged(int oldBuyerId, SSG.Core.Domain.RFQ.RFQ updatedRFQ)
+        {
+            if (oldBuyerId != updatedRFQ.BuyerId && updatedRFQ.RFQStatusId == (int)RFQStates.Submitted)
+            {
+                //Generate PDF...
+                if (!_reportService.GeneratePdfReport(updatedRFQ))
+                    updatedRFQ.EmailAttachmentFilename = string.Empty;
+
+                _workflowMessageService.SendBuyerChangedRFQNotificationMessage(updatedRFQ, 1);
+            }
+        }
+        
+
+        public string GetNextRFQNo()
+        {
+            var currentYear = DateTime.Now.ToString("yyyy");
+            var currentMonth = DateTime.Now.ToString("MM");
+            
+            int maxSelected;
+
+            int max = 0;
+
+            try
+            {
+                max = _rfqRepository.Table.Select(x => x.RFQNo).ToList().Select(n => Int32.TryParse(n.Substring(_rfqNoStartIndex, (n.Length - _rfqNoStartIndex)), out maxSelected) ? maxSelected : 0).Max();
+            
+            }
+            catch (Exception ex)
+            {
+                max = 0;
+            }
+            
+            string nextRFQNo = String.Format("{0}{1}{2}", currentYear, currentMonth, ++max);
+
+            return nextRFQNo;
+        }
+
+        #endregion
+    }
+}

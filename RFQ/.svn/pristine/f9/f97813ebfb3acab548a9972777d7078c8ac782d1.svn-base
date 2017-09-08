@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
+namespace SSG.Web.Models.RFQ
+{
+    public class QuotationModel
+    {
+        [Key]
+        [ScaffoldColumn(false)]
+        public int Id { get; set; }
+
+        [Required]
+        [DisplayName("Quotation No.")]
+        public string QuotationNo { get; set; }
+
+        [DisplayName("Quote Upload Date")]
+        public DateTime? QuoteUploadDate { get; set; }
+
+        [DisplayName("Quote Item Description")]
+        public string QuoteItemDescription { get; set; }
+
+        [DisplayName("MakerPN")]
+        public string MakerPN { get; set; }
+
+        [Required]
+        [DisplayName("Unit Price")]
+        public decimal UnitPrice { get; set; }
+
+        [DisplayName("Discounted Price")]
+        public decimal DiscountedPrice { get; set; }
+
+        [DisplayName("Minimum Order Quantity")]
+        public int MinimumOrderQuantity { get; set; }
+
+        [DisplayName("Delivery Lead Time")]
+        public string DeliveryLeadTime { get; set; }
+
+        [DisplayName("WarrantyPeriod")]
+        public string WarrantyPeriod { get; set; }
+
+        [DisplayName("Buyer Remarks")]
+        public string BuyerRemarks { get; set; }
+
+        [DisplayName("Requester Remarks")]
+        public string RequesterRemarks { get; set; }
+
+        [DisplayName("Quote Attachment")]
+        public string QuotationAttachment { get; set; }
+
+        [DisplayName("ROHS Document")]
+        public string ROHSDocument { get; set; }
+
+        [DisplayName("MSDS Attachment")]
+        public string MSDSAttachment { get; set; }
+
+        [DisplayName("Other Attachment (Drawing)")]
+        public string OtherAttachment1 { get; set; }
+
+        [DisplayName("Other Attachment (Drawing)")]
+        public string OtherAttachment2 { get; set; }
+
+        [DisplayName("Other Attachment (Drawing)")]
+        public string OtherAttachment3 { get; set; }
+
+        [DisplayName("Other Attachment (Drawing)")]
+        public string OtherAttachment4 { get; set; }
+
+        [DisplayName("Other Attachment (Drawing)")]
+        public string OtherAttachment5 { get; set; }
+
+        [Required]
+        [DisplayName("Active")]
+        public bool Active { get; set; }
+
+        public int CreatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
+        public DateTime DateCreatedOnUtc { get; set; }
+        public DateTime DateUpdatedOnUtc { get; set; }
+    }
+}

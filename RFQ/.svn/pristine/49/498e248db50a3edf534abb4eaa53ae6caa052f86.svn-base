@@ -1,0 +1,174 @@
+﻿@using SSG.Web.Extensions
+@model IEnumerable<SSG.Web.Models.RFQ.RFQLineModel>
+<style type="text/css">
+    .custom
+    {
+        font-size: 12px !important;
+    }
+</style>
+<table id="rfqLinesTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>
+                <div class="custom" align="center">
+                    RFQ</div>
+                <div class="custom" align="center">
+                    Line No</div>
+            </th>
+            <th>
+                <div class="custom" align="center">
+                    Type
+                </div>
+            </th>
+            <th style="width: 800px;">
+                <div class="custom" align="center">
+                    Item Description</div>
+                <div class="custom" align="center">
+                    (Model no./Serial No./Brand)</div>
+            </th>
+            <th class="custom" >
+                Quantity
+            </th>
+            <th class="custom" >
+                UOM
+            </th>
+            <th style="width: 100px;">
+                <div class="custom" align="center">
+                    Maker</div>
+            </th>
+            <th style="width: 100px;">
+                <div class="custom" align="center">
+                    Maker PN</div>
+            </th>
+            <th style="width: 400px;">
+                <div class="custom" align="center">
+                    References Link</div>
+            </th>
+            <th>
+                <div class="custom" align="center">
+                    ROHS</div>
+                <div class="custom" align="center">
+                    Compliant?</div>
+            </th>
+            <th style="width: 400px;">
+                <div class="custom" align="center">
+                    Attachments</div>
+            </th>
+            <th style="width: 300px;">
+                <div class="custom" align="center">
+                    Note to Buyer</div>
+            </th>
+            <th style="width: 400px;">
+                <div class="custom" align="center">
+                    Others/Technical</div>
+                <div class="custom" align="center">
+                    Details: (e.g. weight)</div>
+            </th>
+            <th>
+                <div class="custom" align="center">
+                    Line Status</div>
+            </th>
+            <th style="width: 250px;">
+                <div class="custom" align="center">
+                    Actions</div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td align="center">
+                    <div align="center" style="font-weight: bold;">@item.RFQLineNo</div>
+                </td>
+                <td>@item.LineType
+                </td>
+                <td align="center">@item.ItemDescription
+                </td>
+                <td align="center">@item.Quantity
+                </td>
+                <td align="center">@item.QuantityUnit
+                </td>
+                <td align="center">@item.Maker
+                </td>
+                <td align="center">@item.MakerPN
+                </td>
+                <td align="center">
+                    @foreach (var linkStr in @item.GetReferencesForDisplay())
+                    {
+                        <div align="center">
+                            <a target="_blank" href="@linkStr">@linkStr</a></div>
+                    }
+                </td>
+                <td align="center">
+                    <div align="center">
+                        @Html.CheckBox("ROHSCompliant", item.ROHSCompliant, new { @disabled = "disabled" })
+                    </div>
+                </td>
+                <td align="center">
+                    @foreach (var attachment in item.Attachments)
+                    {
+                        <div align="center">
+                            <a target="_blank"  href="@attachment.FileUrl">@attachment.Filename</a></div>
+                    }
+                </td>
+                <td align="center">@item.NoteToBuyer
+                </td>
+                <td align="center">@item.OtherTechnicalDetails
+                </td>
+                <td align="center">
+                    @item.Status
+                </td>
+                <td>
+                    <div align="center">
+                        <div class="btn-group">
+                            @if (ViewBag.IsRequestor)
+                            {
+                                @Html.NoEncodeActionLink("<i class='fa fa-pencil color6'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.Id }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default btn-sm btnViewMatrix", data_user_role = "requestor" })
+                            }
+                            else if (ViewBag.IsBuyer)
+                            {
+                                @Html.NoEncodeActionLink("<i class='fa fa-pencil color6'></i>", "Edit", "Edit", "RFQLine", routeValues: new { rfqLineId = item.Id }, htmlAttributes: new { rfq_modal = "", @class = "btn btn-default btn-sm btnViewMatrix", data_user_role = "buyer" })
+                            }
+                            <button type="button" class="btn btn-default btn-sm btnViewMatrix" onclick="rfqModal.deleteLine('@Url.Action("Delete", "RFQLine", new { lineId = @item.Id })');">
+                                <i class="fa fa-trash color6"></i>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr> 
+        }
+        <tr>
+            <td colspan="14">
+                @if (Model.Count() == 0)
+                {
+                    <div class="text-center">
+                        No lines added to this RFQ</div>
+                }
+            </td>
+        </tr>
+        @if (ViewBag.IsBuyer)
+        {
+            <tr>
+                <td class="color3-bg" colspan="14">
+                    <div class="color10" style="font-weight: bold;" align="left">
+                        Vendor should indicate the ff in their quote:</div>
+                    <div style="font-weight: bold;" align="left">
+                        BOM (Bill Of Materials)</div>
+                    <div align="left">
+                        Lead Time</div>
+                    <div align="left">
+                        Warranty</div>
+                    <div align="left">
+                        Quotation number</div>
+                    <div align="left">
+                        Validity of Quote</div>
+                    <div align="left">
+                        Incoterm</div>
+                    <div align="left">
+                        Packaging dimension & weight</div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

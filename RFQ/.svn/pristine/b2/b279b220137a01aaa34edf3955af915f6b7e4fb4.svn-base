@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data.Entity.ModelConfiguration;
+using SSG.Core.Domain.RFQ;
+
+namespace SSG.Data.Mapping.RFQ
+{
+    public class RFQBuyerHistoryMap : EntityTypeConfiguration<RFQBuyerHistory>
+    {
+        public RFQBuyerHistoryMap()
+        {
+            //Primary Key
+            this.HasKey(t => t.Id);
+
+            this.HasRequired(x => x.RFQ)
+                .WithMany(x => x.BuyerChanges)
+                .HasForeignKey(x => x.RFQId)
+                .WillCascadeOnDelete(false);
+                
+            this.HasRequired(x => x.OldBuyer)
+                .WithMany()
+                .HasForeignKey(x => x.OldBuyerId)
+                .WillCascadeOnDelete(false);
+
+            this.HasRequired(x => x.NewBuyer)
+                .WithMany()
+                .HasForeignKey(x => x.NewBuyerId)
+                .WillCascadeOnDelete(false);
+
+            this.Property(x => x.ChangeReason).IsRequired().HasMaxLength(500).HasColumnName("ChangeReason");
+
+            // Table & Column Mappings
+            this.ToTable("rfqbuyerhistory", "rfq");
+            this.Property(t => t.Id).HasColumnName("Id");
+            this.Property(t => t.Active).HasColumnName("Active");
+            this.Property(t => t.DateCreatedOnUtc).HasColumnName("DateCreatedOnUtc");
+            this.Property(t => t.DateUpdatedOnUtc).HasColumnName("DateUpdatedOnUtc");
+            this.Property(t => t.CreatedByUserId).HasColumnName("CreatedByUserId");
+            this.Property(t => t.UpdatedByUserId).HasColumnName("UpdatedByUserId");
+        }
+    }
+}

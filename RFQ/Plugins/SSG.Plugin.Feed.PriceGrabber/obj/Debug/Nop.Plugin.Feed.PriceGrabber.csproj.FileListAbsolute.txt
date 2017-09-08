@@ -1,0 +1,12 @@
+C:\Development\Portfolio\DotNetWorkspace\Sample\nopCommerce_2.65_Source\Presentation\Nop.Web\Plugins\Feed.PriceGrabber\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Sample\nopCommerce_2.65_Source\Presentation\Nop.Web\Plugins\Feed.PriceGrabber\Nop.Plugin.Feed.PriceGrabber.dll
+C:\Development\Portfolio\DotNetWorkspace\Sample\nopCommerce_2.65_Source\Presentation\Nop.Web\Plugins\Feed.PriceGrabber\Nop.Plugin.Feed.PriceGrabber.pdb
+C:\Development\Portfolio\DotNetWorkspace\Sample\nopCommerce_2.65_Source\Plugins\Nop.Plugin.Feed.PriceGrabber\obj\Debug\ResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Sample\nopCommerce_2.65_Source\Plugins\Nop.Plugin.Feed.PriceGrabber\obj\Debug\Nop.Plugin.Feed.PriceGrabber.dll
+C:\Development\Portfolio\DotNetWorkspace\Sample\nopCommerce_2.65_Source\Plugins\Nop.Plugin.Feed.PriceGrabber\obj\Debug\Nop.Plugin.Feed.PriceGrabber.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\Feed.PriceGrabber\Description.txt
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\Feed.PriceGrabber\Nop.Plugin.Feed.PriceGrabber.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Presentation\Nop.Web\Plugins\Feed.PriceGrabber\Nop.Plugin.Feed.PriceGrabber.pdb
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\Nop.Plugin.Feed.PriceGrabber\obj\Debug\ResolveAssemblyReference.cache
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\Nop.Plugin.Feed.PriceGrabber\obj\Debug\Nop.Plugin.Feed.PriceGrabber.dll
+C:\Development\Portfolio\DotNetWorkspace\Teradyne\Templates\Template.2013\Plugins\Nop.Plugin.Feed.PriceGrabber\obj\Debug\Nop.Plugin.Feed.PriceGrabber.pdb

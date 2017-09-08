@@ -1,0 +1,252 @@
+﻿// modalform.js
+
+$(function () {
+    $.ajaxSetup({ cache: false });
+
+    $("a[data-modal]").on("click", function (e) {
+        // hide dropdown if any (this is used wehen invoking modal from link in bootstrap dropdown )
+        //$(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
+
+        $('#myModalContent').load(this.href, function () {
+            $('#myModal').modal({
+                /*backdrop: 'static',*/
+                keyboard: true
+            }, 'show');
+
+            initializeForm();
+            bindForm(this);
+
+        });
+        return false;
+    });
+});
+
+function SubmitRFQ(submitUrl) {
+    
+    swal({
+        title: 'Are you sure?',
+        text: "RFQ status will be changed to submitted!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#303F9F',
+        cancelButtonColor: '#f39c12',
+        confirmButtonText: 'Yes, submit RFQ!'
+    }).then(function () {
+        //AJAX CALL HERE...
+        $.ajax({
+            url: submitUrl,
+            type: 'GET',
+            data: null,
+            success: function (result) {
+                if (result.success) {
+                    window.location.href = window.location.href;
+                } else {
+                    swal('Ooops...', result.errorMessage, 'error');
+                }
+            }
+        });
+    })
+}
+
+function deleteLine(deleteUrl) {
+    swal({
+        title: 'Are you sure?',
+        text: "Line will be marked as deleted in the database and will no longer be visible!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#303F9F',
+        cancelButtonColor: '#f39c12',
+        confirmButtonText: 'Yes, delete line!'
+    }).then(function () {
+        //AJAX CALL HERE...
+        $.ajax({
+            url: deleteUrl,
+            type: 'GET',
+            data: null,
+            success: function (result) {
+                if (result.success) {
+                    window.location.href = window.location.href;
+                } else {
+                    swal('Ooops...', result.errorMessage, 'error');
+                }
+            }
+        });
+    })
+}
+
+function initializeForm() {
+    
+    var initialFormType = $("[name='initial_form_type']").val();
+
+    // General Form Type
+    if (initialFormType == 1) {
+        showGeneralFormFields();
+    }
+    else {
+        showTechnicalFormFields();
+    }
+
+    //Initialize File Uploader...
+    $("input[id$='__Filename']").each(function (i, el) {
+        initFineUploader(i);
+    });
+
+    //Parse form...
+    parseFormForValidation('#modal_form');
+}
+
+function showGeneralFormFields() {
+    $('#general_form_optional_fields').show();
+    $('#technical_form_optional_fields').hide();
+
+    $('#TestEquipmentPurchaseTypeId').removeAttr("data-val-required");
+    $('#TestEquipmentCalibrationTypeId').removeAttr("data-val-required");
+};
+
+function showTechnicalFormFields() {
+    $('#general_form_optional_fields').hide();
+    $('#technical_form_optional_fields').show();
+
+    $('#TestEquipmentPurchaseTypeId').attr("data-val-required", "Test Equipment Purchase Type is required");
+    $('#TestEquipmentCalibrationTypeId').attr("data-val-required", "Test Equipment Purchase Type is required");
+};
+
+function parseFormForValidation(formId) {
+    var form = $(formId)
+               .removeData("validator")
+               .removeData("unobtrusiveValidation");
+
+    $.validator.unobtrusive.parse(form);
+}
+
+function initFineUploader(index) {
+
+    var prefix = '#Attachments_' + index + '__';
+    var idFileUrl = prefix + 'FileUrl';
+    var idFilename = prefix + 'Filename';
+    var idUploader = prefix + 'Uploader';
+
+    var uploader = new qq.FineUploaderBasic({
+        button: $(idUploader)[0],
+        request: {
+            endpoint: $('#upload_url').val()
+        },
+        validation: {
+            acceptFiles: "application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessing‌​ml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.‌​sheet, text/plain, application/pdf, image/*",
+            allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'ppt', 'pptx'],
+            sizeLimit: 204800 // 200 kB = 200 * 1024 bytes
+        },
+        callbacks: {
+            onComplete: function (id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    $(idFilename).val(fileName);
+                    $(idFileUrl).val(responseJSON.fileurl);
+                } else {
+                    alert("Error in uploading file!");
+                }
+            }
+        },
+        debug: true
+    });
+}
+
+function addLineAttachment(url) {
+
+    // Get last index...
+    var last_attachment_index = $('#last_attachment_index').val();
+
+    // Add index to url...
+    url += '&lastIndex=' + last_attachment_index;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: null,
+        cache: false,
+        success: function (result) {
+            $('#attachment_container').append(result);
+
+            initFineUploader(last_attachment_index);
+
+            //Increment index...
+            $('#last_attachment_index').val(parseInt(last_attachment_index) + 1);
+        }
+    });
+}
+
+function removeAttachment(index) {
+    
+    // Set IsDeleted to true...
+    $("#Attachments_" + index + "__IsDeleted").val(true);
+
+    // Hide parent container...
+    $("#Attachments_Container_" + index).fadeOut();
+}
+
+//Bind Form Type Change...
+function ChangeFormType(formType) {
+    var value = parseInt(formType.options[formType.selectedIndex].value);
+    
+    if (value === 1) {
+        showGeneralFormFields();
+    }
+    else if (value === 2) {
+        showTechnicalFormFields();
+    }
+
+    parseFormForValidation('#modal_form');
+}
+
+function removeValidationSummary() {
+    $('.validation-summary-errors').addClass('validation-summary-valid');
+    $('.validation-summary-errors').removeClass('validation-summary-errors');
+}
+
+function bindForm(dialog) {
+
+    $('form', dialog).submit(function () {
+
+        if ($(this).valid()) {
+
+            var actionUrl = this.action;
+            var methodType = this.method;
+            var formData = $(this).serialize();
+
+            swal({
+                title: 'Are you sure?',
+                text: "Line will be saved to the database!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#303F9F',
+                cancelButtonColor: '#f39c12',
+                confirmButtonText: 'Yes, save line!'
+            }).then(function () {
+                //Removes validation summary
+                removeValidationSummary();
+
+                //AJAX CALL HERE...
+                $.ajax({
+                    url: actionUrl,
+                    type: methodType,
+                    data: formData,
+                    success: function (result) {
+                        if (result.success) {
+                            $('#myModal').modal('hide');
+                            //$('#replacetarget').load(result.url); //  Load data from the server and place the returned HTML into the matched element
+                            // Refresh or reload page because replace causes problems with modal...
+                            window.location.href = window.location.href;
+                        } else {
+                            $('#myModalContent').html(result);
+
+                            initializeForm();
+                            bindForm(dialog);
+                        }
+                    }
+                });
+            })
+
+            
+        }
+        return false;
+    });
+}

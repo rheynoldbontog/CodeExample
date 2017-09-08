@@ -1,0 +1,64 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SSG.Services.RFQ;
+using SSG.Core.Domain.Common;
+using SSG.Core;
+using SSG.Services.Security;
+using SSG.Services.Users;
+using System.Web.Mvc;
+using SSG.Web.Models.RFQ;
+using SSG.Core.Domain.RFQ;
+using SSG.Web.Extensions;
+using AutoMapper;
+
+namespace SSG.Web.Controllers
+{
+    public partial class FileAttachmentController : BaseSSGController
+    {
+        #region Fields
+
+        private readonly IFileAttachmentService _fileAttachmentService;
+        private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IPermissionService _permissionService;
+        private readonly IUserService _userService;
+
+        #endregion
+
+        #region ctor
+
+        public FileAttachmentController(IFileAttachmentService fileAttachmentService,
+            AdminAreaSettings adminAreaSettings,
+            IWorkContext workContext,
+            IPermissionService permissionService,
+            IUserService userService
+            )
+        {
+            this._fileAttachmentService = fileAttachmentService;
+            this._adminAreaSettings = adminAreaSettings;
+            this._workContext = workContext;
+            this._permissionService = permissionService;
+            this._userService = userService;
+        }
+
+        #endregion
+
+        #region Methods
+        
+        public virtual ViewResult Create(int rfqId, int lastIndex)
+        {
+            var attachment = new FileAttachmentModel()
+            {
+                RFQLineId = rfqId,
+                Index = lastIndex.ToString(),
+                IsDeleted = false
+            };
+
+            return View("_CreateEdit", attachment);
+        }
+
+        #endregion
+    }
+}

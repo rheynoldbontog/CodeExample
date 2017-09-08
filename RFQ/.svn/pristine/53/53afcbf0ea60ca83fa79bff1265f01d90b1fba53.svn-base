@@ -1,0 +1,413 @@
+﻿@model UserInfoModel
+@using SSG.Web.Models.User;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }  
+                });
+            });
+        });
+    </script>
+}
+<div class="page account-page user-info-page">
+    <div class="page-header">
+        <h2>@T("Account.MyAccount") - @T("Account.UserInfo")</h2>
+    </div>
+    <div class="page-body">
+        @using (Html.BeginHorizontalForm())
+        {
+            @Html.AntiForgeryToken()
+            if (!ViewData.ModelState.IsValid)
+            { 
+                <div class="alert alert-block alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>@T("Common.Warning")</h4>
+                    <p>@Html.ValidationSummary(true, string.Empty)</p>
+                </div>
+            }
+            <div class="clearfix"></div>      
+            <div class="personal-details">
+                <p class="lead">@T("Account.YourPersonalDetails")</p>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.FirstName, true)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.FirstName, new { placeholder = T("Account.Fields.FirstName"), required = "required" })
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(model => model.FirstName, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(model => model.LastName, true)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.LastName, new { placeholder = T("Account.Fields.LastName"), required = "required" })
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(model => model.LastName, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                @if (Model.DateOfBirthEnabled)
+                {
+                    <div class="control-group">
+                        <label class="control-label">@T("Account.Fields.DateOfBirth")</label> 
+                        <div class="controls">
+                            @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
+                                        Html.FieldNameFor(x => x.DateOfBirthMonth),
+                                        Html.FieldNameFor(x => x.DateOfBirthYear),
+                                        DateTime.Now.Year - 110,
+                                        DateTime.Now.Year,
+                                        Model.DateOfBirthDay,
+                                        Model.DateOfBirthMonth,
+                                        Model.DateOfBirthYear)
+                            @Html.ValidationMessageFor(model => model.DateOfBirthDay, string.Empty, new { @class = "help-inline" })
+                            @Html.ValidationMessageFor(model => model.DateOfBirthMonth, string.Empty, new { @class = "help-inline" })
+                            @Html.ValidationMessageFor(model => model.DateOfBirthYear, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                }
+                <div class="control-group">
+                    @Html.LabelFor(model => model.Email, true)
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.Email, new { placeholder = T("Account.Fields.Email"), required = "required" })
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(model => model.Email, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                @if (Model.UsernamesEnabled)
+                {
+                    if (Model.AllowUsersToChangeUsernames)
+                    { 
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Username, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Username, new { placeholder = T("Admin.Users.Users.Fields.Username"), required = "required" })
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.Username, string.Empty, new { @class = "help-inline" })
+                                @if (Model.CheckUsernameAvailabilityEnabled)
+                                {
+                                    @Html.Partial("_CheckUsernameAvailability")
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Username, true)
+                            <div class="controls-display">
+                                @Html.DisplayFor(model => model.Username)
+                            </div>
+                        </div>
+                    }
+                }
+                @if (Model.EmployeeIDRequired)
+                { 
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.EmployeeId, true)
+                        <div class="controls">
+                            @*@Html.TextBoxFor(model => model.EmployeeId, new { placeholder = T("Account.Fields.EmployeeID"), required = "required" })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.EmployeeId, string.Empty, new { @class = "help-inline" })*@
+                            @Html.DisplayFor(model => model.EmployeeId)
+                            @Html.HiddenFor(model => model.EmployeeId)
+                        </div>
+                    </div>
+                }
+                @if (Model.GenderEnabled)
+                {
+                    <div class="control-group">
+                        <label class="control-label">@T("Account.Fields.Gender")</label>
+                        <div class="controls">
+                            <label class="forcheckbox radio inline" for="gender-male">
+                                @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male" })
+                                @T("Account.Fields.Gender.Male")
+                            </label>
+                            <label class="forcheckbox radio inline" for="gender-female">
+                                @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "gender-female" })
+                                @T("Account.Fields.Gender.Female")
+                            </label>
+                        </div>
+                    </div>
+                }
+                @if (Model.DepartmentEnabled)
+                {
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.DepartmentId, true)
+                        <div class="controls">
+                            @Html.DropDownListFor(model => model.DepartmentId, Model.AvailableDepartments, "Select Department", new { @class = "form-control" })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.DepartmentId, string.Empty, new { @class = "help-inline"})
+                        </div>
+                    </div>
+                }
+            </div>
+                if (Model.AssociatedExternalAuthRecords.Count > 0)
+                { 
+            <div class="external-records">
+                <p class="lead">@T("Account.AssociatedExternalAuth")</p>
+                <div>
+                    <table class="table table-hover table-bordered">
+                        <col />
+                        <col />
+                        <col />
+                        <thead>
+                            <tr>
+                                <th>
+                                    @T("Account.AssociatedExternalAuth.AuthMethodName")
+                                </th>
+                                <th>
+                                    @T("Account.AssociatedExternalAuth.Email")
+                                </th>
+                                <th>
+                                    @T("Account.AssociatedExternalAuth.ExternalIdentifier")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.AssociatedExternalAuthRecords)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.AuthMethodName
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td class="a-left">
+                                        @item.ExternalIdentifier
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                }
+                if (Model.CompanyEnabled || Model.DisplayVatNumber)
+                { 
+            <div class="company-enabled">
+                <p class="lead">@T("Account.CompanyDetails")</p>
+                @if (Model.CompanyEnabled)
+                {
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Company, true)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Company, new { placeholder = T("Account.Fields.Company") })
+                            @if (Model.CompanyRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
+                            @Html.ValidationMessageFor(model => model.Company, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                }
+                @if (Model.DisplayVatNumber)
+                {
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.VatNumber, true)
+                        <div class="controls">
+                            @Html.EditorFor(model => model.VatNumber)
+                            <span class="text-info">@Model.VatNumberStatusNote
+                                <em>@T("Account.Fields.VatNumber.Note")</em>
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+                }
+                if (Model.StreetAddressEnabled ||
+                    Model.StreetAddress2Enabled ||
+                    Model.ZipPostalCodeEnabled ||
+                    Model.CityEnabled ||
+                    Model.CountryEnabled)
+                { 
+                <div class="address-info">
+                    <p class="lead">@T("Account.YourAddress")</p>
+                    @if (Model.StreetAddressEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.StreetAddress, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.StreetAddress, new { placeholder = T("Account.Fields.StreetAddress") })
+                                @if (Model.StreetAddressRequired)
+                                {
+                                    @Html.RequiredHint()
+                                }
+                                @Html.ValidationMessageFor(model => model.StreetAddress, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    }
+                    @if (Model.StreetAddress2Enabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.StreetAddress2, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.StreetAddress2, new { placeholder = T("Account.Fields.StreetAddress2") })
+                                @if (Model.StreetAddress2Required)
+                                {
+                                    @Html.RequiredHint()
+                                }
+                                @Html.ValidationMessageFor(model => model.StreetAddress2, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    }
+                    @if (Model.ZipPostalCodeEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ZipPostalCode, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.ZipPostalCode, new { placeholder = T("Account.Fields.StreetAddress") })
+                                @if (Model.ZipPostalCodeRequired)
+                                {
+                                    @Html.RequiredHint()
+                                }
+                                @Html.ValidationMessageFor(model => model.ZipPostalCode, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    }
+                    @if (Model.CityEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.City, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.City, new { placeholder = T("Account.Fields.StreetAddress") })
+                                @if (Model.CityRequired)
+                                {
+                                    @Html.RequiredHint()
+                                }
+                                @Html.ValidationMessageFor(model => model.City, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    }
+                    @if (Model.CountryEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CountryId, true)
+                            <div class="controls">
+                                @Html.DropDownList("CountryId", Model.AvailableCountries)
+                            </div>
+                        </div>
+                    }
+                    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.StateProvinceId, true)
+                            <div class="controls">
+                                @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                                <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
+                                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")"/>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+                }
+                if (Model.PhoneEnabled || Model.FaxEnabled)
+                { 
+                <div class="phone-info">
+                    <p class="lead">@T("Account.YourContactInformation")</p>
+                    @if (Model.PhoneEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Phone, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Phone, new { placeholder = T("Account.Fields.Phone") })
+                                @if (Model.PhoneRequired)
+                                {
+                                    @Html.RequiredHint()
+                                }
+                                @Html.ValidationMessageFor(model => model.Phone, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    }
+                    @if (Model.FaxEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Fax, true)
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Fax, new { placeholder = T("Account.Fields.Fax") })
+                                @if (Model.FaxRequired)
+                                {
+                                    @Html.RequiredHint()
+                                }
+                                @Html.ValidationMessageFor(model => model.Fax, string.Empty, new { @class = "help-inline" })
+                            </div>
+                        </div>
+                    }
+                </div>
+                }
+                if (Model.NewsletterEnabled)
+                { 
+                <div class="newsletter">
+                    <p class="lead">@T("Account.Options")</p>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Newsletter, true)
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Newsletter, new { placeholder = T("Account.Fields.Newsletter") })
+                            @Html.ValidationMessageFor(model => model.Newsletter, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                </div>
+                }
+                if (Model.AllowUsersToSetTimeZone || Model.SignatureEnabled)
+                { 
+                <div class="timezone">
+                    <p class="lead">@T("Account.Preferences")</p>
+                    @if (Model.AllowUsersToSetTimeZone)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.TimeZoneId, true)
+                            <div class="controls">
+                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                                <span class="text-error">@Html.ValidationMessageFor(model => model.TimeZoneId)</span>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.SignatureEnabled)
+                    {
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Signature, true)
+                            <div class="controls">
+                                 @Html.TextAreaFor(model => model.Signature, new { @class = "account-signature-text input-large" })
+                            </div>
+                        </div>
+                    }
+                </div>
+                }
+            <div class="clearfix"></div>
+            <div class="form-actions">
+                <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-primary save-user-info-button" />
+            </div>
+        }
+    </div>
+</div>
+

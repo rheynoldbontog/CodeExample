@@ -1,0 +1,13 @@
+﻿@model SSG.Web.Models.RFQ.FileAttachmentModel
+
+<div class="row-fluid" style="margin-top: 5px;">
+    <div class="input-append">
+        @Html.TextBoxFor(model => model.Filename, new { id = "Attachments_@(model.Index)__Filename", Name = "Attachments[@(model.Index)].Filename", @class = "span12", @readonly = "readonly" })
+        <div id="Attachments_@(Model.Index)__Uploader" class="btn btn-success">
+            <i class="icon-arrow-up icon-white"></i>
+        </div>
+        <div id="Attachments_@(Model.Index)__Deleter" class="btn btn-danger" onclick="removeAttachment('#Attachments_@(Model.Index)__Filename','#Attachments_@(Model.Index)__Uploader','#Attachments_@(Model.Index)__Deleter');">
+            <i class="icon-trash icon-white"></i>
+        </div>
+    </div>
+</div>

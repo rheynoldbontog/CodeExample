@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    ViewBag.Title = "Index";
+    var workContext = SSG.Core.Infrastructure.EngineContext.Current.Resolve<SSG.Core.IWorkContext>();
+}
+
+<h2>
+    Maintenance</h2>
+<ul>
+    @*<li>@Html.ActionLink("Support Code", MVC.SupportCode.Index())</li>*@
+    <li>@Html.ActionLink("RFQ Status", MVC.RFQStatus.Index())</li>
+    <li>@Html.ActionLink("Departments", MVC.Department.Index())</li>
+    <li>@Html.ActionLink("RFQ Line Type", MVC.RFQLineType.Index())</li>
+    <li>@Html.ActionLink("RFQ Line Form Type", MVC.RFQLineFormType.Index())</li>
+    <li>@Html.ActionLink("Unit Of Measurement", MVC.UOM.Index())</li>
+    <li>@Html.ActionLink("Test Equipment Calibration Type", MVC.EquipmentCalibrationType.Index())</li>
+    <li>@Html.ActionLink("Test Equipment Purchase Type", MVC.EquipmentPurchaseType.Index())</li>
+    
+    
+    @*@if (workContext.IsCaseOwner)
+    { 
+        <li>@Html.ActionLink("Manage Case Owner Backup", MVC.CaseOwnerBackup.Index())</li>
+    }*@
+</ul>

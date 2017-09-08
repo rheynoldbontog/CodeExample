@@ -1,0 +1,25 @@
+﻿@model FooterModel
+@using SSG.Web.Models.Common;
+<div class="clearfix"></div>
+<div class="row-fluid">
+    <div class="footer span12">
+        <div class="footer-poweredby pull-left">
+            <p class="muted">
+                Powered by <a href="http://www.SSG.com/">SSG</a>
+            </p>
+            <!--Would you like
+                    to remove the "Powered by SSGTemplate" link in the bottom of the footer? Find more
+                    info here http://www.SSGTemplate.com/copyrightremoval.aspx -->
+        </div>
+        <div class="footer-disclaimer pull-right">
+            <p>@T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), @Model.SiteName)</p>
+            <div class="footer-site-theme">
+                <p>
+                    @Html.Action("SiteThemeSelector", "Common")
+                </p>
+            </div>
+        </div>
+        @Html.Action("ChangeDeviceBlock", "Common")
+        @Html.Widget("footer")
+    </div>
+</div>

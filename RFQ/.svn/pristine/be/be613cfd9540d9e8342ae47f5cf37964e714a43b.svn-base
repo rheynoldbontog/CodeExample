@@ -1,0 +1,183 @@
+﻿// modalform.js
+
+$(function () {
+    $.ajaxSetup({ cache: false });
+
+    $("a[data-modal]").on("click", function (e) {
+        // hide dropdown if any (this is used wehen invoking modal from link in bootstrap dropdown )
+        //$(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
+
+        $('#myModalContent').load(this.href, function () {
+            $('#myModal').modal({
+                /*backdrop: 'static',*/
+                keyboard: true
+            }, 'show');
+
+            var form = $('#modal_form')
+                       .removeData("validator")
+                       .removeData("unobtrusiveValidation");
+
+            $.validator.unobtrusive.parse(form);
+
+            //Show first tab...
+            $('#line_tabs a:first').tab('show');
+
+            //Show General Form Optional Fields by default...
+            var initialFormType = $("[name='initial_form_type']").val();
+
+            if (initialFormType == 1) {
+                $('#form_tab_name').text("General Form");
+                $('#general_form_optional_fields').show();
+                $('#technical_form_optional_fields').hide();
+            }
+            else {
+                $('#form_tab_name').text("'Test Equipment Rental And Calibration Form'");
+                $('#general_form_optional_fields').hide();
+                $('#technical_form_optional_fields').show();
+            }
+
+            //Attachment1 START
+            $('#attachment1_deleter').hide();
+
+            var uploader1 = new qq.FineUploaderBasic({
+                button: $('#attachment1_uploader')[0],
+                request: {
+                    endpoint: $('#upload_url').val()
+                },
+                validation: {
+                    allowedExtensions: ['jpeg', 'jpg', 'gif', 'png'],
+                    sizeLimit: 204800 // 200 kB = 200 * 1024 bytes
+                },
+                callbacks: {
+                    onComplete: function (id, fileName, responseJSON) {
+                        if (responseJSON.success) {
+                            $('#Attachment1').val(fileName);
+                            $('#attachment1_deleter').show();
+                            $('#attachment1_uploader').hide();
+                        } else {
+                            alert("Error in uploading file!");
+                            $('#attachment1_uploader').show();
+                            $('#attachment1_deleter').hide();
+                        }
+                    }
+                },
+                debug: true
+            });
+            //Attachment1 END
+
+            //Attachment2 START
+            $('#attachment2_deleter').hide();
+
+            var uploader2 = new qq.FineUploaderBasic({
+                button: $('#attachment2_uploader')[0],
+                request: {
+                    endpoint: $('#upload_url').val()
+                },
+                validation: {
+                    allowedExtensions: ['jpeg', 'jpg', 'gif', 'png'],
+                    sizeLimit: 204800 // 200 kB = 200 * 1024 bytes
+                },
+                callbacks: {
+                    onComplete: function (id, fileName, responseJSON) {
+                        if (responseJSON.success) {
+                            $('#Attachment2').val(fileName);
+                            $('#attachment2_deleter').show();
+                            $('#attachment2_uploader').hide();
+                        } else {
+                            alert("Error in uploading file!");
+                            $('#attachment2_uploader').show();
+                            $('#attachment2_deleter').hide();
+                        }
+                    }
+                },
+                debug: true
+            });
+            //Attachment2 END
+
+            //Attachment3 START
+            $('#attachment3_deleter').hide();
+
+            var uploader3 = new qq.FineUploaderBasic({
+                button: $('#attachment3_uploader')[0],
+                request: {
+                    endpoint: $('#upload_url').val()
+                },
+                validation: {
+                    allowedExtensions: ['jpeg', 'jpg', 'gif', 'png'],
+                    sizeLimit: 204800 // 200 kB = 200 * 1024 bytes
+                },
+                callbacks: {
+                    onComplete: function (id, fileName, responseJSON) {
+                        if (responseJSON.success) {
+                            $('#Attachment3').val(fileName);
+                            $('#attachment3_deleter').show();
+                            $('#attachment3_uploader').hide();
+                        } else {
+                            alert("Error in uploading file!");
+                            $('#attachment3_uploader').show();
+                            $('#attachment3_deleter').hide();
+                        }
+                    }
+                },
+                debug: true
+            });
+            //Attachment3 END
+
+            bindForm(this);
+        });
+        return false;
+    });
+});
+
+function removeAttachment(id, uploaderId, deleterId) {
+    $(id).val("");
+    $(uploaderId).show();
+    $(deleterId).hide();
+}
+
+//Bind Form Type Change...
+function ChangeFormType(formType) {
+    $('#form_tab_name').text(formType.options[formType.selectedIndex].innerHTML);
+    var value = parseInt(formType.options[formType.selectedIndex].value);
+    
+    if (value === 1) {
+        $('#general_form_optional_fields').show();
+        $('#technical_form_optional_fields').hide();
+    }
+    else if (value === 2) {
+        $('#general_form_optional_fields').hide();
+        $('#technical_form_optional_fields').show();
+    }
+}
+
+function bindForm(dialog) {
+
+    $('form', dialog).submit(function () {
+
+        if ($(this).valid()) {
+
+            //Removes validation summary
+            $('.validation-summary-errors').addClass('validation-summary-valid');
+            $('.validation-summary-errors').removeClass('validation-summary-errors');
+
+            //alert("Before ajax call to:" + this.action);
+
+            //AJAX CALL HERE...
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#myModal').modal('hide');
+                        $('#replacetarget').load(result.url); //  Load data from the server and place the returned HTML into the matched element
+                    } else {
+                        $('#myModalContent').html(result);
+                        bindForm(dialog);
+                    }
+                }
+            });
+        }
+        return false;
+    });
+}
